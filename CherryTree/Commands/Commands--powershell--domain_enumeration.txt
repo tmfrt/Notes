@@ -1,0 +1,71 @@
+DOMAIN ENUMERATION
+List Current Domain - AD Module
+
+$ADClass = [System.DirectoryServices.ActiveDirectory.Domain] 
+$ADClass::GetCurrentDomain()
+
+Install AD Module with powershell tools without installing RSAT.
+
+https://github.com/samratashok/ADModule
+
+iex (new-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/ADModule/master/Import-ActiveDirectory.ps1');Import-ActiveDirectory
+
+
+Get Current Domain 
+
+Get-NetDomain (PowerView)
+
+Get-ADDomain (ActiveDirectory)
+
+
+Get Object of another Domain
+
+Get-NetDomain -Domain els.local (PowerView)
+
+Get-ADDomain -Identity els.local (Active Directory)
+
+
+Get Domain SID for current Domain
+
+Get-DomainSID (Powerview)
+
+(Get-ADDomain).DomainSID (Active Directory)
+
+
+Get Domain Policy for the Current Domain
+
+Get-DomainPolicy (Powerview)
+
+(Get-DomainPolicy)."system access" (Powerview)
+
+
+Get Domain Policy for another Domain 
+
+(Get-DomainPolicy -domain els.local)."system access" (Powerview)
+
+
+Get Domain Controllers for the Current Domain
+
+Get-NetDomainController (Powerview)
+
+Get-ADDomainController (Active Directory)
+
+
+Get Domain Controllers for another Domain
+
+Get-NetDomainController -Domain els.local (Powerview)
+
+Get-ADDomainController -DomainName els.local -Discover (Active Directory)
+
+
+
+
+
+ 
+
+
+
+
+
+
+

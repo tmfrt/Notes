@@ -1,0 +1,7 @@
+MIMIKATZ - BASE64 ALL THE THINGS
+Base64 output of commands
+
+base64 /out:true
+
+base64 /out:false
+

@@ -1,0 +1,17 @@
+ACTIVE DIRECTORY ONE LINERS
+Retrieves all of the trust relationships for this domain - Does not Grab Forest Trusts 
+
+([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).GetAllTrustRelationships()
+
+
+Grab Forest Trusts.
+
+([System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest()).GetAllTrustRelationships()
+
+
+Get Trusted Domains
+
+nltest /trusted_domains
+
+
+

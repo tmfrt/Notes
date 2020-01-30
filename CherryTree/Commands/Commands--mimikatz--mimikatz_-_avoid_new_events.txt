@@ -1,0 +1,7 @@
+MIMIKATZ - AVOID NEW EVENTS
+Drop new events:
+
+event::drop
+
+event::clear  ***this clears all events
+

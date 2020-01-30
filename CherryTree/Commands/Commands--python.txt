@@ -1,0 +1,11 @@
+PYTHON
+python -m SimpleHTTPServer 80
+
+apt-get install python3-dev
+
+apt-get install
+
+pipenv install - install dependencies within a directory, for instance - you grab a new program from github and don't want to install dependencies for that program and mess with other programs.  
+
+pipenv shell - After pipenv type in pipenv shell and you will be dropped into a shell within that directory
+

@@ -1,0 +1,78 @@
+BASH BUNNY
+https://forums.hak5.org/topic/40971-info-tools/ <----Go here and download Impacket and Responder
+
+https://storage.googleapis.com/bashbunny_tools/impacket-bunny.deb
+https://storage.googleapis.com/bashbunny_tools/responder-bunny.deb
+https://storage.googleapis.com/bashbunny_tools/gohttp-bunny.deb
+
+Good setup video
+https://www.youtube.com/watch?v=VI1ie4cAIho
+
+Set up bash bunny - 
+
+1. Download firmware from
+2. https://wiki.bashbunny.com/downloads.html
+3. Place firmware version into root of bash bunny - Do not unzip or decompress file
+4. Safely remove bash bunny, and insert bash bunny back into computer, wait 10 minutes for flash to complete.
+5. Follow instructions on youtube video above
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mass-Storage Directory Structure                 Default Settings
+ --------------------------------------------     -----------------------------
+ .
+ |-config.txt      - Global config script         Username: root
+ |                   Sourced by all payloads      Password: hak5bunny
+ |-payloads/                                      Hostname: bunny
+ | |-library/                                     
+ | | |-* Payloads from Bash Bunny repository      IP Address: 172.16.64.1
+ | |                                              DHCP Range: 172.16.64.10-12
+ | |-extensions/   - Additional Bunny Script      
+ | |                 commands/functions.          LED Status:
+ | |-switch1/                                     Green Solid    - Boot up
+ | | |-payload.txt - Bunny Script executed on     Blue Blink     - Arming Mode
+ | |                 boot in switch position 1    Red/Blue Blink - Recovery
+ | |-switch2/                                     
+ | | |-payload.txt - Bunny Script executed on     
+ | |                 boot in switch position 2    
+ | |-arming/                                      
+ |   |-payload.txt - Override payload for
+ |                   Arming Mode *USE CAUTION*
+ |
+ |-loot/           - Where payloads store logs and data    
+ |-docs/           - EULA, License, this readme.txt
+ |-tools/          - Contents placed here will be copied
+ |                   to /tools at boot in arming mode.
+ |                   *.deb packages will be installed.
+ |-languages/      - HID languages placed here will
+                     install at boot in arming mode.
+

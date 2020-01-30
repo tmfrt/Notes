@@ -1,0 +1,8 @@
+NIKTO-PROXY
+nikto -useproxy http://192.168.x.x:8080 -h 192.168.x.x
+
+
+
+nikto -Tuning x4 -host 192.168.29.55 -port 80 -Format htm -o 192.168.29.55-nikto.html   <----skipping injection scan, tuned out scan
+
+

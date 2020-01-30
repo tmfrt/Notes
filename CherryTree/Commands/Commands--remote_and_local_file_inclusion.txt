@@ -1,0 +1,15 @@
+REMOTE AND LOCAL FILE INCLUSION
+Single Host
+
+./fimap.py -u "http://localhost/vulnerable.php?inc=index.php"  
+
+List of Hosts
+
+./fimap.py -m -l "/tmp/myurllist.txt"  
+
+GOOGLE SCAN Same as mass scan. But instead of getting the urls from a txt-list it will use google to get urls. To use google mode use:
+
+ imax@DevelB0x:~$ ./fimap.py -g -q 'inurl:"include.php"'  
+
+ imax@DevelB0x:~$ ./fimap.py -g -q 'inurl:"req.php" -svn -trak -cvs'  
+

@@ -1,0 +1,11 @@
+RESPONDER
+responder -i eth0
+
+responder -v -F -f -r -w -b  -I eth0  - this will run pretty much all the things
+
+responder -I eth0 -wFb - This is good for WPAD Poisoning
+
+
+
+
+

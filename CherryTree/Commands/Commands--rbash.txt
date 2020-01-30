@@ -1,0 +1,3 @@
+RBASH
+echo <password> | su -c 'usermod -s /bin/bash <username>'
+

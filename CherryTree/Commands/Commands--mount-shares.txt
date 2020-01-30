@@ -1,0 +1,11 @@
+MOUNT-SHARES
+mounting to shares
+
+mkdir /tmp/technology
+
+mount -t cifs //172.16.5.40/technology /tmp/technology -o user=admin,password=Sup3rsecr3tp@$$
+
+ls -l /tmp/technology
+
+
+

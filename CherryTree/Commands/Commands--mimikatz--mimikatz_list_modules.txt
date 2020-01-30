@@ -1,0 +1,5 @@
+MIMIKATZ LIST MODULES
+List all modules
+
+sadefklijjnh::    *****Note, and random wacky string followed by :: will show all modules
+

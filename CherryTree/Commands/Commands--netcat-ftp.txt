@@ -1,0 +1,14 @@
+NETCAT-FTP
+nc -l -p 443 < C:\bank-account.zip --from machine that has the file, this one is windows.
+
+nc -w3 192.168.31.201 443 > C:\bank-account.zip
+
+###############################
+
+
+Port Scan for open ports
+
+nc -z -v 172.16.1.15 1-65535 2>&1 | grep succeeded
+
+###############################
+

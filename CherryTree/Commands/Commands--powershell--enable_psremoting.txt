@@ -1,0 +1,11 @@
+ENABLE PSREMOTING
+First enable remoting
+
+Enable-PSRemoting -SkipNetworkProfileCheck -Force
+
+Now add trusted hosts
+
+winrm s winrm/config/client '@{TrustedHosts="172.16.80.100"}'
+
+winrm set winrm/config/client '@{TrustedHosts="10.100.11.102,10.100.11.250"}'  
+

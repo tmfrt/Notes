@@ -1,0 +1,6 @@
+NETWORK
+Within a meterpreter shell
+
+run autoroute -h
+run autoroute -s <IP range>
+

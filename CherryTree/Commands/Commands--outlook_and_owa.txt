@@ -1,0 +1,21 @@
+OUTLOOK AND OWA
+In metasploit use 
+
+
+For OWA 2003, 2007, 2010, 2013, and 2016
+
+use auxiliary/scanner/http/owa_login
+set RHOST 10.10.10.71
+set RPORT 443
+set username administrator
+set vhost rabbit.htb.local
+
+
+
+
+https://github.com/Greenwolf/Spray
+
+Useage: spray.sh -lync <targetIP> <usernameList> <passwordList> <AttemptsPerLockoutPeriod> <LockoutPeriodInMinutes>  
+
+./spray.sh -lync https
+

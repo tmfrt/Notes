@@ -1,0 +1,27 @@
+PRIVILEGE ESCALATION
+Power Up
+
+
+Will Run all checks
+
+Invoke-AllChecks
+
+Get Services with unquoted service paths
+
+Get-ServiceUnquoted -verbose
+
+Get services where current user can write to it's binary path
+
+Get-ModifiableServiceFile -verbose
+
+Get the services which current user can modify
+
+Get-ModifiableService -verbose
+
+
+
+Manipulating and actually abusing service abuse.
+
+Invoke-ServiceAbuse -Name '<service name>'
+
+

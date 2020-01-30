@@ -1,0 +1,25 @@
+USER ENUMERATION
+Get a list of users in the current domain
+
+Get-NetUser (Powerview)
+Get-NetUser -Username student (Powerview)
+
+Get-ADUser -Filter * -Properties * (Active Directory)
+Get-ADUser -Identity student -properties * (Active Directory)
+
+
+Get list of all properties for users in the current Domain
+
+Get-UserProperty (Powerview)
+Get-UserProperty -Properties pwdlastset (Powerview)
+
+Get-ADUser -Filter * -Properties * | select -First 1 | Get-Member -Membertype *Property | select Name        (Active Directory)
+Get-ADUser -Filter * -Properties * | select name,@{expression={[datetime]::fromFileTime($_.pwdlastset)}}    (Active Directory)
+
+
+
+
+
+
+
+

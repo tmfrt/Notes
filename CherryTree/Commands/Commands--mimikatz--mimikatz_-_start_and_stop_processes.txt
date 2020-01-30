@@ -1,0 +1,27 @@
+MIMIKATZ - START AND STOP PROCESSES
+Stop Process
+
+process::stop /pid:1234
+
+Suspend Process
+
+process::suspend /pid:1234
+
+Resume Process
+
+process::resume /pid:1234
+
+List exported and imported functions from different DLL's
+
+process::exports
+process::imports
+
+List exported and imported functions from different DLLs used by a given process
+
+process::exports /pid:1234
+process::imports /pid:1234
+
+
+
+
+

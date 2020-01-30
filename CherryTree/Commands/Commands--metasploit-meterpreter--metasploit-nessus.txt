@@ -1,0 +1,39 @@
+METASPLOIT-NESSUS
+while in msfconsole
+
+======================
+
+
+*****In order to add nessus stuff:
+
+/etc/init.d/nessusd start  <--start service
+
+------------------
+
+load nessus  <--load nessus
+
+------------------
+nessus_connect user:password@localhost  <--connect to nessus instance
+
+------------------
+
+nessus_scan_list  <---list all scans
+
+------------------
+
+nessus_db_import 8  <--import a scan the "8" represents which scan to 
+
+import from the list of scans 
+
+------------------
+
+***** pentest plugins
+
+load pentest
+
+vulns  <-----list all vulns
+
+vuln_exploit  <----exploit all found vulns
+------------------
+
+

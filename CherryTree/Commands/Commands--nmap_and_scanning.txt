@@ -1,0 +1,407 @@
+NMAP AND SCANNING
+nmap sneaky syn scan with different user agent, searching for web services
+
+nmap -sS -p 80,443,8080 --open --script http-title --script-args 'http.useragent="Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"' 10.10.40.0/24
+
+nmap scan Ipv6 
+
+nmap -6 dead:beef::11be:2d04:b08e:84ff
+
+nmap to xml then xml to html
+
+nmap -A -p- 192.168.26.141 -oX /root/Desktop/test.xml nmap -sS -p
+
+xsltproc test.xml -o test.html
+
+nmap -Pn -p- -sI 10.185.10.20 10.185.11.1 <--idle scan
+
+apt-get install xsltproc
+
+nmap -sS -p 80,443,8080 --open --script http-title --script-args
+'http.useragent="Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like
+Gecko"' 10.10.40.0/24
+
+======================
+
+Zone transfer
+
+dig @10.50.96.5 foocampus.com -t AXFR
+
+Check for dns port open from dns port (sometimes port 53 only responds to port 53)
+
+nmap -sS --source-port 53 -p 53 10.50.97.5 
+
+---------------
+
+nmap -sT -p 53 10.10.10.*
+
+once this is found do
+
+dig @<ipaddress with DNS open> -x <ipaddress with DNS open>
+
+now you should see something like 
+
+answer section
+10.5.16.172.in-addr.arpa     1200     IN     PTR     dc01.sportsfoo.com
+                                                     -------------------
+
+the sportsfoo.com is the domain name
+
+now you can do
+
+dig@<ipaddress with DNS open> -t AXFR sportsfoo.com  <--this will do a zone transfer with info from above.
+
+------------------------
+bash scripts
+
+if zone transfer fails, you can do the following
+
+nmap -sP 172.16.5.* -oG - | awk '/Up/{print $2}' > alive.txt && cat alive.txt
+
+for name in $(cat /usr/share/fierce/hosts.txt); do host $name.sportfoo.com <ipaddress with DNS open> -W 2; done | grep 'has address'
+
+
+for name in $(cat /usr/share/fierce/hosts.txt); do host $name.sportsfoo.com 172.16.5.10 -W 2; done | grep 'has address'
+
+
+----------------------
+
+Unicorn Scan
+
+unicornscan -msf <IPaddress>:a > nametcp.txt
+
+unicornscan -mU <IPaddress>:a > nameudp.txt
+
+----------------------
+
+Blue Squirrel Scan
+
+unicornscan -msf -R1 -L10 -p1-65535 -r 300 $1
+
+
+--------------------
+
+Precise nmap scan - version scan, OS detection, vuln checks, default scans, and all outputs
+
+nmap -sS -sU -sV --reason -vv -O --script vuln, default -p- <ip address> -oA <name of file>
+
+
+-----------------------
+
+1: Host Discovery
+
+The Nmap command to perform a ping sweep, and then save the results
+
+into an xml, is the following:
+
+>>nmap –PE –sn -n 10.50.96.0/23 –oX /root/Desktop/scan.xml
+
+where with the -sn we tell nmap to not do a port scan after a host
+
+discovery, the -PE enables ICMP Echo request host discovery (Ping scan)
+
+and with the -oX we tell nmap to save the results into an XML file (in our
+
+case the filename is scan.xml and is located in /root/Desktop).
+
+Option -n is optional and skips DNS reverse lookup on all the IP 
+addresses.
+
+Hosts found with this scan are 8:
+
+Host IP address
+
+10.50.96.1
+10.50.96.105
+10.50.96.110
+10.50.96.115
+10.50.97.1
+10.50.97.5
+10.50.97.10
+10.50.97.15
+10.50.97.20
+10.50.97.25
+
+Note that if you use only –sn without –PE nmap uses ICMP requests, but
+will also send a TCP SYN packet on ports 80 and 443 of each host
+
+======================
+
+2: Open/Closed/Filtered ports
+Hping3 is one of the most powerful packet crafting tools. It’s very easy to
+
+start a TCP communication defining flags to use in order to scan specific
+
+ports and hosts. We want to scan ports 23/53/135 on the address
+
+10.50.97.5. For a SYN scan, we will have to enable the SYN flag, and
+
+according to the response we can determine if a port is
+
+open/close/filtered.
+
+The command to use is:
+
+>>hping3 -S –p 23 10.50.97.5
+where:
+–S tells the tool to set the SYN flag,
+–p option is used to specify the port to scan.
+
+We already know that the host is alive, but if we try the previous
+
+command we will receive no packets. This could happen when there is a
+
+Firewall between us and the target, that blocks our packets.
+
+In the same way as before, let’s use the previous command in order to
+
+scan port 53:
+
+>>hping3 -S –p 53 10.50.97.5
+In this case the tool tells us that it received the R flag (Reset) and the A
+(Acknowledgement) flag. This means that the port 53 is closed.
+
+The last port to check is 135. The command will look like this:
+
+>>hping3 -S –p 135 10.50.97.5
+In this case the flags are S and A, meaning that the port is open.
+At the end this is what we have
+
+end result?
+
+
+Status Port
+Open 135
+Closed 53
+Filtered 23
+
+
+===========================
+
+3: Hping3: Port scan (TCP)
+In order to perform a TCP scan with Hping3 from port 1 to port 1000 we
+can use the following option:
+>>hping3 10.50.97.5 -S --scan known
+This command will scan the most known ports (known includes all the
+ports listed in /etc/services) and it will print out information about open
+ports, which in our case are 135 and 445.
+
+
+=============================
+
+4: nmap: Port scan (UDP)
+Since the previous scan does not reveal any information about
+open/closed/filtered ports used by UDP services, we can use Nmap to
+perform an UDP scan and get more information about our target. In order
+to do that, we can use the following command:
+>>nmap -sU 10.50.97.5
+where:
+-sU tells nmap to perform an UDP scan.
+Note that the open|filtered result means that no response has been
+received, and that the port can be open or filtered by a firewall.
+
+root@kali:~# nmap -sU 10.50.97.5
+
+Starting Nmap 7.01 ( https://nmap.org ) at 2016-06-17 21:12 EDT
+Nmap scan report for 10.50.97.5
+Host is up (0.087s latency).
+Not shown: 991 closed ports
+PORT     STATE         SERVICE
+123/udp  open          ntp
+137/udp  open          netbios-ns
+138/udp  open|filtered netbios-dgm
+161/udp  filtered      snmp
+162/udp  filtered      snmptrap
+445/udp  open|filtered microsoft-ds
+500/udp  open|filtered isakmp
+1900/udp open|filtered upnp
+4500/udp open|filtered nat-t-ike
+
+====================================
+
+5: Nmap: Port scan (TCP)
+In Task 1 we have found a list of alive hosts. We can use this information
+
+to create a ‘.txt’ file that contains the list of IP address to take care 
+of.
+
+Once we have created the file, we can give it to Nmap and perform a TCP
+
+SYN scan in order to find open/closed/filtered ports. The command will
+
+look like this:
+
+>>nmap -sS -iL /root/Desktop/list.txt
+
+where:
+
+-sS is the option that tells Nmap to perform the TCP SYN scan
+
+-iL tells Nmap to load the addresses to scan from the file ‘list.txt’
+
+This command will take times. To check the progress of the scan press
+
+the up arrow on your keyboard. 
+
+======================================
+
+6: Source port
+Sometimes DNS accepts communication only if it comes from port 53.
+
+This means that all communications with port different from 53 are
+
+blocked by the service or by the firewall. In order to understand if our 
+
+[Scanning] LAB ID: 3
+
+eLearnSecurity s.r.l. © 2012 | H E R A 12
+
+target network this policy is in place, we can set-up nmap or Hping3 to
+
+use port 53 as source port for the scan.
+
+In other words, we have to perform a port scan in the entire network,
+
+from port 53 to port 53.
+
+To do that we can use the following commands:
+
+>>nmap -sS --source-port 53 -p 53 10.50.97.0/24
+
+or
+
+>>hping3 -S -s 53 –k -p 53 10.50.97.25
+
+Note that when you specify a source port, hping takes it as a base port
+
+and increases it at every packet sent. You can use the –k (keep) option to
+
+prevent this behavior. From the results of the previous two commands,
+
+we can see that there is only one host (10.50.97.25) with the port 53
+
+open. This is information that we didn’t find using any of the previous
+
+scans, so make sure to play with source ports during your scans.
+
+
+
+=========================================
+
+7: Service detection
+
+In order to accomplish this task, we can set up Nmap in different ways,
+
+depending on the intensity of the scan we want to perform. To perform a
+
+service and version detection with nmap, the option to use is the –sV.
+
+Note that by default the intensity of the scan is set to 7, but you can 
+use a
+
+different intensity with the --version-intensity option.
+
+In this case we will show the basic command, but you can use different
+
+options and check the different results yourself. If you need more
+
+information about it, please check out the Nmap man page here:
+
+http://nmap.org/book/man-version-detection.html.
+
+The command will then looks like this:
+
+>>nmap –sV 10.50.97.0/24
+
+Note that Nmap first checks for alive hosts, then performs a port scan and
+
+after that, it performs a service and version detection. Moreover you can
+
+use the –A option to get more information about services and
+
+applications version. This is quite aggressive and will also enable Nmap
+
+scripts.
+
+===================
+
+
+8: Find a good zombie (Hping3)
+
+[Scanning] LAB ID: 3
+
+eLearnSecurity s.r.l. © 2012 | H E R A 14
+
+In order to find a good zombie, we have to find a host with no active
+
+communications, in other words, we have to check if the host is sending
+
+packets to and from the network. This means that we have to find a host
+
+which its ID field does not change frequently.
+
+To do this we can use Hping3 sending packets to open ports at each host
+
+in the network, using the following command:
+
+>>hping3 -S -r -p 135 10.50.97.10
+
+where:
+
+-S tells hping to send SYN flag
+
+-r displays ID increments relatively
+
+In this way if the ID increments by 1 for each packet (id=+1), means that
+
+the target is not sending packets through the network and is a good
+
+zombie candidate.
+
+Another way to check if the target is a good candidate, is by using nmap.
+
+We can simply run the following command:
+
+>>nmap –O –v –n 10.50.97.10
+
+If the value of “IP ID Sequence Generation” is on ‘Incremental’, we can
+
+consider the target as a good candidate for our idle scan.
+
+=======================
+
+9: Idle Scan
+Now that we have the address of a good zombie we can check if the
+target hosts have port 23 open :
+
+1) Open a console, Start again the previous Hping scan on the
+
+zombie (Task 9). This will show us ID’s on the fly.
+
+2) Open another console and run the following command:
+
+[Scanning] LAB ID: 3
+
+eLearnSecurity s.r.l. © 2012 | H E R A 15
+
+>>hping3 -a 10.50.97.10 -S -p 23 10.50.96.110
+
+If the zombie ID increment is ‘id=+2’ (Console 1) instead of ‘id=+1’, we 
+can
+
+deduce that port 23 on the target 10.50.96.105 is open. Otherwise, if the
+
+ID still increments by 1, we can deduce that the port is closed.
+
+
+
+
+
+
+
+
+
+
+
+
+

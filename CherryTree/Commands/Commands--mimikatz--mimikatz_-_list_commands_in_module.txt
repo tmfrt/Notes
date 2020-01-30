@@ -1,0 +1,8 @@
+MIMIKATZ - LIST COMMANDS IN MODULE
+List commands in module
+
+kerberos::
+sekurlsa::
+
+*****Just type in the name of the module followed by :: and press enter
+

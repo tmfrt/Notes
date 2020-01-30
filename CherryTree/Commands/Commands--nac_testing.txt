@@ -1,0 +1,33 @@
+NAC TESTING
+NAC testing
+
+arp scan - find IP addresses
+
+change mac address
+ifconfig eth0 down
+ifconfig eth0 hw ether 00:00:00:00:00:00
+
+---------
+
+Use cpscam to look for clients who are inactive #make sure perl -MCPAN -e 'install NetPacket::IP' Is installed
+
+perl cpscam.pl 10.10.10.0 255.255.255.0
+
+
+----------
+
+Switch user agent in firefox to Apple iPad 7 which is mostly unsupported and good to go
+
+Description:iOS 7 iPad
+User Agent: Mozilla/5.0 (iPAD; CPU iPad OS 7_0 like Mac OS X) AppleWebKit/546.10 (KHTML, like Gecko) Version/6.0
+App Code Name: Mozilla
+App Version: 5.0 (iPad; CPU iPad OS 7_0 like Mac OS X) Apple WebKit/546.10 (KHTML, like Gecko) Version/6.0 Mobile/7E18WD Safari/8536.25
+Platform: iPad
+Vendor: Apple Computer, Inc.
+Vendor Sub: <blank>
+
+-----------
+
+
+
+

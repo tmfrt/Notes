@@ -1,0 +1,12 @@
+PORT-FORWARD
+my port | their port - the ip address is the victim IP
+
+portfwd add -l 1234 -p 445 -r 10.11.1.14
+             my port | their port - the ip address is the victim IP
+
+or you can use proxychains
+
+gedit /etc/proxychains.conf
+
+change the 127.0.0.1 9050 to whatever you want the port to be
+

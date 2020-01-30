@@ -1,0 +1,12 @@
+MIMIKATZ - APPLOCKER BYPASS AND OTHER SN
+Misc in mimikatz may be able to launch apps blocked by applocker etc.
+
+misc::cmd
+misc::regedit
+
+misc::mflt   ***Some kind of filter that can tell if it's running sysmon, kaspersky etc
+
+misc::wp /file:tacos.jpg   ***This will inject into explorer.exe for sneakiness
+
+
+

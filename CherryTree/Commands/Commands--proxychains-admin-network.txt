@@ -1,0 +1,11 @@
+PROXYCHAINS-ADMIN-NETWORK
+
+
+ssh -D 127.0.0.1:8080 dc01@192.168.0.16 <--your machine to DC
+
+pass = PASSw0rd123
+
+ssh -D 127.0.0.1:8082 -p 222 dc02@10.0.0.16 <--from the original pivot machine to connect to the new pivot machine. IE - dc01 to dc02
+
+
+

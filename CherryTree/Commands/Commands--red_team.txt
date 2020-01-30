@@ -1,0 +1,91 @@
+RED TEAM
+Domain Enumeration with powerview
+
+get-netdomain
+get-netdomain -domain victim.local
+
+Domain SID enumeration
+
+Get-DomainSID
+
+Domain Enumeration with ActiveDirectory Module
+
+Get-ADDomain
+Get-ADDomain -Identity victim.local
+(Get-ADDomain).DomainSID.Value
+
+
+PowerView
+
+Get Domain Controllers for a domain:
+Get-NetDomainController
+Get-NetDomainController -Domain victim.local
+
+ActiveDirectory Module
+
+Get-ADDomainController
+Get-ADDomainController -Discover -DomainName victim.local
+
+
+Get users of a Domain PowerView
+
+Get-NetUser
+Get-NetUser -Domain victim.local
+Get-NetUser -UserName user123
+
+Get users of a Domain ActiveDirectory Module
+
+Get-ADUser -Filter * -Properties *
+Get-ADUser -Server dc01.victim.local
+Get-ADUser -Identity user123
+
+Get all the groups in the current domain PowerView
+
+Get-NetGroup
+Get-NetGroup *admin*
+
+
+Get all the groups in the domain ActiveDirectory Module
+
+
+Get-ADGroup -Filter * | select name
+Get-ADGroup -Filter 'Name -Like "*admin*" | select name
+
+Find all machines on the current domain where the current user has local admin access
+
+Find-LocalAdminAccess -verbose
+
+Find Local Admins on all machines of the domain
+
+Invoke-EnumerateLocalAdmin - Verbose
+
+List Sessions on a particular Computer
+
+Get-NetSession -ComputerName victim1
+
+Find Computers where a domain admin is logged in and current user has access
+
+Invoke-UserHunter -CheckAccess
+
+Above gets a list of machines from DC and list sessions and logged on users from each machine
+
+Get ACLs associated with the specified object
+
+Get-ObjectACL -SamAccountName ussr123 -ResolveGUIDs
+
+Get ACLs associated with the specified prefix to be used for search
+
+Get-objectACL -ADSprefix 'CN=Administrator,CN=Users' -Verbose
+
+Enumerate ACLs using Active Directory module but without resolving GUIDs
+
+(Get-ACL 'AD:\CN:=labuser,CN=Users,DC=dc01,DC=dc02,DC=local').Access
+
+
+
+
+
+
+
+
+

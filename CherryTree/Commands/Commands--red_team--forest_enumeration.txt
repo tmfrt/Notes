@@ -1,0 +1,29 @@
+FOREST ENUMERATION
+Get Details about the current forest
+
+Powerview
+
+Get-NetForest
+Get-NetForest -Forest victim.local
+
+ActiveDirectory Module
+
+Get-ADForest
+Get-ADForest -Identity victim.local
+
+
+
+Get all domains in the current forest More Powerview
+
+Get-NetforestDomain
+Get-NetForestDomain -Forest victim.local
+
+Using Active Directory Module
+
+(Get-ADForest).domains
+
+
+
+
+
+

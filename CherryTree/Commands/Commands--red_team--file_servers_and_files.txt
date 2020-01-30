@@ -1,0 +1,29 @@
+FILE SERVERS AND FILES
+Basic Command Line
+
+Basic, recursive file listing
+
+dir /s C:\ > listing.txt
+
+List files sorted by subdirectory with most recent listed on top
+
+ dir /S /Q /O:-D /T:A C:\ > listing.txt
+
+
+
+Powershell
+
+With admin privileges, list remote users accessing the box 
+
+Get-NetSessions
+
+Get a CSV file with the paths of all files, their owners, creation/access times and size
+
+powershell.exe -command “get-childitem .\ -rec -ErrorAction SilentlyContinue | where {!$_.PSIsContainer} | select-object FullName, @{Name=’Owner’;Expression={(Get-Acl $_.FullName).Owner}}, LastAccessTime, LastWriteTime, Length | export-csv -notypeinformation -path files.csv”
+
+Pare down the size of the results to certain file types
+
+powershell.exe -command “get-childitem .\ -rec -ErrorAction SilentlyContinue -include @(‘*.doc*’,’*.xls*’,’*.pdf’)|where{!$_.PSIsContainer}|select-object FullName,@{Name=’Owner’;Expression={(Get-Acl $_.FullName).Owner}},LastAccessTime,LastWriteTime,Length|export-csv -notypeinformation -path files.csv”  
+
+
+

