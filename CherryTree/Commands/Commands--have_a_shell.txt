@@ -1,0 +1,43 @@
+HAVE_A_SHELL
+Windows
+==========================================
+
+systeminfo  <---list system info.  also use the winsploit script against the results to find exploits
+
+wmic product get /format:csv > Software_%Computername%.csv
+
+^^^^^ get products installed
+
+
+Linux
+===========================================
+
+--------
+TTY shells
+
+python -c 'import pty;pty.spawn("/bin/bash")'
+echo os.system('/bin/bash')
+/bin/sh -i
+perl -e 'exec "/bin/bash";'
+
+-----------
+
+find hidden files
+find . -type f -name '*.py'  <----you can edit this to find php, py, html, txt, whatever file you want.
+
+---------------------------
+Find writeable files in a linux box IE, if you want to download an exploit etc etc
+
+find / -writable -type d 2>/dev/null      # world-writeable folders
+find / -perm -222 -type d 2>/dev/null     # world-writeable folders
+find / -perm -o w -type d 2>/dev/null     # world-writeable folders
+
+find / -perm -o x -type d 2>/dev/null     # world-executable folders
+
+find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   # world-writeable & executable folders
+
+---------------------------
+
+
+
+

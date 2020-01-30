@@ -1,0 +1,22 @@
+GENERATING CERTIFICATES
+Generating Valid Certificates - 
+
+https://certbot.eff.org/lets-encrypt/debianother-other
+
+
+If you have a valid domain and access to the webserver e.g., Command Line Access to a Linux Box, do the following
+
+wget https://dl.eff.org/certbot-auto
+sudo mv certbot-auto /usr/local/bin/certbot-auto
+sudo chown root /usr/local/bin/certbot-auto
+sudo chmod 0755 /usr/local/bin/certbot-auto
+
+*****Be Sure to set up your webserver and have it running, EFF will verify your site is up and running before giving you a cert.
+
+To obtain a cert using the "webroot" plugin, which can work with the webroot directory of any webserver software:
+
+
+# ./certbot-auto certonly --webroot -w /var/www/html -d domain.com -d subdomain.domain.com  
+
+The previous command will generate a certificate for meterpaderp.com and also the subdomain, subdomain.meterpaderp.com using the webroot /var/www/html - which is the default webroot for apache2
+

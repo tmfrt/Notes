@@ -1,0 +1,18 @@
+HEX ENCODE COMMAND LINE
+Example - will return with spaces
+echo -n "Hello" | od -A n -t x1
+
+Example with SED - will delete all spaces
+
+echo -n "Hello" | od -A n -t x1 | sed 's/ //g'
+
+
+
+Explanation:
+
+The echo program will provide the string to the next command.
+The -n flag tells echo to not generate a new line at the end of the "Hello".
+The od program is the "octal dump" program. (We will be provide a flag to tell it to dump it in hexadecimal instead of octal.)
+The -A n flag is short for --address-radix=n, with n being short for "none". Without this part, the command would output an ugly numerical address prefix on the left side. This is useful for large dumps, but for a short string it is unnecessary.
+The -t x1 flag is short for --format=x1, with the x being short for "hexidecimal" and the 1 meaning 1 byte.
+

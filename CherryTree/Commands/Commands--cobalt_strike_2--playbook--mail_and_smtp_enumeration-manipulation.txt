@@ -1,0 +1,27 @@
+MAIL AND SMTP ENUMERATION-MANIPULATION
+Connect directly to target mail server
+
+dig +short MX <domain>
+
+dig +short MX gmail.com
+
+Beware of the SPF AKA, Sender Policy Framework
+
+dig +short TXT <domain>
+
+dig +short TXT gmail.com
+
+****If you see a bunch of IP addresses you don't have access to, do not try to spoof emails
+
+Beware of DomainKeys Identified Mail (DKIM) e.g., webexdomainverification, dropbox-domain-verification, etc.
+
+Beware of Domain-based Messages Authentication.  (DMARC)
+
+dig +short TXT _dmarc.domain.com
+
+dig +short TXT _dmarc.gmail.com
+
+
+*****Make sure you match "From:header" to "MAIL FROM" in the envelope, this is a tradecraft consideration, if not matching, your email may not get delivered.
+
+

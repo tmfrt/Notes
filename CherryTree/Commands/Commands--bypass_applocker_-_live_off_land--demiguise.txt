@@ -1,0 +1,15 @@
+DEMIGUISE
+With demiguise - demiguise will generate an encrypted hta file
+
+-k = encryption key
+
+-c = command or payload, like an empire payload
+
+-p = application
+
+-o = output
+
+python demiguise.py -k hello -c "notepad.exe" -p Outlook.Application -o test.hta
+
+
+

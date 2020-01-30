@@ -1,0 +1,23 @@
+IMAGES-WITH-FILES-IN-THEM
+Finding out if an image has hidden stuff in it
+==============================================
+
+
+convert image.jpg converted.jpg
+----------
+
+
+strings -10 image.jpg 
+----------
+
+
+hexdump -C 6packsofsoda.jpg | less +//"ff d9"
+
+hexdump -C 6packsofsoda.jpg | more +//"ff d9"
+----------
+
+
+xxd -c1 -p 6packofsoda.jpg | tr "\n" " " | sed -n -e 's/.*\(ff d9 \)\(.*\).*/\2/p' | xxd -r -p
+
+foremost -t zip -i /root/filename.jpg 
+

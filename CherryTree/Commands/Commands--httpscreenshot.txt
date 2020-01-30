@@ -1,0 +1,3 @@
+HTTPSCREENSHOT
+httpscreenshot -l /root/Desktop/domains-https/https.txt -tG -sF -vH 
+

@@ -1,0 +1,5 @@
+GO DADDY DOMAIN
+1. Buy Domain
+2. Manage Domain - Edit A record to point to IP address
+3. Set TTL to 3600 (1hour) for Cobalt Strike
+

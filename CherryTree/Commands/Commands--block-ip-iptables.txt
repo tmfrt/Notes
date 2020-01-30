@@ -1,0 +1,7 @@
+BLOCK-IP-IPTABLES
+ip route add prohibit 192.168.30.83/32  <---- works without ip tables
+
+iptables -A INPUT -s IP-Address -j DROP
+
+netsh advfirewall firewall add rule name="IP Block" dir=in interface=any action=block remoteip=192.168.30.75/32  <---windows command line
+

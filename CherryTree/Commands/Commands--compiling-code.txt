@@ -1,0 +1,13 @@
+COMPILING-CODE
+#define PAGE_SIZE sysconf(_SC_PAGE_SIZE)
+
+^^ use this if you get the error "5092.c:30:30: fatal error: asm-generic/page.h: No such file or directory" or something similar dealing with asm/page etc etc
+==========================
+compile code
+
+gcc <filename.c> -o <newfilename(do not add extension)>
+
+IE gcc 5092.c -o 5092
+
+
+

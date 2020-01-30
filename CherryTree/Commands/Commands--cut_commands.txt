@@ -1,0 +1,30 @@
+CUT COMMANDS
+When you have a username and password list like below, do the following to separate usernames and passwords.
+
+DRussell Password1
+GCoates Welcome01
+cyber_adm Password123!
+FSaville-Kent Letmein!
+justalocaladmin Pass123!
+svc_iis Vintage!
+LNewton Banker123
+LWestgarth Offshore123
+MCarrodus Spring2018!
+IChamberlain Mei2Chai
+JSwift theifi9A
+Ksteele dahxahJ5
+LMacghey Chie0zai
+LPatterson chipieKu7
+ned_adm Nothing to see here!
+vincent.delpy Il0v3kiwis!
+wsadmin Workstationadmin1!
+
+
+Do the below command to separate the usernames from the passwords and put them into a username file
+
+cat usernamepass.txt |cut -d ' ' -f2 --complement > username.txt
+
+Do the below command to separate the passwords from the usernames and put them into a password file
+
+cat usernamepass.txt |cut -d ' ' -f1 --complement >password.txt
+

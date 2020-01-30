@@ -1,0 +1,26 @@
+BUFFER-OVERFLOW
+Pattern Create: find out which bytes overwrite the string
+
+/usr/share/metasploit-framework/tools/pattern_create.rb
+
+  ^^^^^
+find out which bytes overwrite the string, just add the number of bytes after  /usr/share/metasploit-framework/tools/pattern_create.rb
+
+I.E. "/usr/share/metasploit-framework/tools/pattern_create.rb 2700"
+
+---------------------------------------------
+
+Pattern offset: Discover exact position of the bytes that overwrite the string
+
+IE  --  /usr/share/metasploit-framework/tools/pattern_offset.rb 39694438  <----this string is the output we get after using patter create -- it is what the EIP registers
+
+--------------------------------------------
+
+mona.py
+
+--------------------------------------------
+
+NASM: Print out any instruction of the code we provide it with.
+
+ruby /usr/share/metasploit-framework/tools/nasm_shell.rb
+

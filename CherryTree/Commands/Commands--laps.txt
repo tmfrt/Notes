@@ -1,0 +1,15 @@
+LAPS
+Good Repo
+
+https://github.com/ztrhgf/LAPS/tree/master/AdmPwd.PS
+
+We can enumerate on which OU's LAPS are in use and which users are allowed to read passwords:
+
+- Using LAPS module (*Which can be moved across different systems)
+
+Import-Module C:\Users\Public\Adm.Pwd.PS\AdmPwd.PS.psd1
+
+then
+
+Find-AdmPwdExtendedRights -Identity OUDistinguishedName
+

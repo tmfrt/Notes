@@ -1,0 +1,4 @@
+MSHTA
+
+C:\Windows\System32>mshta.exe evilfile.hta
+

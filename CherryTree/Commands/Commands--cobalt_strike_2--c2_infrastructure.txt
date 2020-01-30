@@ -1,0 +1,37 @@
+C2 INFRASTRUCTURE
+Setting up Cobalt Strike
+
+
+Step 1. Change SSL certificate settings starting on Line 52 (where it ssays keytool -keystore ./cobaltstrike.store....)
+Step 1a. Default CN is 'Major Cobalt Strike'.  DO NOT USE THIS or you will get caught.  Use a CN like google or microsoft.
+Step 1b. Specify a Certificate in Malleable C2 Profile - see other note in this file (Certificates)
+
+Step 2. Domain Fronting - Log into AWS - Select Services - In services, select "CloudFront" - Create Distribution - Select Web - 
+
+Under Create Distribution, select Origin Domain Name
+
+Origin Domain Name will be team server name, e.g. meterpaderp.com or even an IP address such as 72.224.x.x
+
+Origin ID is a description of the Origin, such as healthcare or fitness
+
+Origin Protocol Policy - Select "Match Viewer"
+
+Allowed HTTP Methods - Selects all "Get,Head,Options,Post,Patch,Put,Delete"
+
+Object Caching - Select "Customize"
+
+Cache Based on Selected Request Headers - Select "Customize"
+
+Forward cookies - Select "All"
+
+Query String Forwarding and Caching - Select "All"
+
+Distribution State - Select "Enabled"
+
+Select 'Create Distribution'
+
+
+
+
+
+

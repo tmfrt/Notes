@@ -1,0 +1,31 @@
+MAC ADDRESS CHANGE
+This will change your MAC address
+
+IE in this case, we changed the MAC address on our Alfa wireless card
+
+First notate the mac address
+
+root@kali:~# ifconfig 
+
+wlan0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        ether 00:c0:ca:5a:05:b7  txqueuelen 1000  (Ethernet)
+
+Next we need to take down the wireless interface
+
+root@kali:~# ifconfig wlan0 down
+
+Now we need to change the mac address to something (I didn't change much because this can cause issues if you type in a crazy MAC address like 00:00:00:00:00:00)
+
+root@kali:~# macchanger --mac=00:c0:ca:5a:05:b6 wlan0 
+
+Now we will get the output.
+
+root@kali:~# macchanger --mac=00:c0:ca:5a:05:b6 wlan0
+Current MAC:   00:c0:ca:5a:05:b7 (ALFA, INC.)
+Permanent MAC: 00:c0:ca:5a:05:b7 (ALFA, INC.)
+New MAC:       00:c0:ca:5a:05:b6 (ALFA, INC.)
+
+Now we will take the interface back up
+
+root@kali:~# ifconfig wlan0 up 
+

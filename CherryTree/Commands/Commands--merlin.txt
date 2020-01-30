@@ -1,0 +1,64 @@
+MERLIN
+1. Download Merlin
+-------------------------
+
+cd /opt
+
+git clone https://github.com/Ne0nd0g/merlin.git
+
+2. Download Agent Dependencies
+-------------------------------
+cd /opt/merlin/cmd/merlinagent
+
+go get github.com/Ne0nd0g/merlin/pkg
+
+go get github.com/Ne0nd0g/merlin/pkg/agent
+
+go get github.com/fatih/color
+
+---------------------------
+
+3. Build Linux Agent
+
+cd /opt/merlin/cmd/merlinagent
+
+go build
+
+---------------------------
+
+4. Build Windows Agent
+
+cd /opt/merlin/cmd/merlinagent
+
+GOOS=windows GOARCH=amd64 go build
+
+----------------------------
+
+5. Build Server
+
+cd /opt/merlin/cmd/merlinserver
+
+go build
+
+----------------------------
+6. Move Built Server and Generate SSL Cert
+
+mv /opt/merlin/cmd/merlinserver/merlinserver ../../
+
+cd /opt/merlin/data/x509
+
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout server.key -out server.crt -subj "/CN=Humana.com" -days 7 
+
+----------------------------
+
+Run Merlin Server
+
+cd /opt/merlin/
+
+./merlinserver -i 192.168.0.46
+
+
+
+
+
+

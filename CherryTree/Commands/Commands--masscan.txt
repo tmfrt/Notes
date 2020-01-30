@@ -1,0 +1,3 @@
+MASSCAN
+masscan -p 1-65535 
+

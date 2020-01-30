@@ -1,0 +1,63 @@
+GITHUB REPOS
+Sharpup-Privesc - https://github.com/GhostPack/SharpUp.git
+SharpView - https://github.com/tevora-threat/SharpView.git
+SharpCOM - https://github.com/rvrsh3ll/SharpCOM.git
+Goddi - https://github.com/NetSPI/goddi.git
+Rubeus - https://github.com/GhostPack/Rubeus.git
+Sharphound - https://github.com/BloodHoundAD/SharpHound.git
+Sharp-InvokeWMIExec - https://github.com/checkymander/Sharp-WMIExec.git
+Invoke-Thehash - https://github.com/Kevin-Robertson/Invoke-TheHash.git
+ClipboardMonitor - https://github.com/mrousavy/ClipboardMonitor.git
+Keethief - https://github.com/HarmJ0y/KeeThief.git
+DNSrecon - https://github.com/darkoperator/dnsrecon.git
+Seatbelt - https://github.com/GhostPack/Seatbelt.git
+Internal Monologue - https://github.com/eladshamir/Internal-Monologue.git
+LAPS tools - https://github.com/ztrhgf/LAPS
+
+Privesc
+  [>] https://www.rythmstick.net/posts/cve-2019-1064/
+
+ [!] CVE-2019-1130 : VULNERABLE
+  [>] https://github.com/S3cur3Th1sSh1t/SharpByeBear
+
+ [!] CVE-2019-1253 : VULNERABLE
+  [>] https://github.com/padovah4ck/CVE-2019-1253
+
+ [!] CVE-2019-1315 : VULNERABLE
+  [>] https://offsec.almond.consulting/windows-error-reporting-arbitrary-file-move-eop.html
+
+https://github.com/swisskyrepo/PayloadsAllTheThings/
+
+New Windows Exploit Suggestor - https://github.com/bitsadmin/wesng
+
+https://github.com/PowerShell/GPRegistryPolicyParser
+
+https://raw.githubusercontent.com/n00py/ReadingList/master/gunsafe.txt
+
+SharpWeb - .NET 2.0 CLR project to retrieve saved browser credentials - https://github.com/djhohnstein/SharpWeb
+reconerator - C# Targeted Attack Reconnissance Tools - https://github.com/stufus/reconerator
+SafetyKatz -  create a minidump of LSASS - https://github.com/GhostPack/SafetyKatz
+SharpShooter - framework for the retrieval and execution of arbitrary CSharp source code - https://github.com/mdsecactivebreach/SharpShooter
+SharpCradle - download and execute .NET binaries into memory - https://github.com/anthemtotheego/SharpCradle
+Sharp-WMIExec -  C# conversion of Invoke-WMIExec - https://github.com/checkymander/Sharp-WMIExec
+Sharp-SMBExec - C# conversion of Invoke-SMBExec https://github.com/checkymander/Sharp-SMBExec
+SharpCloud - Collecting  AWS, Microsoft Azure, and Google Compute creds - https://github.com/chrismaddalena/SharpCloud
+SharpView - C# implementation of PowerView - https://github.com/tevora-threat/SharpView
+SharpHound - The BloodHound C# Ingestor - https://github.com/BloodHoundAD/SharpHoun
+SharpGen - C# compiler to cross-compile .NET console applications or libraries. - https://github.com/cobbr/SharpGen
+InveighZero - C# LLMNR/NBNS spoofer - https://github.com/Kevin-Robertson/InveighZero
+SharpSploitConsole - Console Application designed to interact with SharpSploit - https://github.com/anthemtotheego/SharpSploitConsole
+SharpSniper - Find specific users in active directory via username and IP address - https://github.com/HunnicCyber/SharpSniper
+SharPersist - Windows persistence toolkit - https://github.com/fireeye/SharPersist
+RedTeamCSharpScripts - C# Script used for Red Team - https://github.com/Mr-Un1k0d3r/RedTeamCSharpScripts
+SharPyShell - iny and obfuscated ASP.NET webshell for C# - https://github.com/antonioCoco/SharPyShell
+
+pacu - The AWS exploitation framework - https://github.com/RhinoSecurityLabs/pacu
+weirdAAL - AWS Attack Library - https://github.com/carnal0wnage/weirdAAL
+ScoutSuite - Multi-Cloud Security Auditing Tool - https://github.com/nccgroup/ScoutSuite
+AWS-IAM-Privilege-Escalation - AWS IAM privilege escalation methods - https://github.com/RhinoSecurityLabs/AWS-IAM-Privilege-Escalation
+nimbostratus - ingerprinting and exploiting Amazon cloud infrastructures - https://github.com/andresriancho/nimbostratus
+
+
+
+

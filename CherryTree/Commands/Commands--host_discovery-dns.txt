@@ -1,0 +1,121 @@
+HOST_DISCOVERY-DNS
+proxychains nmap -sV -PS -p 21,22,25,110,3389,23,80,443,3306,5060,28017,53,139,135,445,1433,110,111,8080,27017,88,990,543,544,5432,8010,2105,636 -iL /root/Desktop/IPs-Deduplicated  --open
+
+proxychains nmap -p 21,22,25,110,3389,23,80,443,3306,5060,28017,53,139,135,445,1433,110,111,8080,27017,99,990 -iL /root/Desktop/IPs-Deduplicated -oA /root/Desktop/testsktop/test --open
+
+
+
+Lab 1  -- *****Host discovery****
+
+quick scan - just ICMP and some TCP to 80 and 443 to see who is online
+
+nmap -sn 10.50.96.0/23
+
+results
+========
+
+The following hosts are up
+
+Nmap scan report for 10.50.96.5
+
+Nmap scan report for 10.50.96.15
+
+Nmap scan report for 10.50.97.5
+
+Nmap scan report for 10.50.97.6
+
+Nmap scan report for 10.50.97.15
+
+hacker target.com
+gobuster
+dnsrecon
+dnsdumpster.com
+
+===========
+
+part 2 host discovery no ping  (The PS argument will limit traffic to be sneaky)
+
+nmap -n -sn -PS22,135,443,445 10.50.96.0/23
+
+new host is up 
+
+10.50.97.17
+
+===============
+
+DNS discovery
+
+nmap -sS -sU -p 53 -n 10.50.96.0/23
+
+now we can see the following 2 addresses have DNS
+
+10.50.96.5
+53/tcp open  domain
+53/udp open  domain
+
+
+10.50.96.15
+53/tcp open  domain
+53/udp open  domain
+
+==============
+DNS enumeration
+
+
+> server 10.50.96.5  ****default server to query
+Default server: 10.50.96.5
+Address: 10.50.96.5#53
+> set q=NS           *****set query type to NS
+> foocampus.com      *****Domain name
+
+Server:10.50.96.5
+Address:10.50.96.5#53
+
+foocampus.comnameserver = ns.foocampus.com.
+foocampus.comnameserver = ns1.foocampus.com.
+
+===============
+
+> server 10.50.96.5
+Default server: 10.50.96.5
+Address: 10.50.96.5#53
+> set q=mx
+> foocampus.com
+Server:10.50.96.5
+Address:10.50.96.5#53
+
+foocampus.commail exchanger = 10 pop3.foocampus.com.
+
+
+=================
+
+Zone transfers 
+
+dig @10.50.96.5 foocampus.com -t AXFR  **zone transfer command.
+
+results
+=============
+
+; <<>> DiG 9.9.5-12.1-Debian <<>> @10.50.96.5 foocampus.com -t AXFR
+; (1 server found)
+;; global options: +cmd
+foocampus.com.3600INSOAfoocampus.com. campusadmin. 47 900 600 86400 3600
+foocampus.com.3600INNSns1.foocampus.com.
+foocampus.com.3600INNSns.foocampus.com.
+foocampus.com.3600INMX10 pop3.foocampus.com.
+ftp.foocampus.com.3600INA10.50.96.10
+intranet.foocampus.com.3600INA10.50.96.15
+management.foocampus.com. 3600INA10.50.96.15
+ns.foocampus.com.3600INA10.50.96.21
+ns1.foocampus.com.3600INA10.50.96.22
+pop3.foocampus.com.3600INA10.50.96.60
+www.foocampus.com.3600INA10.50.96.15
+foocampus.com.3600INSOAfoocampus.com. campusadmin. 47 900 600 86400 3600
+;; Query time: 151 msec
+;; SERVER: 10.50.96.5#53(10.50.96.5)
+;; WHEN: Fri Jun 17 04:36:40 EDT 2016
+;; XFR size: 12 records (messages 12, bytes 685)
+
+
+===========
+

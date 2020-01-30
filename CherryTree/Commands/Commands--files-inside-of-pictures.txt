@@ -1,0 +1,5 @@
+FILES-INSIDE-OF-PICTURES
+Pull images embedded within files
+
+foremost -i picturefile.jpg -o output
+

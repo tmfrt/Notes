@@ -1,0 +1,104 @@
+LINUX
+
+######################################
+Ping Sweep
+
+for i in `seq 1 255`; do ping -c 1 172.16.1.$i | tr \\n ' ' | awk '/1 received/ {print $2}'; done
+
+
+
+######################################
+
+Enumeration
+
+find hidden files
+find . -type f -name '*.py'  <----you can edit this to find php, py, html, txt, whatever file you want.
+
+---------------------------
+Find writeable files in a linux box IE, if you want to download an exploit etc etc
+
+find / -writable -type d 2>/dev/null      # world-writeable folders
+find / -perm -222 -type d 2>/dev/null     # world-writeable folders
+find / -perm -o w -type d 2>/dev/null     # world-writeable folders
+
+find / -perm -o x -type d 2>/dev/null     # world-executable folders
+
+find / \( -perm -o w -perm -o x \) -type d 2>/dev/null   # world-writeable & executable folders
+
+find / -perm -2 ! -type l -ls 2>/dev/null  # world readable and writeable folders - maybe a cron job running as root :)
+
+find / -type f -exec grep -l "flag.txt" {} \;  ##Find a file with a particular name
+
+---------------------------
+
+find filtering by path, filename, and permissions
+
+find /path -iname "FILTER" -perm PERM
+
+find with flags used to list or delete files found
+
+find /path -iname "FILTER" -ls
+
+find with grep to quickly identify files of interest
+
+find /path -iname "FILTER" -exec grep -i "CONTENT" {} \;
+
+find things like shadow.bak etc
+
+find / -iname "shadow*"
+
+find with flags used to list or delete files found (w/error redirection)
+find / -iname "shadow*" -ls 2>/dev/null  
+
+find results can also be filtered by file permissions as well (-perm) flag
+find / -iname "shadow*" -perm /o+r -ls 2>/dev/null  
+
+find with grep to search for strings inside of files:
+find /home -iname "*.txt" 2>/dev/null -exec grep -i 'pass' {} \;  
+
+find with grep to quickly identify files of interest:
+find /home -iname "*.txt" 2>/dev/null -exec grep -li 'pass' {} \;  
+
+find with egrep to quickly identify files of interest using regular expressions:
+find /home -iname "*.txt" 2>/dev/null -exec egrep -li "^.+@.+$" {} \;  
+
+Syntax: Recursively list all hidden files and directories on Linux/Unix
+
+The basic syntax is as follows:
+
+find /dir/to/search/ -name ".*" -print
+
+OR
+
+find /dir/to/search/ -name ".*" -ls
+
+OR search only hidden files:
+
+find /dir/to/search/ -type f -iname ".*" -ls
+
+OR search only hidden directories:
+
+find /dir/to/search/ -type d -iname ".*" -ls
+
+OR
+
+find /dir/to/search -path '*/.*' -print
+find /dir/to/search -path '*/.*' -ls
+
+Find files based in attributes e.g.; list files that are text, ascii, unicode etc etc
+
+file /home/bandit4/inhere/*
+
+Find a readable file, that is not executable, and has a certain size (within same directory)
+
+find -readable -size 1033c ! -executable
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+AFTER INITIAL ACCESS
+Put Your Seatbelt on!
+
+1. Make sure you have the binaries and aggressor scripts loaded onto your Cobalt Strike client
+
+https://raw.githubusercontent.com/harleyQu1nn/AggressorScripts/master/AVQuery.cna  - This is caught - don't use!!!!!!!!!!!!
+
+https://raw.githubusercontent.com/harleyQu1nn/AggressorScripts/master/EDR.cna  - Right click on session and click EDR Query - This results in moderate feedback
+
+https://github.com/GhostPack/Seatbelt  - execute-assembly /opt/seatbelt.exe all    ************PREFERRED
+
+
+Note the following
+
+Reboot Schedule
+Domain SID
+UAC System Policies
+Logon Server AKA DOMAIN CONTROLLER
+Domain Name
+Local Group Memberships
+Drive Information
+RDP Sessions
+Network Shares
+Potential Defensive Processes
+Current User SID
+DPAPI Master Keys
+
+
+
+

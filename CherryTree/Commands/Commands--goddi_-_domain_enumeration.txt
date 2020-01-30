@@ -1,0 +1,3 @@
+GODDI - DOMAIN ENUMERATION
+.\godditest-windows-amd64.exe -username=testuser -password="testpass!" -domain="test.local" -dc="dc.test.local" -unsafe  
+

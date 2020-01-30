@@ -1,0 +1,27 @@
+CPL RESOURCE RUNNER PAYLOAD
+Payloads
+
+Malicious Control Panel Item (.cpl file)
+
+https://github.com/rvrsh3ll/CPLResourceRunner
+
+
+Step 1: In Cobalt Strike select Attacks>Packages>Windows Executable (S) .  Select Output as "RAW".  Ensure that it is x86 and click Generate.
+ 
+Step 2: Run ConvertShellcode.py on your beacon.bin file (beacon.bin is the payload generated from Step 1) - This will create shellcode.txt.
+
+Step 3: Run the following command against the "shellcode.txt" file to get a blob for the cpl resource.
+
+Step 4: cat shellcode.txt |sed 's/[, ]//g; s/0x//g;' |tr -d '\n' |xxd -p -r |gzip -c |base64 > b64shellcode.txt
+
+Step 5: To compile to x86, open Visual Studio and copy b64shellcode.txt to Resources.txt (CPLResourceRunner/CPLResourceRunner/Resources.txt)  
+
+Step 6: Double click the Solution file in CPLResourceRunner. (may receive compilation errors, but if it creates CPLResourceRUnner.dll in \CPLResourceRunner\bin\x86\Release\ then it was successful)
+
+Step 7: Move CPLResourceRunner.dll to *.cpl (double clicking the .cpl file will launch the shell code.  By default you get an error message, but the shellcode should still work)
+
+Step 8: For asthetics, change the contents of the MsgBox to suit your pretext or remove for lateral movement usage.
+
+
+
+

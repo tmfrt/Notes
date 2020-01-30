@@ -1,0 +1,15 @@
+CERTIFICATE TLS AND SSL
+Using OpenSSL
+-----------------------
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout server.key -out server.crt -subj "/CN=Humana.com" -days 7
+
+
+Using Metasploit
+------------------------
+use auxiliary/gather/impersonate_ssl
+set ADD_CN *.humana.com
+set EXPIRATION 09 March 2025
+set RHOST humana.com
+
+
+

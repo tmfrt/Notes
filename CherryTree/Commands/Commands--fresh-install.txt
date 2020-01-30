@@ -1,0 +1,22 @@
+FRESH-INSTALL
+Fresh installs of linux
+
+ **add on for enum4linux
+
+apt-get install ldapscripts 
+
+sudo apt-get install python-xlrd
+
+apt-get install xsltproc
+
+update-java-alternatives --jre -s java-1.7.0-openjdk-amd64
+
+apt-get install seclists
+
+sudo apt-get install erlang-base-hipe sudo
+
+git clone https://github.com/trustedsec/ptf
+
+
+------
+

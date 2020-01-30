@@ -1,0 +1,40 @@
+ENUMERATION
+nmap -A <ip address>
+
+nmap -p 1-65535 <ip address>
+
+nmap --script smb-system-info <ip address>
+
+
+-----------------------------
+Samba?
+
+enum4linux <ip address>
+
+------------------------------
+SMB?
+
+smbclient -L=<IP Address>
+
+-------------------------------
+
+http or https?
+
+nikto --host <ip address>
+
+--------------------------------
+
+Hydra brute force
+
+hydra -L /root/Desktop/names.txt -P /usr/share/wordlists/rockyou.txt <ip address> <service>
+
+Supported services: asterisk cisco cisco-enable cvs firebird ftp ftps http[s]-{head|get} http[s]-{get|post}-form http-proxy http-proxy-urlenum icq imap[s] irc ldap2[s] ldap3[-{cram|digest}md5][s] mssql mysql nntp oracle-listener oracle-sid pcanywhere pcnfs pop3[s] postgres rdp redis rexec rlogin rsh s7-300 sip smb smtp[s] smtp-enum snmp socks5 ssh sshkey teamspeak telnet[s] vmauthd vnc xmpp
+
+
+--------------------------------
+
+
+
+
+
+

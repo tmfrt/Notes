@@ -1,0 +1,42 @@
+PAM ABUSE
+PAM Trust Enumeration
+
+Using the AD mocule, we can enumerate Trust Properties.  If a trust has a Forest Transitive set to True and SIDFilteringQuarantined set to false (which means that SID Filtering is disabled), it has properties set for PAM trust.
+
+Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}
+
+To be sure about use of PAM Trust, we can enumerate the shadow security principals.
+
+Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl
+
+To check if we are in a production or user forest, We can filter Forest Trusts
+
+***************Make sure that you have both the Microsoft.ActiveDirectory.Management.dll and the ActiveDirectory\ActiveDirectory.psd1 modules loaded!!!
+
+Get-ADTrust -Filter {(ForestTransitive -eq $True)}
+
+If TAPT (TRUST_ATTRIBUT_PIM_TRUST) is 0x00000400 (1024 in decimal) for PAM/PIM and TRUST_ATTRIBUTE_TREAT_AS_EXTERNAL (0x00000040) are set, the trust is a PAM Trust
+
+A trust attribute of 1096 is for PAM (0x00000400) and External Trust (0x00000040) and Forest Transitive (0x00000008)
+
+
+List all computers in domain powershell
+
+Get-DomainComputer | select DNSHOSTNAME
+
+List of users to compromise in order to abuse PAM Trust
+
+Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl
+
+The output will show
+
+1. Name of the shadow principal
+2. Members from the bastion forest that are mapped to the shadow principal
+3. SID of the principal user or group in the forest whose privileges are assigned to the shadow security principal.
+
+
+
+
+
+
+

