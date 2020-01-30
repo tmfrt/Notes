@@ -1,0 +1,162 @@
+TSO COMMANDS
+
+      
+ALLOCATE
+   
+ALLOC
+   
+Allocating data sets.
+     
+CALL
+   
+CALL
+   
+Loading and executing programs.
+     
+CANCEL
+   
+CANCEL
+   
+Halting a submitted job.
+     
+DELETE
+   
+DEL
+   
+Deleting one or more data set entries or one or more members of a partitioned data set.
+     
+EDIT
+   
+E
+   
+Entering data into data sets, or directly modifying data that is already in a data set.
+     
+FREE
+   
+FREE
+   
+Releasing (deallocating) a previously allocated data set.
+     
+HELP
+   
+H
+   
+Obtaining information about the function, syntax, and operands of commands and subcommands and information about certain messages.
+     
+LISTALC
+   
+LISTA
+   
+Listing the data sets that are currently allocated to the TSO/E session.
+     
+LISTBC
+   
+LISTB
+   
+Listing mail and notices for your installation.
+     
+LISTCAT
+   
+LISTC
+   
+Listing the data sets beginning with your prefix or the data sets in a particular catalog
+     
+LISTDS
+   
+LISTD
+   
+Listing certain attributes of data sets.
+     
+LOGOFF
+   
+LOGOFF
+   
+Ending a terminal session.
+     
+LOGON
+   
+LOGON
+   
+Accessing the system.
+     
+MVSSERV
+   
+MVSSERV
+   
+Accessing host capabilities from a Personal Computer.
+     
+OUTPUT
+   
+OUT
+   
+Listing or directing held output.
+     
+PRINTDS
+   
+PR
+   
+Printing a data set on a system printer.
+     
+PROFILE
+   
+PROF
+   
+Listing or changing your user profile.
+     
+RECEIVE
+   
+RECEIVE
+   
+Receiving a transmitted message or data set.
+     
+RENAME
+   
+REN
+   
+Changing the name of a non-VSAM cataloged data set or a member of a partitioned data set, or creating an alias name for a member of a partitioned data set.
+     
+RUN
+   
+R
+   
+Compiling, loading, and executing source statements in a data set.
+     
+SEND
+   
+SE
+   
+Sending messages to another terminal user or the system operator on your system.
+     
+SMCOPY
+   
+SMC
+   
+Copying one data set to another
+     
+STATUS
+   
+ST
+   
+Checking the progress of a job.
+     
+SUBMIT
+   
+SUB
+   
+Submitting a background job for processing.
+     
+TERMINAL
+   
+TERM
+   
+Listing or changing the operating characteristics of your terminal.
+     
+TRANSMIT
+   
+XMIT
+   
+Sending messages or data sets to users on your system or on another system.
+    
+ 
+    
+

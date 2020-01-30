@@ -1,0 +1,77 @@
+NMAP STUFF - RECON
+Recon: Looking for
+
+On the system:
+
+LPAR names / IP addresses
+User name convention - for brute forcing
+CICS regions
+application names
+passwords
+config files
+user guides
+
+Mailing lists (these are public) 
+
+IBMMAIN
+IBMTCP-L
+CICS-L
+RACF-L
+
+Googlehacking
+
+site:share.confex.com
+
+sharpoint: LPAR - CICS - IMS
+attachmate: 'CICS Explorer' 'TSO ID'
+
+============================================
+
+NMAP/Scanning
+
+Nmap is good at identification I.E. - knowing it's a mainframe
+
+Safe scan for mainframe
+-------------------------------------
+nmap -n -p- -dd -oA ip.date.initial <ip>
+
+nmap -sV -p 23,22,21 -vv -d -oA ip.date.service <ip>
+
+Enumerate the LU - Enumerate any VTAM applications
+
+Available Nmap scripts
+
+tn3270-screen
+vtam-enum
+cics-enum
+tso-enum
+tso-brute
+cics-user-enum
+cics-user-brute
+cics-info
+
+
+nmap --script tn3270-screen --script-args tn3270-screen.commands="tso;user;password"
+
+nmap -n -p 23 <ip> -sV -vv --script vtam-enum --script-args vtam-enum.path=/home/test,idlist=vtam.list
+
+
+---------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

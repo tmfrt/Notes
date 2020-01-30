@@ -1,0 +1,3 @@
+MIMIKATZ
+https://justinelze.wordpress.com/2013/03/25/wce-and-mimikatz-in-memory-over-meterpreter/
+
