@@ -1,0 +1,16 @@
+JD-GUI
+Once you use the dex2jar tool, see above note, you can go ahead and use JD-GUI 
+
+JD-GUI is a tool that will help decompile some code that is very similar to the original source code.
+
+The sequence would be 
+
+./dj2-dex2jar.sh <apkname.apk> -o <output-file.jar>
+
+Then
+
+Run JD-Gui - SELECT the File Menu and select the <output-file.jar> as seen above
+
+This will show a hierarchial view of the contents on the left hand side.
+
+

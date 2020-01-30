@@ -1,0 +1,16 @@
+BLACKBOX PICKING
+Use lubricant to loosen up lock
+
+Use tensioner or similar tool to check if the core can still remain free.  Move the tensioner back and forth to make sure there is rotation
+
+Run pick or hook through pinning to make sure there isn't any glue, or debris in the key way while you pick - this will also help loosen up any potentially frozen pins
+
+Run a pick to check for how many pins are available
+
+Once you know how many pins are there, that the keyway is clear, and the core can be rotated, hack stuff
+
+start with rocking - use a lifter
+
+then move to raking - use a bogota triple rake or a bogata double eork - the bogata snake rake works
+
+
