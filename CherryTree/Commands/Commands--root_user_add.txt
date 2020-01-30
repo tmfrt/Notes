@@ -1,0 +1,3 @@
+ROOT_USER_ADD
+useradd -ou 0 -g 0 machew
+

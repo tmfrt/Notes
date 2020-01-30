@@ -1,0 +1,16 @@
+XXD
+
+
+
+
+
+
+
+
+
+
+
+This is the command "cat /etc/passwd" converted to hex and then XXD back to the regular command
+
+`echo 636174202f6574632f706173737764 | xxd -r -p`"
+

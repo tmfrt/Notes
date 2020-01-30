@@ -1,0 +1,13 @@
+HANDSHAKE-VIA-PCAP
+Open the pcap or cap in wireshark and type the following capture filter
+
+eapol || wlan.fc.type_subtype == 0x04 || wlan.fc.type_subtype == 0x08
+
+This will give you authentication beacons etc
+
++++++++++++++++++++++++++++=
+
+Crack a valid handshake inside of a pcap file
+
+aircrack-ng <pcap-name.cap> -w <wordlist-name.txt>
+

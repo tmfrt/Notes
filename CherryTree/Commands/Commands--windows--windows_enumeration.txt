@@ -1,0 +1,160 @@
+WINDOWS ENUMERATION
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md
+
+Windows Version and Configuration 
+
+systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
+
+
+Extract patchs and updates
+
+wmic qfe
+
+
+Architecture
+
+wmic os get osarchitecture || echo %PROCESSOR_ARCHITECTURE%
+
+
+List all env variables
+
+cmd line - set 
+powershell - Get-ChildItem Env: | ft Key,Value
+
+
+List all drives
+
+ wmic logicaldisk get caption || fsutil fsinfo drives wmic logicaldisk get caption,description,providername Get-PSDrive | where {$_.Provider -like "Microsoft.PowerShell.Core\FileSystem"}| ft Name,Root
+
+
+Get current username
+
+echo %USERNAME% || whoami $env:username
+
+
+List user privilege
+
+whoami /priv
+
+
+
+List all users
+
+net user 
+whoami /all 
+Get-LocalUser | ft Name,Enabled,LastLogon Get-ChildItem C:\Users -Force | select Name
+
+
+
+
+List all local groups
+
+net localgroup 
+Get-LocalGroup | ft Name
+
+
+
+Get details about a group (i.e. administrators)
+
+net localgroup administrators 
+Get-LocalGroupMember Administrators | ft Name, PrincipalSource 
+Get-LocalGroupMember Administrateurs | ft Name, PrincipalSource
+
+
+
+List all network interfaces, IP, and DNS.
+
+ipconfig /all 
+Get-NetIPConfiguration | ft InterfaceAlias,InterfaceDescription,IPv4Address Get-DnsClientServerAddress -AddressFamily IPv4 | ft
+
+
+
+List the ARP table
+
+arp -A 
+Get-NetNeighbor -AddressFamily IPv4 | ft ifIndex,IPAddress,LinkLayerAddress,State
+
+
+List all current connections
+
+netstat -ano
+
+
+Disable firewall
+
+netsh firewall set opmode disable 
+netsh advfirewall set allprofiles state off
+
+
+List all network shares
+
+net share
+
+
+SNMP Configuration
+
+reg query HKLM\SYSTEM\CurrentControlSet\Services\SNMP /s Get-ChildItem -path HKLM:\SYSTEM\CurrentControlSet\Services\SNMP -Recurse
+
+SAM and SYSTEM files
+
+The Security Account Manager (SAM), often Security Accounts Manager, is a database file. The user passwords are stored in a hashed format in a registry hive either as a LM hash or as a NTLM hash. This file can be found in %SystemRoot%/system32/config/SAM and is mounted on HKLM/SAM.
+
+# Usually %SYSTEMROOT% = C:\Windows
+%SYSTEMROOT%\repair\SAM
+%SYSTEMROOT%\System32\config\RegBack\SAM
+%SYSTEMROOT%\System32\config\SAM
+%SYSTEMROOT%\repair\system
+%SYSTEMROOT%\System32\config\SYSTEM
+%SYSTEMROOT%\System32\config\RegBack\system
+
+Read a value of a certain sub key
+
+REG QUERY "HKLM\Software\Microsoft\FTH" /V RuleList
+
+
+EoP - Processes Enumeration and Tasks
+
+What processes are running?
+
+tasklist /v
+net start
+sc query
+Get-Service
+Get-WmiObject -Query "Select * from Win32_Process" | where {$_.Name -notlike "svchost*"} | Select Name, Handle, @{Label="Owner";Expression={$_.GetOwner().User}} | ft -AutoSize
+
+
+Which processes are running as "system"
+
+tasklist /v /fi "username eq system"
+
+Do you have powershell magic?
+
+REG QUERY "HKLM\SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine" /v PowerShellVersion
+
+List installed programs
+
+Get-ChildItem 'C:\Program Files', 'C:\Program Files (x86)' | ft Parent,Name,LastWriteTime
+Get-ChildItem -path Registry::HKEY_LOCAL_MACHINE\SOFTWARE | ft Name
+
+List services
+
+net start
+wmic service list brief
+tasklist /SVC
+
+Scheduled tasks
+
+schtasks /query /fo LIST 2>nul | findstr TaskName
+schtasks /query /fo LIST /v > schtasks.txt; cat schtask.txt | grep "SYSTEM\|Task To Run" | grep -B 1 SYSTEM
+Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
+
+
+Startup tasks
+
+wmic startup get caption,command
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\R
+reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
+dir "C:\Documents and Settings\All Users\Start Menu\Programs\Startup"
+dir "C:\Documents and Settings\%username%\Start Menu\Programs\Startup"
+

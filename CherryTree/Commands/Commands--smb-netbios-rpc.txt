@@ -1,0 +1,113 @@
+SMB-NETBIOS-RPC
+File shares
+
+rpcinfo -s <ip address>
+
+List Shares
+
+showmount -e <ip>
+
+grab the file
+
+mount -t nfs <ip>:/backup /tmp/nfs -o nolock
+
+-----------------------------------------------
+
+smbclient -N -L \\<IP address>
+
+
+-----------------------------------------------
+
+Install this for better enum4linux usability
+
+apt-get install ldapscripts  
+
+list shares
+
+smbclient -L 192.168.99.162 
+
+------------------
+
+Access Share
+
+smbclient \\\\192.168.30.53\\WorkSharing  <--access share
+
+
+if you see any files of interest you can type the following
+
+get <filename>.txt /root/Desktop/<filename>.txt
+
+
+from windows, type
+
+nbtstat -a
+
+----------
+
+Linux Discovery
+
+nbtscan -v <IP Address orr address range IE /24>
+
+----------
+  
+if you then see something like    ELS-WINXP    <20>    Unique    Registered -- then there is a server or share :)
+
+----------
+
+From windows, type the following this should list the shares, domains, and resources on the target
+
+net view <IPaddress>
+
+----------
+
+This will connect to the K drive
+
+net use K: \\<IP address\share IE C or Admin>  net use K: \\192.168.31.53\C
+
+----------
+
+
+From linux type the following this will list the shares, domains, and resources on the target 
+
+smbclient -L 192.168.30.53
+
+
+To mount from linux, type the following
+
+mount.cifs /192.168.99.162/C /media/K_share/ user=,pass=
+
+----------
+
+From windows start a null session
+
+net use \\192.168.30.53\IPC$ "" /u: ""
+
+----------
+
+From linux, type the following to enumerate all smb things
+
+enum4linux -A -v <IP address>
+
+----------
+
+Enumerate null user sessions.
+
+rpcclient -N -U "" <IP address>
+
+while in RPC client command line, type the following to enumerate 
+
+enum  <---then use tab completion to autocomplete, and you can choose what you do want to enumerate.
+
+others
+
+srvinfo, lookupnames, queryuser, enumprivs, enumalsgroups
+-----------
+
+RPC Enumeration
+
+/usr/share/set/src/fasttrack/rid_enum.py 192.168.91.129:36234 500 5000 /usr/share/seclists/Usernames/Names
+
+
+
+http://www.fuzzysecurity.com/tutorials/26.html
+

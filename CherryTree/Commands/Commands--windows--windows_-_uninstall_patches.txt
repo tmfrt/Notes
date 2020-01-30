@@ -1,0 +1,10 @@
+WINDOWS - UNINSTALL PATCHES
+View Hotfixes
+
+cmd line - systeminfo 
+powershell - Get-Hotfix
+
+Uninstall Hotfix
+
+wusa /uninstall /kb:1234512
+

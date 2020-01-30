@@ -1,0 +1,49 @@
+TMUX CHEAT SHEET
+Most used
+
+CTRL + A then \ will make a vertical pane
+CTRL + A then - will make a horizontal pane
+
+Prefix + q - Show Numbers
+Prefix + x - Kill Pane
+Prefix + z - Toggle Zoom
+ALT up - Switch Pane up
+ALT down - Switch Pane down
+ALT left - Switch Pane left
+ALT right - Switch Pane right
+Prefix + c - Create window
+Prefix + w - List windows
+Prefix + n - Next Window
+Prefix + p - Previous Window
+Prefix + f - Find Window
+Prefix + , - Rename Window
+Prefix + & - Kill Window
+Prefix + / - Regex search (strings work too)
+Prefix + Ctrl f - Simple File Search
+Prefix + Ctrl g - Jump over git status
+Prefix + alt h - Jump over SHA-1/SHA-256 hashes
+Prefix + ctrl u - url search
+Prefix + ctrl d - number search
+prefix + alt i - ip address search
+n - Jumps to next match
+N - Jumps to previous match
+Enter - Copies match
+o - Open highlighted selection
+Ctrl o - Open highlighted selection in Editor
+Shift s - search the highlighted selection directly insdie google
+Prefix Ctrl s - Save
+Prefix Ctrl r - Restore
+tmux source-file ~/.tmux.conf Reload tmux config
+^ - Back to indentation
+(space) - Start selection
+Esc - Clear Selection
+Copy - Selection Enter
+Prefix + ? - List Shortcuts
+Prefix + t - Clock
+Prefix + d - Detach
+Prefix + : - Prompt
+Prompt: setw synchronize-panes on Synchronize Panes
+Prompt: setw synchronize-panes off Turn Off Synchronize Panes
+Prefix + : select-pane -P 'fg=colourx' Change font color of current pane
+Prefix + x - Kill  pane
+

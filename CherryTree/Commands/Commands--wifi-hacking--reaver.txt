@@ -1,0 +1,3 @@
+REAVER
+reaver -i <wireless interface> -b <bssid> -d 10 -S -N -vv
+

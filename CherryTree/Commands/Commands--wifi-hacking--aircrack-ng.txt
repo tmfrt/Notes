@@ -1,0 +1,173 @@
+AIRCRACK-NG
+#Show all of your interface statuses
+
+root@kali:~# airmon-ng 
+
+PHYInterfaceDriverChipset
+
+phy1wlan0rt2800usbRalink Technology, Corp. RT2870/RT3070
+
+
+
+====
+
+#Check for any problematic processes that might ruin a wireless attack
+
+
+root@kali:~# airmon-ng check
+
+Found 3 processes that could cause trouble.
+If airodump-ng, aireplay-ng or airtun-ng stops working after
+a short period of time, you may want to run 'airmon-ng check kill'
+
+  PID Name
+  441 NetworkManager
+  698 wpa_supplicant
+ 3340 dhclient
+
+
+
+====
+
+
+#Kill the problematic processes automatically
+
+root@kali:~# airmon-ng check kill
+
+Killing these processes:
+
+  PID Name
+  698 wpa_supplicant
+ 3743 dhclient
+
+
+====
+
+
+#Put wireless card into monitor mode
+
+
+
+root@kali:~# airmon-ng start wlan0
+
+
+PHYInterfaceDriverChipset
+
+phy1wlan0rt2800usbRalink Technology, Corp. RT2870/RT3070
+
+(mac80211 monitor mode vif enabled for [phy1]wlan0 on [phy1]wlan0mon)
+(mac80211 station mode vif disabled for [phy1]wlan0)
+
+
+====
+
+
+
+#Stop Monitor mode
+
+
+root@kali:~# airmon-ng stop mon0
+
+PHYInterfaceDriverChipset
+
+phy1wlan0monrt2800usbRalink Technology, Corp. RT2870/RT3070
+
+
+
+====
+
+
+
+#Start Monitor mode on a specific channel
+
+
+
+root@kali:~# airmon-ng start wlan0mon 6
+
+
+PHYInterfaceDriverChipset
+
+phy1wlan0monrt2800usbRalink Technology, Corp. RT2870/RT3070
+
+**check your channel with 
+
+root@kali:~# iwlist wlan0mon channel 
+
+
+
+====
+
+
+
+#Check to see what networks are within range
+
+
+root@kali:~# airodump-ng wlan0mon 
+
+
+ BSSID              PWR  Beacons    #Data, #/s  CH  MB   ENC  CIPHER AUTH ESSID
+                                                                                                    
+ A0:63:91:D5:63:07  -23       46       27    0   6  54e  WPA2 CCMP   PSK  chalupa_2GEXT             
+ FA:8F:CA:85:86:4C  -36       53        0    0   6  54e. OPN              <length:  0>              
+ C4:E9:84:E5:D7:05  -46       51        1    0   6  54e. WPA2 CCMP   PSK  chalupa                   
+ 08:95:2A:6C:7D:52  -68       42        4    0   1  54e  WPA2 CCMP   PSK  TC8717T4C                 
+ 40:B8:9A:DE:D0:70  -70       44        9    0   1  54e  WPA2 CCMP   PSK  Hatfield Network          
+ 00:22:75:6C:05:18  -76       26       13    0  11  54e  WPA2 CCMP   PSK  insight wifi 2999          
+ A8:A7:95:E8:62:31  -77       11        0    0   1  54e  WPA2 CCMP   PSK  TWC_Wifi_515               
+ 38:4C:90:6B:B5:60  -78        4        0    0  11  54e. WPA2 CCMP   PSK  GABBY                     
+ 94:62:69:6D:0D:60  -79        7        0    0   6  54e  WPA2 CCMP   PSK  ATTh9rTqXi 
+
+
+BSSID: MAC addresses of the access point
+
+PWR: 
+
+Beacons:
+
+Data: Number of initializations vectors that airodump-ng has captured
+
+#/s: Rate at which the data packets are being collected
+
+CH: Channel that the access point is on
+
+MB:
+
+ENC: What encryption type is being used on the access point
+
+CIPHER: What cipher is detected on the encrypted network
+
+AUTH: Displays authentication protocol in use
+
+ESSID: Name of the network.
+
+
+On the lower half, BSSID is the MAC addresses of the devices connected on the network.
+
+====
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

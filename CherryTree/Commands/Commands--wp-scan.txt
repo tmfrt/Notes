@@ -1,0 +1,20 @@
+WP-SCAN
+wpscan --url https://192.168.26.141:12380/blogblog  <--this will give you basic information about wordpress
+
+wpscan --url https://192.168.26.141:12380/blogblog --enumerate vp    <---this will give you information on vulnerable plugins
+
+wpscan --url https://192.168.26.141:12380/blogblog --enumerate at    <---enumerate all things
+  
+
+wpscan -u http://192.168.0.14/ –wordlist /root/Dropbox/Vulnhub/MrRobot/fsocity.dic –username elliot
+
+wpscan -u http://10.11.1.234/ --threads 20 --wordlist /usr/share/wordlists/rockyou.txt --username admin  <----this will bruteforce passwords :)
+
+nmap -sV --script http-wordpress-enum 10.11.1.234   if ping probes are blocked, use -Pn rather that -sV
+
+nmap -Pn --script http-wordpress-enum --script-args check-latest=true,search-limit=10 10.11.1.234 
+
+nmap -sV 10.11.1.234 --script http-wordpress-enum --script-args limit=25 
+
+
+

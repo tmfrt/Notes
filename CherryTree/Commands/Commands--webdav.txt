@@ -1,0 +1,97 @@
+WEBDAV
+https://www.trustedsec.com/2018/06/how-to-set-up-a-quick-simple-webdav-server-for-remote-file-sharing/
+
+Set Up WebDav server to host malicious or fun....files
+
+pip install wsgidav
+
+pip install cheroot
+
+$ sudo apt-get update 
+$ sudo apt-get install software-properties-common 
+$ sudo add-apt-repository ppa:certbot/certbot 
+$ sudo apt-get update 
+$ sudo apt-get install certbot
+
+$ mkdir -p /tmp/webdav/share
+
+certbot certonly --webroot -w /tmp/webdav/share -d carrot.ignorelist.com
+
+
+Add The following to your webdav.conf file 
+ssl_certificate = "/etc/letsencrypt/live/carrot.ignorelist.com/cert.pem" 
+ssl_certificate_chain = "/etc/letsencrypt/live/carrot.ignorelist.com/fullchain.pem" 
+ssl_private_key = "/etc/letsencrypt/live/carrot.ignorelist.com/privkey.pem"
+
+Run
+
+wsgidav --host=0.0.0.0 --port=443 --config webdav.conf --root ./share/
+
+
+
+root@kali:~# davtest -url http://10.11.1.14
+********************************************************
+ Testing DAV connection
+OPENSUCCEED:http://10.11.1.14
+********************************************************
+NOTERandom string for this session: pIzR5HdI
+********************************************************
+ Creating directory
+MKCOLSUCCEED:Created http://10.11.1.14/DavTestDir_pIzR5HdI
+********************************************************
+ Sending test files
+PUThtmlSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.html
+PUTcgiFAIL
+PUTcfmSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.cfm
+PUTaspxSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.aspx
+PUTaspFAIL
+PUTtxtSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.txt
+PUTshtmlFAIL
+PUTjhtmlSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.jhtml
+PUTjspSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.jsp
+PUTphpSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.php
+PUTplSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.pl
+********************************************************
+ Checking for test file execution
+EXEChtmlSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.html
+EXECcfmFAIL
+EXECaspxFAIL
+EXECtxtSUCCEED:http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.txt
+EXECjhtmlFAIL
+EXECjspFAIL
+EXECphpFAIL
+EXECplFAIL
+
+********************************************************
+/usr/bin/davtest Summary:
+Created: http://10.11.1.14/DavTestDir_pIzR5HdI
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.html
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.cfm
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.aspx
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.txt
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.jhtml
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.jsp
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.php
+PUT File: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.pl
+Executes: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.html
+Executes: http://10.11.1.14/DavTestDir_pIzR5HdI/davtest_pIzR5HdI.txt
+
+
+-------------------------------------
+
+
+
+
+Another tool is cadaver
+
+root@kali:~# cadaver http://10.11.1.229  <----this will connect you to the webdav site itself.
+
+Available commands: 
+ ls         cd         pwd        put        get        mget       mput       
+ edit       less       mkcol      cat        delete     rmcol      copy       
+ move       lock       unlock     discover   steal      showlocks  version    
+ checkin    checkout   uncheckout history    label      propnames  chexec     
+ propget    propdel    propset    search     set        open       close      
+ echo       quit       unset      lcd        lls        lpwd       logout     
+ help       describe   about 
+

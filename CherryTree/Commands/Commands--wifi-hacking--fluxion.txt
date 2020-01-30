@@ -1,0 +1,15 @@
+FLUXION
+aircrack - not pyrit
+
+1
+
+fake ap with airbase ng
+ 
+handshake with aircrack
+
+deauth target
+
+check handshake
+
+
+

@@ -1,0 +1,21 @@
+WINDOWS - POWERSHELL WEB ACCESS
+This is a web gateway to powershell on machines
+
+Install Powershell Web Access
+
+Install-WindowsFeature -Name WindowsPowerShellWebAccess  (need admin access, also is noisy)
+
+Configure Gateway
+
+Install-PswaWebApplication -useTestCertificate
+
+Configure Authorization
+
+Add-PswaAuthorizationRule -UserName <domain\user> -ComputerName <computer_name> -ConfigurationName <session_configuration_name>
+
+Allow all the things (Not OpSec)
+
+Add-PswaAuthorizationRule -UserName * -ComputerName * ConfigurationName *
+
+
+

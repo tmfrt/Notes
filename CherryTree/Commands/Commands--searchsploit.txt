@@ -1,0 +1,15 @@
+SEARCHSPLOIT
+Easy Searchsploit 
+
+searchsploit --nmap *.xml 
+
+Exclude DOS exploits
+
+searchsploit <search string> | grep -v '/dos/'
+
+Search only in exploit title
+
+searchsploit -t <search string> --colour
+
+
+

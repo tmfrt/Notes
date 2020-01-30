@@ -1,0 +1,98 @@
+SNMP
+                                              ********Process*********
+-----------
+
+nmap -sU -p 161 10.10.10.10
+
+if found do
+
+snmp-check -t 10.10.10.10
+
+if snmp stuff is found, gather the following
+
+Names
+Services
+Listening ports
+
+-----------
+
+
+SNMP
+
+downloads
+---------
+
+snmpenum
+
+http://dl.packetstormsecurity.net/UNIX/scanners/snmpenum.zip
+
+commands for this tool
+
+perl snmp.pl 10.10.10.5 public windows.txt
+
+the "public" refers to the fact you want to search for public strings.  The "windows" shows you want to search a known windows host
+
+------------------------------------
+
+to find people running snmp
+
+nmap -sU -p 161 <IP address> 
+
+------------------------------------
+
+snmp-check -t <ip address>
+
+if SNMP is found, type the following
+
+onesixtyone -c /usr/share/doc/onesixtyone/dict.txt <IP address>
+
+-------------------------------------
+
+if you find some usernames from the snmp enumeration, you can do the following
+
+echo -e "admin\nAdministrator\nGuest " > users.txt
+
+this will make a wordlist -- the admin, Administrator, and guest are just examples of usernames found, the \n after the usernames just specifies a carriage return.
+
+
+
+Snmpwalk
+
+snmpwalk -v -2c 192.168.30.53 -c public
+
+-v option specifies the snmp version IE version 2c
+
+-c option specifies to use the "public" string
+
+
+if the output returns numerically then be sure to install the snmp-mibs-downloader package
+
+=====================
+
+http://www.networkmanagementsoftware.com/snmp-tutorial-part-2-rounding-out-the-basics/
+http://www.oid-info.com/
+
+=====================
+
+nmap snmp scripts
+
+snmp-brute
+snmp-info
+snmp-interfaces
+snmp-netstat
+snmp-processes
+snmp-sysdescr
+snmp-win32-services
+
+or view them all 
+
+/usr/share/nmap/scripts ls -l | grep -i snmp
+
+IE:
+
+nmap -sU -p 161 --script=<script name> <IP address>  **optional, you can append the following  **--script-args snmp-brute.communitiesdb=<wordlist>
+
+
+
+
+

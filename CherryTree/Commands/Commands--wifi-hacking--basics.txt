@@ -1,0 +1,128 @@
+BASICS
+#Get Wireless interface status
+
+root@kali:~# iwconfig
+
+ 
+#Get status of driver
+
+root@kali:~# dmesg | grep 2x00
+
+#Get a ton of information on your wireless NIC and it's driver
+
+root@kali:~# iw list | less 
+
+#Get a list of the wireless networks around you
+
+
+root@kali:~# iw dev wlan0 scan | grep SSID
+SSID: chalupa_2GEXT
+SSID: TC8717T4C
+SSID: Hatfield Network
+SSID: 
+SSID: chalupa
+SSID: ATTh9rTqXi
+
+#Get a list of channel numbers and their corresponding frequencies
+
+root@kali:~# iwlist wlan0 frequency 
+wlan0     14 channels in total; available frequencies :
+          Channel 01 : 2.412 GHz
+          Channel 02 : 2.417 GHz
+          Channel 03 : 2.422 GHz
+snip....
+ 
+#Get a list of Networks around you and the channel that they are on
+
+root@kali:~# iwlist wlan0 scanning | egrep "ESSID|Channel" 
+
+root@kali:~# iw dev wlan0 scan | egrep "DS\ Parameter\ set|SSID"
+
+SSID: chalupa_2GEXT
+DS Parameter set: channel 6
+SSID: Hatfield Network
+DS Parameter set: channel 1
+SSID: TC8717T4C
+DS Parameter set: channel 1
+
+#Create a VAP (virtual access point that is in monitor mode)
+
+root@kali:~# iw dev wlan0 interface add mon0 type monitor 
+
+root@kali:~# ifconfig mon0 up 
+
+*now type ifconfig, and you should see an interface called mon0
+
+**now lets double check that you are actually IN MONITOR mode
+
+root@kali:~# tcpdump -i mon0 -s 65000 -p 
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on mon0, link-type IEEE802_11_RADIO (802.11 plus radiotap header), capture size 65000 bytes
+12:44:32.988131 1.0 Mb/s 2437 MHz 11b -25dB signal antenna 1 Beacon (chalupa_2GEXT) [1.0* 2.0* 5.5 11.0 18.0 24.0 36.0 54.0 Mbit] ESS CH: 6, PRIVACY
+12:44:32.990346 1.0 Mb/s 2437 MHz 11b -25dB signal antenna 1 Data IV:3aaaa Pad 0 KeyID 0
+12:44:33.013759 1.0 Mb/s 2437 MHz 11b -47dB signal antenna 1 Beacon (chalupa) [1.0* 2.0* 5.5* 11.0* 6.0 9.0 12.0 18.0 Mbit] ESS CH: 6, PRIVACY
+
+snip.......
+
+If you see the above output, IE beacon and privacy mode etc etc...then you are successfully in monitor mode.
+
+***Now to delete the VAP if you want to
+
+root@kali:~# iw dev mon0 interface del
+
+********
+
+#Put your Network Card into monitor mode on a specific channel.
+
+root@kali:~# iwconfig wlan0 mode monitor channel 6 
+
+root@kali:~# ifconfig wlan0 up <--check if it's up and on monitor mode
+
+now check TCP Dump to make sure you are actually in monitor mode
+
+root@kali:~#tcpdump -i -wlan0 -s 65000 -p
+
+
+--------------
+
+#Take your card out of monitor mode
+
+root@kali:~# iwconfig wlan0 mode managed 
+
+-------------
+
+
+
+
+
+**********************************
+
+# See if you are using 802.11 Drivers
+RANDOM stuff
+
+root@kali:~# iwlist 
+
+If you get no results, then you are not using 802.11, if you see the following
+
+******
+
+root@kali:~# iwlist
+Usage: iwlist [interface] scanning [essid NNN] [last]
+              [interface] frequency 
+              [interface] channel 
+              [interface] bitrate 
+              [interface] rate 
+              [interface] encryption
+snip....
+*******
+
+Then you are using 802.11
+
+----------------------------------------
+
+rmmod r8187  <---rmmod will remove a driver 8187 is the driver, with my alfa it would be rmmod 2x00
+
+modprobe rtl8187  <----after running rmmod command above, modprobe will begin using the 802.11 driver
+
+--------------------------------
+

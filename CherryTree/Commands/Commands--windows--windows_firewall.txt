@@ -1,0 +1,50 @@
+WINDOWS FIREWALL
+Allow RDP
+
+netsh advfirewall firewall add rule name="Remote Desktop (TCP-In)" dir=in action=allow protocol=TCP localport=3389
+
+Allow https in and out
+
+netsh advfirewall firewall add rule name="https" dir=in action=allow protocol=TCP localport=443
+netsh advfirewall firewall add rule name="https" dir=out action=allow protocol=TCP localport=443
+
+Allow https in and out for different firewall profiles
+
+netsh advfirewall firewall add rule name="https" dir=in action=allow protocol=TCP localport=443 profile=private,public,domain
+netsh advfirewall firewall add rule name="https" dir=out action=allow protocol=TCP localport=443 profile=private,public,domain
+
+Allow https in and out for different firewall profiles Cobalt Strike 8443 Beacon
+
+netsh advfirewall firewall add rule name="https" dir=in action=allow protocol=TCP localport=8443 profile=private,public,domain
+netsh advfirewall firewall add rule name="https" dir=out action=allow protocol=TCP localport=8443 profile=private,public,domain
+
+
+
+
+
+Netsh Helper list - https://superuser.com/questions/430414/netsh-advfirewall-command-not-found  **In case you are making firewall rules and getting error messages
+
+
+
+advfirewall: netsh add helper AUTHFWCFG.DLL 
+firewall: netsh add helper FWCFG.DLL
+http: netsh add helper NSHHTTP.DLL
+interface: netsh add helper IFMON.DLL
+bridge: netsh add helper HNETMON.DLL
+dhcpclient: netsh add helper DHCPCMONITOR.DLL
+dnsclient, netio: netsh add helper NETIOHLP.DLL
+ipsec: netsh add helper NSHIPSEC.DLL
+lan: netsh add helper DOT3CFG.DLL
+mbn: netsh add helper WWANCFG.DLL
+namespace: netsh add helper NETIOHLP.DLL
+nap: netsh add helper NAPMONTR.DLL
+p2p: netsh add helper P2PNETSH.DLL
+ras: netsh add helper RASMONTR.DLL
+rpc: netsh add helper RPCNSH.DLL
+trace: netsh add helper NETTRACE.DLL
+wcn: netsh add helper WCNNETSH.DLL
+wfp: netsh add helper NSHWFP.DLL
+winhttp: netsh add helper WHHELPER.DLL
+winsock: netsh add helper WSHELPER.DLL
+wlan: netsh add helper WLANCFG.DLL
+

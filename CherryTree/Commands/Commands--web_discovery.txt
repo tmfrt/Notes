@@ -1,0 +1,23 @@
+WEB DISCOVERY
+Wfuzz - Hide 404 codes
+
+wfuzz --hc 404 -w /usr/share/wordlists/rockyou.txt 192.168.174.130/FUZZ
+
+Go Buster Web Content Discovery Feel free to change the wordlist based on the services.
+
+gobuster -u http://<ip or URL>/ -w /usr/share/seclists/Discovery/Web_Content/common.txt -s '200,204,301,302,307,403,500' -e
+
+Dirb, search recursively
+
+dirb https://192.168.26.141:12380 -r
+
+Go Buster subdomain brute forcing
+
+gobuster -m dns -w /usr/share/wordlists/subdomain.txt -u google.com -i   
+
+
+
+
+
+
+

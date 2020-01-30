@@ -1,0 +1,9 @@
+SSH
+Log into server with key
+
+ssh -i k<key_for_ssh.pem> root@<ip address>
+
+If you are getting "Permissions" issues then set the .pem file to 400 permission level
+
+e.g., chmod 400 key_for_ssh.pem
+

@@ -1,0 +1,24 @@
+HOSTAPD
+My next step was to install hostapd-wpe, one of my go to Enterprise RADIUS MiTM attack techniques. I was happy to see that Kali is now including this in the repos, making for an easy install instead of needing to patch hostapd yourself.
+
+--------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------- 
+apt-get install hostapd-wpe
+
+To configure hostapd-wpe, modify the configuration file:
+
+nano /etc/hostapd-wpe/hostapd-wpe.conf
+
+so that:
+
+ssid=<Targeted SSID>
+channel=1
+<insert new line under channel>
+ieee80211n=1
+<scroll down quite a bit and change>
+hw_mode=g
+
+With this configured, you can now launch hostapd-wpe:
+
+./hostapd-wpe /etc/hostapd-wpe/hostapd-wpe.conf
+

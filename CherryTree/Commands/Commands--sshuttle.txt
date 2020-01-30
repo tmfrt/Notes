@@ -1,0 +1,18 @@
+SSHUTTLE
+Connect SSHuttle with a key file
+
+sshuttle --dns -vr root@10.10.110.123 0/0 --ssh-cmd 'ssh -i file.key'
+
+Connect sshuttle with username (will be prompted with password)
+
+sshuttle -r root@10.10.110.123 0/0
+
+
+sshuttle -H -N --dns -D -r root@10.10.110.123 0/0 --ssh-cmd "ssh -i root_rsa_key_Nix01"
+
+
+This works well
+sshuttle --dns --auto-nets --to-ns 172.16.1.5:53 --auto-hosts --method ipfw --python /opt/splink/bin/python -v 0/0 --ssh-cmd "ssh -i /root/Desktop/offshore/ssh_keys/root_rsa_key_Nix01 root@10.10.110.123"
+
+sshuttle --dns 0/0 --ssh-cmd "ssh -i /root/Desktop/offshore/ssh_keys/root_rsa_key_Nix01 root@10.10.110.123"
+

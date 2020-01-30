@@ -1,0 +1,13 @@
+WINDOWS - POWERVIEW ACL ENUM-ABUSE
+Using Powerview - see if our user George has Generic All rights on the AD object for the user Martha
+
+Get-ObjectAcl -SamAccountName Martha -ResolveGUIDs | ? {$_.ActiveDirectoryRights -eq "GenericAll"}  
+
+Using SharpView in Cobalt Strike (Keep in mind, can't pipe commands with .NET executables
+
+execute-assembly /opt/exe/SharpView.exe Get-ObjectAcl -SamAccountName Martha -ResolveGUIDS
+
+
+
+
+
