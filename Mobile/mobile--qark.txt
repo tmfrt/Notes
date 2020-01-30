@@ -1,3 +1,0 @@
-QARK
-qark --pathtoapk <path to apk> --install 1 --exploit 0 --reportdir <report location>
-
