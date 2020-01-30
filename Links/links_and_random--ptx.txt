@@ -1,7 +1,0 @@
-PTX
-txtwizard.net/compression
-
-https://raw.githubusercontent.com/giMini/PowerMemory/master/RWMC/misc/reverseshell.xml
-
-https://github.com/colemination/PowerOutlook/blob/master/New-DynamicOutlookTrigger.ps1
-
