@@ -1,0 +1,135 @@
+COBALT STRIKE OPSEC CONSIDERATIONS
+
+API-only
+These commands are built-into Beacon and rely on Win32 APIs to meet their objectives.
+
+    cd
+    cp
+    download
+    drives
+    exit
+    getprivs
+    getuid
+    kerberos_ccache_use
+    kerberos_ticket_purge
+    kerberos_ticket_use
+    jobkill
+    kill
+    link
+    ls
+    make_token
+    mkdir
+    mv
+    ppid
+    ps
+    pwd
+    reg query
+    reg queryv
+    rev2self
+    rm
+    rportfwd
+    setenv
+    socks
+    steal_token
+    timestomp
+    unlink
+    upload
+
+House-keeping Commands
+
+    cancel
+    checkin
+    clear
+    downloads
+    help
+    jobs
+    mode dns
+    mode dns-txt
+    mode dns6
+    mode http
+    note
+    powershell-import
+    sleep
+    socks stop
+    spawnto
+
+Post-Exploitation Jobs (Process Execution + Remote Process Injection)
+Post-exploitation features spawn a process and inject a capability into that process. 
+
+    browserpivot
+    bypassuac
+    covertvpn
+    dcsync
+    desktop
+    elevate
+    execute-assembly
+    hashdump
+    keylogger
+    logonpasswords
+    mimikatz
+    net
+    portscan
+    powerpick
+    psinject
+    pth
+    runasadmin
+    screenshot
+    shspawn
+    spawn
+    ssh
+    ssh-key
+    wdigest
+
+OPSEC Advice: Use the spawnto command to change the process Beacon will launch for its post-exploitation jobs. The default is rundll32.exe 
+
+Process Execution
+These commands spawn a new process:
+
+    execute
+    runas
+    runu
+
+OPSEC Advice: The ppid command will change the parent process of commands run by execute. The ppid command does not affect runas or spawnu.
+
+Process Execution: Cmd.exe
+The shell command depends on cmd.exe.
+
+The pth and getsystem commands rely on cmd.exe to pass a token to Beacon via a named pipe. 
+The command pattern to pass this token is an indicator some host-based security products look for.
+
+OPSEC Advice: The shell command uses the COMSPEC environment variable to find the preferred command-line interpreter on Windows. 
+Use Aggressor Script’s &bsetenv function to point COMSPEC to a different cmd.exe location, if needed. Use the ppid command to change the parent process the command-line interpreter is run under. 
+To pth without cmd.exe, execute the pth steps by hand. Don’t use getsystem. There are other ways to acquire a SYSTEM token.
+
+Process Execution: PowerShell.exe
+The following commands launch powershell.exe to perform some task on your behalf.
+
+    elevate uac-token-duplication
+    powershell
+    spawnas
+    spawnu
+    winrm
+    wmi
+
+OPSEC Advice: Use the ppid command to change the parent process powershell.exe is run under. Be aware, there are alternatives to each of these commands that do not use powershell.exe:
+
+The uac-token-duplication privilege escalation exploit has runasadmin. This command runs a command of your choosing with the same UAC bypass.
+spawnu has runu which runs an arbitrary command under another process.
+spawnas has runas which runs an arbitrary command as another user.
+powershell has powerpick, this command runs powershell scripts without powershell.exe.
+It’s also possible to laterally spread without the winrm and wmi commands.
+
+Remote Process Injection
+The post-exploitation job commands (previously mentioned) rely on process injection too. The other commands that inject into a remote process are:
+
+    dllinject
+    dllload
+    inject
+    shinject
+
+Service Creation
+The following internal Beacon commands create a service (either on the current host or a remote target) to run a command. These commands use Win32 APIs to create and manipulate services.
+
+    getsystem
+    psexec
+    psexec_psh
